@@ -1,0 +1,276 @@
+# backend/app/main.py
+import os
+import time
+from contextlib import asynccontextmanager
+from typing import Dict
+
+import uvicorn
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+from prometheus_client import Counter, Histogram, generate_latest
+from starlette.responses import Response
+
+from app.core.config import settings
+from app.core.database import create_tables
+from app.core.logging import setup_logging, logger
+from app.middleware.auth import AuthenticationMiddleware
+from app.middleware.rate_limit import RateLimitMiddleware
+from app.middleware.tenant import TenantMiddleware
+
+# Metrics
+REQUEST_COUNT = Counter(
+    'http_requests_total', 
+    'Total HTTP requests', 
+    ['method', 'endpoint', 'status']
+)
+REQUEST_DURATION = Histogram(
+    'http_request_duration_seconds',
+    'HTTP request duration',
+    ['method', 'endpoint']
+)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan manager."""
+    # Startup
+    logger.info("Starting PdM Platform API")
+    
+    # Initialize database
+    await create_tables()
+    
+    # Startup health checks
+    from app.core.database import check_db_connection
+    from app.core.redis import check_redis_connection
+    
+    if not await check_db_connection():
+        raise RuntimeError("Database connection failed")
+    
+    if not await check_redis_connection():
+        raise RuntimeError("Redis connection failed")
+    
+    logger.info("All systems ready")
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down PdM Platform API")
+
+
+def create_application() -> FastAPI:
+    """Create FastAPI application with all configurations."""
+    
+    app = FastAPI(
+        title="PdM Platform API",
+        description="Production-grade Predictive Maintenance Platform",
+        version="1.0.0",
+        contact={
+            "name": "PdM Platform Team",
+            "email": "support@pdmplatform.com"
+        },
+        license_info={
+            "name": "Proprietary",
+        },
+        lifespan=lifespan,
+        docs_url=None,  # Custom docs below
+        redoc_url=None,
+    )
+    
+    # Custom OpenAPI schema
+    def custom_openapi():
+        if app.openapi_schema:
+            return app.openapi_schema
+        
+        openapi_schema = get_openapi(
+            title="PdM Platform API",
+            version="1.0.0",
+            description="Production-grade Predictive Maintenance Platform API",
+            routes=app.routes,
+        )
+        
+        # Add security schemes
+        openapi_schema["components"]["securitySchemes"] = {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            },
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-Key",
+            }
+        }
+        
+        app.openapi_schema = openapi_schema
+        return app.openapi_schema
+    
+    app.openapi = custom_openapi
+    
+    return app
+
+
+# Create app instance
+app = create_application()
+
+# Setup logging
+setup_logging()
+
+# Security middleware
+app.add_middleware(
+    TrustedHostMiddleware, 
+    allowed_hosts=settings.ALLOWED_HOSTS
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Custom middleware
+app.add_middleware(RateLimitMiddleware)
+app.add_middleware(TenantMiddleware)
+app.add_middleware(AuthenticationMiddleware)
+
+
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    """Collect metrics for all requests."""
+    start_time = time.time()
+    
+    response = await call_next(request)
+    
+    duration = time.time() - start_time
+    
+    # Record metrics
+    REQUEST_COUNT.labels(
+        method=request.method,
+        endpoint=request.url.path,
+        status=response.status_code
+    ).inc()
+    
+    REQUEST_DURATION.labels(
+        method=request.method,
+        endpoint=request.url.path
+    ).observe(duration)
+    
+    # Add timing header
+    response.headers["X-Process-Time"] = str(duration)
+    
+    return response
+
+
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    """Add security headers to all responses."""
+    response = await call_next(request)
+    
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    
+    return response
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Custom HTTP exception handler."""
+    logger.warning(
+        f"HTTP {exc.status_code}: {exc.detail}",
+        extra={"path": request.url.path, "method": request.method}
+    )
+    
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": exc.detail,
+            "status_code": exc.status_code,
+            "timestamp": time.time(),
+            "path": request.url.path
+        }
+    )
+
+
+@app.exception_handler(500)
+async def internal_error_handler(request: Request, exc: Exception):
+    """Handle internal server errors."""
+    logger.error(
+        f"Internal server error: {str(exc)}",
+        extra={"path": request.url.path, "method": request.method},
+        exc_info=True
+    )
+    
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal server error",
+            "status_code": 500,
+            "timestamp": time.time(),
+            "path": request.url.path
+        }
+    )
+
+
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui_html():
+    """Custom Swagger UI with branding."""
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=f"{app.title} - Interactive API Documentation",
+        swagger_js_url="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js",
+        swagger_css_url="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui.css",
+        swagger_ui_parameters={
+            "defaultModelsExpandDepth": -1,
+            "displayRequestDuration": True,
+            "filter": True,
+            "showExtensions": True,
+        }
+    )
+
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint."""
+    return Response(generate_latest(), media_type="text/plain")
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {
+        "status": "healthy",
+        "timestamp": time.time(),
+        "version": "1.0.0"
+    }
+
+
+@app.get("/")
+async def root():
+    """API root endpoint."""
+    return {
+        "service": "PdM Platform API",
+        "version": "1.0.0",
+        "status": "operational",
+        "documentation": "/docs",
+        "health": "/health",
+        "metrics": "/metrics"
+    }
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=os.getenv("ENVIRONMENT") == "development"
+    )

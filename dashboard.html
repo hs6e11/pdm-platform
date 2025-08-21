@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PdM Platform - Live Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .status-online { background-color: #22c55e; }
+        .status-maintenance { background-color: #f59e0b; }
+        .status-offline { background-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold text-gray-900">🏭 Predictive Maintenance Dashboard</h1>
+                <p class="text-gray-600 mt-2">Real-time monitoring • Live since <span id="startTime"></span></p>
+            </div>
+
+            <!-- Real-time Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <span class="text-2xl">🟢</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Online Machines</p>
+                            <p id="onlineMachines" class="text-3xl font-bold text-gray-900">2/3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <span class="text-2xl">📊</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Avg Temperature</p>
+                            <p id="avgTemp" class="text-3xl font-bold text-gray-900">--°C</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-orange-100 rounded-full">
+                            <span class="text-2xl">⚠️</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Alerts</p>
+                            <p id="activeAlerts" class="text-3xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <span class="text-2xl">🔄</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Data Points</p>
+                            <p id="dataPoints" class="text-3xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Temperature Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🌡️ Temperature Monitoring</h3>
+                    <canvas id="temperatureChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Electrical Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">⚡ Electrical Parameters</h3>
+                    <canvas id="electricalChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Machine Status and Recent Activity -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Machine Status -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🏭 Machine Status</h3>
+                    <div id="machinesList" class="space-y-4">
+                        <!-- Machines will be populated here -->
+                    </div>
+                </div>
+
+                <!-- ML Insights -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🤖 ML Insights</h3>
+                    <div id="mlInsights" class="space-y-4">
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="text-green-500 text-xl mr-3">✅</span>
+                                <div>
+                                    <p class="font-medium text-green-900">Normal Operation</p>
+                                    <p class="text-sm text-green-700">All parameters within expected ranges</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Data Feed -->
+            <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">📡 Live Data Feed</h3>
+                <div id="liveDataFeed" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm h-40 overflow-y-auto">
+                    <div>🚀 PdM Platform Live Data Feed Started...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize dashboard
+        document.getElementById('startTime').textContent = new Date().toLocaleTimeString();
+        
+        // Data storage
+        let sensorData = [];
+        let dataPointCount = 0;
+
+        // Initialize charts
+        const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+        const tempChart = new Chart(tempCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [],
+                    borderColor: 'rgb(239, 68, 68)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: false }
+                }
+            }
+        });
+
+        const elecCtx = document.getElementById('electricalChart').getContext('2d');
+        const elecChart = new Chart(elecCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Current (A)',
+                    data: [],
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4
+                }, {
+                    label: 'Power (W)',
+                    data: [],
+                    borderColor: 'rgb(16, 185, 129)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: false },
+                    y1: { type: 'linear', position: 'right', beginAtZero: false }
+                }
+            }
+        });
+
+        // Simulate real-time data (replace with actual API calls)
+        function updateDashboard() {
+            const now = new Date();
+            const timeLabel = now.toLocaleTimeString();
+            
+            // Simulate sensor data
+            const temp = 45 + Math.random() * 15;
+            const current = 4 + Math.random() * 3;
+            const power = 800 + Math.random() * 600;
+            
+            // Update charts
+            if (tempChart.data.labels.length > 20) {
+                tempChart.data.labels.shift();
+                tempChart.data.datasets[0].data.shift();
+                elecChart.data.labels.shift();
+                elecChart.data.datasets[0].data.shift();
+                elecChart.data.datasets[1].data.shift();
+            }
+            
+            tempChart.data.labels.push(timeLabel);
+            tempChart.data.datasets[0].data.push(temp);
+            tempChart.update('none');
+            
+            elecChart.data.labels.push(timeLabel);
+            elecChart.data.datasets[0].data.push(current);
+            elecChart.data.datasets[1].data.push(power);
+            elecChart.update('none');
+            
+            // Update metrics
+            document.getElementById('avgTemp').textContent = temp.toFixed(1) + '°C';
+            document.getElementById('dataPoints').textContent = ++dataPointCount;
+            
+            // Update live feed
+            const feed = document.getElementById('liveDataFeed');
+            const entry = document.createElement('div');
+            entry.innerHTML = `[${timeLabel}] 📊 pump-01: Temp=${temp.toFixed(1)}°C, Current=${current.toFixed(1)}A, Power=${power.toFixed(0)}W`;
+            feed.appendChild(entry);
+            feed.scrollTop = feed.scrollHeight;
+            
+            // Test ML service
+            testMLService(temp, current);
+        }
+
+        // Test ML anomaly detection
+        async function testMLService(temp, current) {
+            try {
+                const response = await fetch('http://localhost:8001/inference/anomaly', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        machine_id: 'pump-01',
+                        readings: [{temp_c: temp, current_a: current}]
+                    })
+                });
+                const result = await response.json();
+                
+                const insights = document.getElementById('mlInsights');
+                const isAnomalous = result.anomaly_score > 0.7;
+                insights.innerHTML = `
+                    <div class="p-4 ${isAnomalous ? 'bg-red-50' : 'bg-green-50'} rounded-lg">
+                        <div class="flex items-center">
+                            <span class="${isAnomalous ? 'text-red-500' : 'text-green-500'} text-xl mr-3">
+                                ${isAnomalous ? '⚠️' : '✅'}
+                            </span>
+                            <div>
+                                <p class="font-medium ${isAnomalous ? 'text-red-900' : 'text-green-900'}">
+                                    ${isAnomalous ? 'Anomaly Detected' : 'Normal Operation'}
+                                </p>
+                                <p class="text-sm ${isAnomalous ? 'text-red-700' : 'text-green-700'}">
+                                    Anomaly Score: ${(result.anomaly_score * 100).toFixed(1)}% 
+                                    (Confidence: ${(result.confidence * 100).toFixed(1)}%)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.log('ML service not available:', error);
+            }
+        }
+
+        // Update machines list
+        function updateMachines() {
+            const machines = [
+                {name: 'Main Water Pump', id: 'pump-01', status: 'online', health: 85},
+                {name: 'Conveyor Motor', id: 'motor-02', status: 'online', health: 92},
+                {name: 'Air Compressor', id: 'comp-03', status: 'maintenance', health: 65}
+            ];
+
+            const machinesList = document.getElementById('machinesList');
+            machinesList.innerHTML = machines.map(machine => `
+                <div class="flex items-center justify-between p-3 border rounded-lg">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full status-${machine.status} mr-3"></div>
+                        <div>
+                            <p class="font-medium text-gray-900">${machine.name}</p>
+                            <p class="text-sm text-gray-500">${machine.id}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-gray-900">${machine.health}%</p>
+                        <p class="text-sm text-gray-500">${machine.status}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Start real-time updates
+        updateMachines();
+        setInterval(updateDashboard, 2000); // Update every 2 seconds
+        
+        // Initial update
+        updateDashboard();
+    </script>
+</body>
+</html>

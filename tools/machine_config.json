@@ -1,0 +1,537 @@
+{
+  "clients": {
+    "acme-corp": {
+      "name": "ACME Corporation",
+      "industry": "Manufacturing",
+      "description": "Leading manufacturer of industrial equipment",
+      "icon": "🏢",
+      "cost_savings_target": 125,
+      "machines": [
+        {
+          "id": "acme-pump-01",
+          "name": "Primary Water Pump",
+          "type": "Centrifugal Pump",
+          "device_id": "esp32-acme-001",
+          "sensors": {
+            "temperature": {"base": 45, "variation": 8, "unit": "°C"},
+            "current": {"base": 5.2, "variation": 1.0, "unit": "A"},
+            "power": {"base": 1020, "variation": 200, "unit": "W"},
+            "vibration": {"base": 0.05, "variation": 0.3, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 92,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "monthly"
+          }
+        },
+        {
+          "id": "acme-motor-02",
+          "name": "Conveyor Motor A1",
+          "type": "AC Motor",
+          "device_id": "esp32-acme-002",
+          "sensors": {
+            "temperature": {"base": 38, "variation": 6, "unit": "°C"},
+            "current": {"base": 4.8, "variation": 0.8, "unit": "A"},
+            "power": {"base": 950, "variation": 150, "unit": "W"},
+            "vibration": {"base": 0.03, "variation": 0.2, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 88,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "quarterly"
+          }
+        },
+        {
+          "id": "acme-comp-03",
+          "name": "Air Compressor Unit",
+          "type": "Rotary Compressor",
+          "device_id": "esp32-acme-003",
+          "sensors": {
+            "temperature": {"base": 55, "variation": 12, "unit": "°C"},
+            "current": {"base": 7.2, "variation": 1.5, "unit": "A"},
+            "power": {"base": 1400, "variation": 300, "unit": "W"},
+            "vibration": {"base": 0.08, "variation": 0.4, "unit": "g"}
+          },
+          "operational": {
+            "status": "maintenance",
+            "health_score": 75,
+            "operating_hours": [6, 22],
+            "weekend_operation": false,
+            "maintenance_schedule": "weekly"
+          }
+        },
+        {
+          "id": "acme-fan-04",
+          "name": "Cooling Fan System",
+          "type": "Centrifugal Fan",
+          "device_id": "esp32-acme-004",
+          "sensors": {
+            "temperature": {"base": 32, "variation": 5, "unit": "°C"},
+            "current": {"base": 3.1, "variation": 0.5, "unit": "A"},
+            "power": {"base": 620, "variation": 100, "unit": "W"},
+            "vibration": {"base": 0.02, "variation": 0.15, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 95,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "biannual"
+          }
+        },
+        {
+          "id": "acme-mill-05",
+          "name": "Ball Mill Crusher",
+          "type": "Ball Mill",
+          "device_id": "esp32-acme-005",
+          "sensors": {
+            "temperature": {"base": 68, "variation": 15, "unit": "°C"},
+            "current": {"base": 9.5, "variation": 2.0, "unit": "A"},
+            "power": {"base": 1850, "variation": 400, "unit": "W"},
+            "vibration": {"base": 0.15, "variation": 0.6, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 82,
+            "operating_hours": [8, 20],
+            "weekend_operation": false,
+            "maintenance_schedule": "monthly"
+          }
+        }
+      ]
+    },
+    "tech-solutions": {
+      "name": "Tech Solutions Inc.",
+      "industry": "Industrial Automation",
+      "description": "Advanced industrial automation solutions",
+      "icon": "⚙️",
+      "cost_savings_target": 89,
+      "machines": [
+        {
+          "id": "tech-robot-01",
+          "name": "Robotic Arm Unit 1",
+          "type": "Industrial Robot",
+          "device_id": "esp32-tech-001",
+          "sensors": {
+            "temperature": {"base": 35, "variation": 7, "unit": "°C"},
+            "current": {"base": 6.8, "variation": 1.2, "unit": "A"},
+            "power": {"base": 1320, "variation": 250, "unit": "W"},
+            "vibration": {"base": 0.04, "variation": 0.25, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 96,
+            "operating_hours": [7, 19],
+            "weekend_operation": false,
+            "maintenance_schedule": "quarterly"
+          }
+        },
+        {
+          "id": "tech-servo-02",
+          "name": "Servo Motor Drive",
+          "type": "Servo Motor",
+          "device_id": "esp32-tech-002",
+          "sensors": {
+            "temperature": {"base": 42, "variation": 8, "unit": "°C"},
+            "current": {"base": 4.2, "variation": 0.9, "unit": "A"},
+            "power": {"base": 820, "variation": 180, "unit": "W"},
+            "vibration": {"base": 0.01, "variation": 0.08, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 91,
+            "operating_hours": [7, 19],
+            "weekend_operation": false,
+            "maintenance_schedule": "biannual"
+          }
+        },
+        {
+          "id": "tech-cnc-03",
+          "name": "CNC Machine Center",
+          "type": "CNC Machine",
+          "device_id": "esp32-tech-003",
+          "sensors": {
+            "temperature": {"base": 48, "variation": 10, "unit": "°C"},
+            "current": {"base": 8.1, "variation": 1.8, "unit": "A"},
+            "power": {"base": 1580, "variation": 350, "unit": "W"},
+            "vibration": {"base": 0.06, "variation": 0.35, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 87,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "monthly"
+          }
+        },
+        {
+          "id": "tech-laser-04",
+          "name": "Laser Cutting System",
+          "type": "Laser Cutter",
+          "device_id": "esp32-tech-004",
+          "sensors": {
+            "temperature": {"base": 52, "variation": 12, "unit": "°C"},
+            "current": {"base": 5.9, "variation": 1.1, "unit": "A"},
+            "power": {"base": 1150, "variation": 220, "unit": "W"},
+            "vibration": {"base": 0.03, "variation": 0.18, "unit": "g"}
+          },
+          "operational": {
+            "status": "maintenance",
+            "health_score": 78,
+            "operating_hours": [8, 18],
+            "weekend_operation": false,
+            "maintenance_schedule": "weekly"
+          }
+        },
+        {
+          "id": "tech-press-05",
+          "name": "Hydraulic Press",
+          "type": "Hydraulic Press",
+          "device_id": "esp32-tech-005",
+          "sensors": {
+            "temperature": {"base": 58, "variation": 14, "unit": "°C"},
+            "current": {"base": 7.8, "variation": 1.6, "unit": "A"},
+            "power": {"base": 1520, "variation": 320, "unit": "W"},
+            "vibration": {"base": 0.12, "variation": 0.5, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 89,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "monthly"
+          }
+        }
+      ]
+    },
+    "global-motors": {
+      "name": "Global Motors Ltd.",
+      "industry": "Automotive Manufacturing",
+      "description": "Automotive manufacturing and assembly",
+      "icon": "🚗",
+      "cost_savings_target": 203,
+      "machines": [
+        {
+          "id": "gm-engine-01",
+          "name": "Engine Test Rig",
+          "type": "Test Equipment",
+          "device_id": "esp32-gm-001",
+          "sensors": {
+            "temperature": {"base": 72, "variation": 18, "unit": "°C"},
+            "current": {"base": 12.5, "variation": 2.5, "unit": "A"},
+            "power": {"base": 2450, "variation": 500, "unit": "W"},
+            "vibration": {"base": 0.08, "variation": 0.4, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 85,
+            "operating_hours": [6, 18],
+            "weekend_operation": false,
+            "maintenance_schedule": "weekly"
+          }
+        },
+        {
+          "id": "gm-weld-02",
+          "name": "Welding Robot Station",
+          "type": "Welding Robot",
+          "device_id": "esp32-gm-002",
+          "sensors": {
+            "temperature": {"base": 65, "variation": 15, "unit": "°C"},
+            "current": {"base": 8.9, "variation": 1.8, "unit": "A"},
+            "power": {"base": 1740, "variation": 380, "unit": "W"},
+            "vibration": {"base": 0.05, "variation": 0.3, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 93,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "quarterly"
+          }
+        },
+        {
+          "id": "gm-paint-03",
+          "name": "Paint Booth System",
+          "type": "Paint Booth",
+          "device_id": "esp32-gm-003",
+          "sensors": {
+            "temperature": {"base": 28, "variation": 8, "unit": "°C"},
+            "current": {"base": 3.8, "variation": 0.7, "unit": "A"},
+            "power": {"base": 740, "variation": 150, "unit": "W"},
+            "vibration": {"base": 0.02, "variation": 0.12, "unit": "g"}
+          },
+          "operational": {
+            "status": "offline",
+            "health_score": 65,
+            "operating_hours": [8, 16],
+            "weekend_operation": false,
+            "maintenance_schedule": "emergency"
+          }
+        },
+        {
+          "id": "gm-press-04",
+          "name": "Stamping Press Line",
+          "type": "Stamping Press",
+          "device_id": "esp32-gm-004",
+          "sensors": {
+            "temperature": {"base": 85, "variation": 20, "unit": "°C"},
+            "current": {"base": 15.2, "variation": 3.0, "unit": "A"},
+            "power": {"base": 2960, "variation": 600, "unit": "W"},
+            "vibration": {"base": 0.18, "variation": 0.8, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 88,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "monthly"
+          }
+        },
+        {
+          "id": "gm-assembly-05",
+          "name": "Assembly Line Motor",
+          "type": "Conveyor Motor",
+          "device_id": "esp32-gm-005",
+          "sensors": {
+            "temperature": {"base": 41, "variation": 9, "unit": "°C"},
+            "current": {"base": 4.6, "variation": 0.9, "unit": "A"},
+            "power": {"base": 900, "variation": 180, "unit": "W"},
+            "vibration": {"base": 0.04, "variation": 0.25, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 90,
+            "operating_hours": [6, 22],
+            "weekend_operation": true,
+            "maintenance_schedule": "quarterly"
+          }
+        }
+      ]
+    },
+    "petro-industries": {
+      "name": "Petro Industries",
+      "industry": "Oil & Gas",
+      "description": "Oil refining and petrochemical processing",
+      "icon": "🛢️",
+      "cost_savings_target": 340,
+      "machines": [
+        {
+          "id": "petro-pump-01",
+          "name": "Crude Oil Pump",
+          "type": "Centrifugal Pump",
+          "device_id": "esp32-petro-001",
+          "sensors": {
+            "temperature": {"base": 78, "variation": 22, "unit": "°C"},
+            "current": {"base": 11.8, "variation": 2.2, "unit": "A"},
+            "power": {"base": 2300, "variation": 480, "unit": "W"},
+            "vibration": {"base": 0.12, "variation": 0.6, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 79,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "weekly"
+          }
+        },
+        {
+          "id": "petro-turbine-02",
+          "name": "Gas Turbine Generator",
+          "type": "Gas Turbine",
+          "device_id": "esp32-petro-002",
+          "sensors": {
+            "temperature": {"base": 95, "variation": 25, "unit": "°C"},
+            "current": {"base": 18.5, "variation": 3.5, "unit": "A"},
+            "power": {"base": 3600, "variation": 750, "unit": "W"},
+            "vibration": {"base": 0.15, "variation": 0.7, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 84,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "monthly"
+          }
+        },
+        {
+          "id": "petro-comp-03",
+          "name": "Gas Compressor Unit",
+          "type": "Reciprocating Compressor",
+          "device_id": "esp32-petro-003",
+          "sensors": {
+            "temperature": {"base": 88, "variation": 20, "unit": "°C"},
+            "current": {"base": 14.2, "variation": 2.8, "unit": "A"},
+            "power": {"base": 2770, "variation": 550, "unit": "W"},
+            "vibration": {"base": 0.20, "variation": 0.9, "unit": "g"}
+          },
+          "operational": {
+            "status": "maintenance",
+            "health_score": 72,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "emergency"
+          }
+        },
+        {
+          "id": "petro-reactor-04",
+          "name": "Catalytic Reactor",
+          "type": "Chemical Reactor",
+          "device_id": "esp32-petro-004",
+          "sensors": {
+            "temperature": {"base": 125, "variation": 30, "unit": "°C"},
+            "current": {"base": 22.1, "variation": 4.0, "unit": "A"},
+            "power": {"base": 4300, "variation": 850, "unit": "W"},
+            "vibration": {"base": 0.08, "variation": 0.4, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 86,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "monthly"
+          }
+        },
+        {
+          "id": "petro-distill-05",
+          "name": "Distillation Column",
+          "type": "Distillation Unit",
+          "device_id": "esp32-petro-005",
+          "sensors": {
+            "temperature": {"base": 110, "variation": 28, "unit": "°C"},
+            "current": {"base": 16.7, "variation": 3.2, "unit": "A"},
+            "power": {"base": 3250, "variation": 650, "unit": "W"},
+            "vibration": {"base": 0.06, "variation": 0.35, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 91,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "quarterly"
+          }
+        }
+      ]
+    },
+    "food-processing": {
+      "name": "Food Processing Co.",
+      "industry": "Food & Beverage",
+      "description": "Food manufacturing and packaging",
+      "icon": "🍎",
+      "cost_savings_target": 67,
+      "machines": [
+        {
+          "id": "food-mixer-01",
+          "name": "Industrial Mixer",
+          "type": "Planetary Mixer",
+          "device_id": "esp32-food-001",
+          "sensors": {
+            "temperature": {"base": 35, "variation": 8, "unit": "°C"},
+            "current": {"base": 6.2, "variation": 1.2, "unit": "A"},
+            "power": {"base": 1210, "variation": 240, "unit": "W"},
+            "vibration": {"base": 0.08, "variation": 0.4, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 94,
+            "operating_hours": [5, 21],
+            "weekend_operation": false,
+            "maintenance_schedule": "monthly"
+          }
+        },
+        {
+          "id": "food-oven-02",
+          "name": "Convection Oven System",
+          "type": "Industrial Oven",
+          "device_id": "esp32-food-002",
+          "sensors": {
+            "temperature": {"base": 180, "variation": 40, "unit": "°C"},
+            "current": {"base": 25.5, "variation": 5.0, "unit": "A"},
+            "power": {"base": 4970, "variation": 1000, "unit": "W"},
+            "vibration": {"base": 0.03, "variation": 0.15, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 87,
+            "operating_hours": [5, 21],
+            "weekend_operation": false,
+            "maintenance_schedule": "quarterly"
+          }
+        },
+        {
+          "id": "food-pack-03",
+          "name": "Packaging Machine",
+          "type": "Packaging System",
+          "device_id": "esp32-food-003",
+          "sensors": {
+            "temperature": {"base": 32, "variation": 6, "unit": "°C"},
+            "current": {"base": 4.8, "variation": 0.9, "unit": "A"},
+            "power": {"base": 940, "variation": 190, "unit": "W"},
+            "vibration": {"base": 0.05, "variation": 0.3, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 91,
+            "operating_hours": [6, 20],
+            "weekend_operation": false,
+            "maintenance_schedule": "quarterly"
+          }
+        },
+        {
+          "id": "food-cool-04",
+          "name": "Refrigeration Unit",
+          "type": "Industrial Chiller",
+          "device_id": "esp32-food-004",
+          "sensors": {
+            "temperature": {"base": 2, "variation": 4, "unit": "°C"},
+            "current": {"base": 8.9, "variation": 1.8, "unit": "A"},
+            "power": {"base": 1740, "variation": 350, "unit": "W"},
+            "vibration": {"base": 0.07, "variation": 0.35, "unit": "g"}
+          },
+          "operational": {
+            "status": "maintenance",
+            "health_score": 76,
+            "operating_hours": [0, 23],
+            "weekend_operation": true,
+            "maintenance_schedule": "weekly"
+          }
+        },
+        {
+          "id": "food-belt-05",
+          "name": "Conveyor Belt System",
+          "type": "Belt Conveyor",
+          "device_id": "esp32-food-005",
+          "sensors": {
+            "temperature": {"base": 28, "variation": 5, "unit": "°C"},
+            "current": {"base": 3.2, "variation": 0.6, "unit": "A"},
+            "power": {"base": 620, "variation": 120, "unit": "W"},
+            "vibration": {"base": 0.04, "variation": 0.25, "unit": "g"}
+          },
+          "operational": {
+            "status": "online",
+            "health_score": 89,
+            "operating_hours": [6, 20],
+            "weekend_operation": false,
+            "maintenance_schedule": "biannual"
+          }
+        }
+      ]
+    }
+  },
+  "global_settings": {
+    "data_generation": {
+      "default_interval": 2.0,
+      "anomaly_probability": 0.05,
+      "failure_simulation": true,
+      "seasonal_effects": true
+    },
+    "api_settings": {
+      "base_url": "http://localhost:8000",
+      "timeout": 30,
+      "retry_attempts": 3
+    }
+  }
+}

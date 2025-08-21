@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PdM Platform - Multi-Client Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .status-online { background-color: #22c55e; }
+        .status-maintenance { background-color: #f59e0b; }
+        .status-offline { background-color: #ef4444; }
+        .client-selector { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .machine-card { transition: all 0.2s ease; }
+        .machine-card:hover { transform: scale(1.02); }
+        .connection-indicator { transition: all 0.3s ease; }
+        .connection-online { background-color: #22c55e; }
+        .connection-offline { background-color: #ef4444; }
+        .data-feed { font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Top Navigation -->
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-900">🏭 PdM Platform</h1>
+                        <span class="ml-4 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                            Multi-Client Dashboard
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <span class="text-sm text-gray-500 mr-2">API Status:</span>
+                            <div id="connectionStatus" class="w-3 h-3 connection-indicator rounded-full"></div>
+                            <span id="connectionText" class="text-sm text-gray-500 ml-2">Connecting...</span>
+                        </div>
+                        <span class="text-sm text-gray-500">Live since <span id="startTime"></span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto p-6">
+            <!-- API Configuration -->
+            <div class="mb-6">
+                <div class="bg-white rounded-lg shadow-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <label class="text-sm font-medium text-gray-700">API Endpoint:</label>
+                            <input id="apiEndpoint" type="text" value="http://localhost:8000" 
+                                   class="px-3 py-1 border border-gray-300 rounded text-sm">
+                            <button onclick="connectToAPI()" 
+                                    class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                                Connect
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-500">Data Points:</span>
+                            <span id="dataPointsCount" class="font-bold text-blue-600">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Selector -->
+            <div class="mb-8">
+                <div class="bg-white rounded-lg shadow-lg p-6 client-selector">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">👥 Select Client</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4" id="clientSelector">
+                        <!-- Client buttons will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Client Info -->
+            <div id="clientInfo" class="mb-6 hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold" id="clientName">Client Name</h2>
+                            <p class="text-blue-100" id="clientDescription">Client Description</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-blue-100">Last Update</p>
+                            <p class="text-xl font-bold" id="lastUpdateTime">--:--:--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Metrics -->
+            <div id="clientMetrics" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 hidden">
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <span class="text-2xl">🟢</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Online Machines</p>
+                            <p id="onlineMachinesCount" class="text-3xl font-bold text-gray-900">-/-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <span class="text-2xl">🌡️</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Avg Temperature</p>
+                            <p id="avgTemperature" class="text-3xl font-bold text-gray-900">--°C</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-orange-100 rounded-full">
+                            <span class="text-2xl">⚠️</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Alerts</p>
+                            <p id="activeAlertsCount" class="text-3xl font-bold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <span class="text-2xl">⚡</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Avg Power</p>
+                            <p id="avgPower" class="text-3xl font-bold text-gray-900">--W</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Machine Grid -->
+            <div id="machineGrid" class="mb-8 hidden">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-6">🏭 Machine Overview</h3>
+                    <div id="machinesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Machines will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div id="chartsSection" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 hidden">
+                <!-- Temperature Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🌡️ Fleet Temperature Monitoring</h3>
+                    <canvas id="temperatureChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Power Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">⚡ Fleet Power Consumption</h3>
+                    <canvas id="powerChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Feed and Insights -->
+            <div id="dataSection" class="grid grid-cols-1 lg:grid-cols-2 gap-6 hidden">
+                <!-- Live Data Feed -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">📡 Live Data Feed</h3>
+                    <div id="liveDataFeed" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm h-64 overflow-y-auto data-feed">
+                        <div>🚀 PdM Platform Live Data Feed...</div>
+                    </div>
+                </div>
+
+                <!-- Recent Alerts -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🚨 Recent Alerts</h3>
+                    <div id="recentAlerts" class="space-y-3 max-h-64 overflow-y-auto">
+                        <div class="text-gray-500 text-sm">No alerts detected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let apiEndpoint = 'http://localhost:8000';
+        let currentClient = null;
+        let machineData = new Map(); // Store latest data for each machine
+        let clients = new Map(); // Store client configurations
+        let tempChart = null;
+        let powerChart = null;
+        let updateInterval = null;
+        let isConnected = false;
+        let dataPointsReceived = 0;
+
+        // Initialize dashboard
+        document.getElementById('startTime').textContent = new Date().toLocaleTimeString();
+
+        // API Connection Management
+        async function connectToAPI() {
+            const endpoint = document.getElementById('apiEndpoint').value;
+            apiEndpoint = endpoint;
+            
+            try {
+                updateConnectionStatus('connecting', 'Connecting...');
+                
+                // Test API connection
+                const response = await fetch(`${apiEndpoint}/api/v1/health`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    isConnected = true;
+                    updateConnectionStatus('online', 'Connected');
+                    await loadClientsFromAPI();
+                    startDataPolling();
+                } else {
+                    throw new Error(`API returned ${response.status}`);
+                }
+            } catch (error) {
+                console.error('API connection failed:', error);
+                isConnected = false;
+                updateConnectionStatus('offline', 'Disconnected');
+                loadDefaultClients(); // Fallback to default configuration
+            }
+        }
+
+        function updateConnectionStatus(status, text) {
+            const statusElement = document.getElementById('connectionStatus');
+            const textElement = document.getElementById('connectionText');
+            
+            statusElement.className = `w-3 h-3 connection-indicator rounded-full connection-${status}`;
+            textElement.textContent = text;
+            
+            if (status === 'connecting') {
+                statusElement.classList.add('animate-pulse');
+            } else {
+                statusElement.classList.remove('animate-pulse');
+            }
+        }
+
+        // Load client configurations
+        async function loadClientsFromAPI() {
+            try {
+                const response = await fetch(`${apiEndpoint}/api/v1/clients`);
+                if (response.ok) {
+                    const clientsData = await response.json();
+                    populateClientsFromAPI(clientsData);
+                } else {
+                    throw new Error('Failed to load clients from API');
+                }
+            } catch (error) {
+                console.warn('Loading default clients:', error);
+                loadDefaultClients();
+            }
+        }
+
+        function loadDefaultClients() {
+            // Default client configuration matching your data generator
+            const defaultClients = {
+                'acme-corp': {
+                    name: 'ACME Corporation',
+                    description: 'Leading manufacturer of industrial equipment',
+                    icon: '🏢',
+                    industry: 'Manufacturing',
+                    machines: ['acme-pump-01', 'acme-motor-02', 'acme-comp-03', 'acme-fan-04', 'acme-mill-05']
+                },
+                'tech-solutions': {
+                    name: 'Tech Solutions Inc.',
+                    description: 'Advanced industrial automation solutions',
+                    icon: '⚙️',
+                    industry: 'Industrial Automation',
+                    machines: ['tech-robot-01', 'tech-servo-02', 'tech-cnc-03', 'tech-laser-04', 'tech-press-05']
+                },
+                'global-motors': {
+                    name: 'Global Motors Ltd.',
+                    description: 'Automotive manufacturing and assembly',
+                    icon: '🚗',
+                    industry: 'Automotive',
+                    machines: ['gm-engine-01', 'gm-weld-02', 'gm-paint-03', 'gm-press-04', 'gm-assembly-05']
+                },
+                'petro-industries': {
+                    name: 'Petro Industries',
+                    description: 'Oil refining and petrochemical processing',
+                    icon: '🛢️',
+                    industry: 'Oil & Gas',
+                    machines: ['petro-pump-01', 'petro-turbine-02', 'petro-comp-03', 'petro-reactor-04', 'petro-distill-05']
+                },
+                'food-processing': {
+                    name: 'Food Processing Co.',
+                    description: 'Food manufacturing and packaging',
+                    icon: '🍎',
+                    industry: 'Food & Beverage',
+                    machines: ['food-mixer-01', 'food-oven-02', 'food-pack-03', 'food-cool-04', 'food-belt-05']
+                }
+            };
+
+            for (const [clientId, clientConfig] of Object.entries(defaultClients)) {
+                clients.set(clientId, clientConfig);
+            }
+            
+            renderClientSelector();
+        }
+
+        function populateClientsFromAPI(clientsData) {
+            clients.clear();
+            for (const [clientId, clientConfig] of Object.entries(clientsData)) {
+                clients.set(clientId, clientConfig);
+            }
+            renderClientSelector();
+        }
+
+        function renderClientSelector() {
+            const container = document.getElementById('clientSelector');
+            container.innerHTML = '';
+
+            for (const [clientId, clientConfig] of clients) {
+                const clientMachines = Array.from(machineData.values())
+                    .filter(machine => machine.client_id === clientId);
+                const activeMachines = clientMachines.filter(m => m.metadata?.status !== 'offline').length;
+                const totalMachines = clientConfig.machines ? clientConfig.machines.length : clientMachines.length;
+
+                const button = document.createElement('button');
+                button.onclick = () => selectClient(clientId);
+                button.className = 'client-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all';
+                button.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-2xl mb-2">${clientConfig.icon}</div>
+                        <div class="font-semibold">${clientConfig.name}</div>
+                        <div class="text-sm text-gray-500">${clientConfig.industry}</div>
+                        <div class="text-sm text-green-600">${activeMachines}/${totalMachines} machines</div>
+                    </div>
+                `;
+                container.appendChild(button);
+            }
+        }
+
+        function selectClient(clientId) {
+            currentClient = clientId;
+            const clientConfig = clients.get(clientId);
+            
+            // Update UI
+            updateClientSelector(clientId);
+            showClientData(clientConfig);
+            initializeCharts();
+            
+            // Show sections
+            document.getElementById('clientInfo').classList.remove('hidden');
+            document.getElementById('clientMetrics').classList.remove('hidden');
+            document.getElementById('machineGrid').classList.remove('hidden');
+            document.getElementById('chartsSection').classList.remove('hidden');
+            document.getElementById('dataSection').classList.remove('hidden');
+        }
+
+        function updateClientSelector(selectedId) {
+            // Reset all buttons
+            document.querySelectorAll('.client-btn').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'bg-blue-50');
+                btn.classList.add('border-gray-200');
+            });
+            
+            // Highlight selected
+            const buttons = document.querySelectorAll('.client-btn');
+            const index = Array.from(clients.keys()).indexOf(selectedId);
+            if (index >= 0 && buttons[index]) {
+                buttons[index].classList.add('border-blue-500', 'bg-blue-50');
+                buttons[index].classList.remove('border-gray-200');
+            }
+        }
+
+        function showClientData(clientConfig) {
+            // Update client info
+            document.getElementById('clientName').textContent = clientConfig.name;
+            document.getElementById('clientDescription').textContent = clientConfig.description;
+            
+            updateClientMetrics();
+            updateMachinesGrid();
+        }
+
+        function updateClientMetrics() {
+            if (!currentClient) return;
+
+            const clientMachines = Array.from(machineData.values())
+                .filter(machine => machine.client_id === currentClient);
+
+            if (clientMachines.length === 0) {
+                document.getElementById('onlineMachinesCount').textContent = '0/0';
+                document.getElementById('avgTemperature').textContent = '--°C';
+                document.getElementById('activeAlertsCount').textContent = '0';
+                document.getElementById('avgPower').textContent = '--W';
+                return;
+            }
+
+            // Online machines count
+            const onlineMachines = clientMachines.filter(m => m.metadata?.status === 'online').length;
+            document.getElementById('onlineMachinesCount').textContent = `${onlineMachines}/${clientMachines.length}`;
+
+            // Average temperature
+            const avgTemp = clientMachines.reduce((sum, m) => sum + (m.sensor_data?.temperature_c || 0), 0) / clientMachines.length;
+            document.getElementById('avgTemperature').textContent = `${avgTemp.toFixed(1)}°C`;
+
+            // Active alerts (health score < 80 or high temperature)
+            const alerts = clientMachines.filter(m => 
+                (m.metadata?.health_score < 80) || 
+                (m.sensor_data?.temperature_c > 80)
+            ).length;
+            document.getElementById('activeAlertsCount').textContent = alerts;
+
+            // Average power
+            const avgPower = clientMachines.reduce((sum, m) => sum + (m.sensor_data?.power_w || 0), 0) / clientMachines.length;
+            document.getElementById('avgPower').textContent = `${avgPower.toFixed(0)}W`;
+
+            // Update last update time
+            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleTimeString();
+        }
+
+        function updateMachinesGrid() {
+            if (!currentClient) return;
+
+            const machinesList = document.getElementById('machinesList');
+            const clientMachines = Array.from(machineData.values())
+                .filter(machine => machine.client_id === currentClient);
+
+            machinesList.innerHTML = clientMachines.map(machine => {
+                const sensorData = machine.sensor_data || {};
+                const metadata = machine.metadata || {};
+                const status = metadata.status || 'unknown';
+                const health = metadata.health_score || 0;
+                const lastUpdate = machine.timestamp ? new Date(machine.timestamp).toLocaleTimeString() : '--:--:--';
+
+                return `
+                    <div class="machine-card bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-semibold text-gray-900">${metadata.machine_name || machine.machine_id}</h4>
+                            <div class="w-3 h-3 rounded-full status-${status}"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">${metadata.machine_type || 'Unknown Type'}</p>
+                        <p class="text-xs text-gray-500 mb-3">${machine.machine_id}</p>
+                        
+                        <div class="space-y-2 mb-3">
+                            <div class="flex justify-between text-xs">
+                                <span>Temp:</span>
+                                <span class="font-medium">${sensorData.temperature_c?.toFixed(1) || '--'}°C</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span>Power:</span>
+                                <span class="font-medium">${sensorData.power_w?.toFixed(0) || '--'}W</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span>Vibration:</span>
+                                <span class="font-medium">${sensorData.vibration_x_g?.toFixed(3) || '--'}g</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <span class="text-xs text-gray-500 mr-2">Health:</span>
+                                    <span class="text-sm font-bold ${health > 85 ? 'text-green-600' : health > 75 ? 'text-yellow-600' : 'text-red-600'}">${health.toFixed(1)}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="h-2 rounded-full ${health > 85 ? 'bg-green-500' : health > 75 ? 'bg-yellow-500' : 'bg-red-500'}" 
+                                         style="width: ${health}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 rounded-full text-xs ${
+                                status === 'online' ? 'bg-green-100 text-green-800' :
+                                status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-red-100 text-red-800'
+                            }">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                            <span class="text-xs text-gray-400">${lastUpdate}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function initializeCharts() {
+            // Destroy existing charts
+            if (tempChart) tempChart.destroy();
+            if (powerChart) powerChart.destroy();
+
+            // Temperature Chart
+            const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+            tempChart = new Chart(tempCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+
+            // Power Chart
+            const powerCtx = document.getElementById('powerChart').getContext('2d');
+            powerChart = new Chart(powerCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Power (W)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+
+            updateCharts();
+        }
+
+        function updateCharts() {
+            if (!currentClient || !tempChart || !powerChart) return;
+
+            const clientMachines = Array.from(machineData.values())
+                .filter(machine => machine.client_id === currentClient && machine.metadata?.status === 'online');
+
+            if (clientMachines.length === 0) return;
+
+            const now = new Date().toLocaleTimeString();
+            const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+
+            // Update temperature chart
+            if (tempChart.data.labels.length > 20) {
+                tempChart.data.labels.shift();
+                tempChart.data.datasets.forEach(dataset => dataset.data.shift());
+            }
+
+            tempChart.data.labels.push(now);
+
+            // Update or create datasets for each machine
+            clientMachines.forEach((machine, index) => {
+                let dataset = tempChart.data.datasets.find(d => d.label === machine.machine_id);
+                if (!dataset) {
+                    dataset = {
+                        label: machine.metadata?.machine_name || machine.machine_id,
+                        data: [],
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '20',
+                        tension: 0.4,
+                        fill: false
+                    };
+                    tempChart.data.datasets.push(dataset);
+                }
+                dataset.data.push(machine.sensor_data?.temperature_c || 0);
+            });
+
+            tempChart.update('none');
+
+            // Update power chart similarly
+            if (powerChart.data.labels.length > 20) {
+                powerChart.data.labels.shift();
+                powerChart.data.datasets.forEach(dataset => dataset.data.shift());
+            }
+
+            powerChart.data.labels.push(now);
+
+            clientMachines.forEach((machine, index) => {
+                let dataset = powerChart.data.datasets.find(d => d.label === machine.machine_id);
+                if (!dataset) {
+                    dataset = {
+                        label: machine.metadata?.machine_name || machine.machine_id,
+                        data: [],
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '20',
+                        tension: 0.4,
+                        fill: false
+                    };
+                    powerChart.data.datasets.push(dataset);
+                }
+                dataset.data.push(machine.sensor_data?.power_w || 0);
+            });
+
+            powerChart.update('none');
+        }
+
+        // Data polling and updates
+        function startDataPolling() {
+            if (updateInterval) clearInterval(updateInterval);
+            
+            updateInterval = setInterval(async () => {
+                await pollLatestData();
+                if (currentClient) {
+                    updateClientMetrics();
+                    updateMachinesGrid();
+                    updateCharts();
+                }
+                updateDataPointsCounter();
+            }, 2000);
+        }
+
+        async function pollLatestData() {
+            try {
+                const response = await fetch(`${apiEndpoint}/api/v1/data/latest`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const latestData = await response.json();
+                    processIncomingData(latestData);
+                    updateConnectionStatus('online', 'Connected');
+                } else {
+                    throw new Error(`API error: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Data polling failed:', error);
+                updateConnectionStatus('offline', 'Disconnected');
+                // Simulate data for demonstration
+                simulateIncomingData();
+            }
+        }
+
+        function processIncomingData(data) {
+            if (Array.isArray(data)) {
+                data.forEach(dataPoint => {
+                    machineData.set(dataPoint.machine_id, dataPoint);
+                    updateLiveDataFeed(dataPoint);
+                    checkForAlerts(dataPoint);
+                    dataPointsReceived++;
+                });
+            } else if (data.machine_id) {
+                machineData.set(data.machine_id, data);
+                updateLiveDataFeed(data);
+                checkForAlerts(data);
+                dataPointsReceived++;
+            }
+        }
+
+        function simulateIncomingData() {
+            // Simulate data for demonstration when API is not available
+            const clientsArray = Array.from(clients.keys());
+            if (clientsArray.length === 0) return;
+
+            const randomClient = clientsArray[Math.floor(Math.random() * clientsArray.length)];
+            const clientConfig = clients.get(randomClient);
+            
+            if (clientConfig.machines && clientConfig.machines.length > 0) {
+                const randomMachine = clientConfig.machines[Math.floor(Math.random() * clientConfig.machines.length)];
+                
+                const simulatedData = {
+                    machine_id: randomMachine,
+                    client_id: randomClient,
+                    device_id: `esp32-${randomClient}-sim`,
+                    timestamp: new Date().toISOString(),
+                    sensor_data: {
+                        temperature_c: 45 + Math.random() * 20,
+                        current_a: 4 + Math.random() * 3,
+                        power_w: 800 + Math.random() * 600,
+                        vibration_x_g: Math.random() * 0.2,
+                        vibration_y_g: Math.random() * 0.15,
+                        vibration_z_g: Math.random() * 0.1
+                    },
+                    metadata: {
+                        machine_name: randomMachine.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                        machine_type: 'Simulated Machine',
+                        status: Math.random() > 0.1 ? 'online' : 'maintenance',
+                        health_score: 70 + Math.random() * 25
+                    }
+                };
+                
+                processIncomingData(simulatedData);
+            }
+        }
+
+        function updateLiveDataFeed(dataPoint) {
+            const feed = document.getElementById('liveDataFeed');
+            const timestamp = new Date(dataPoint.timestamp).toLocaleTimeString();
+            const sensorData = dataPoint.sensor_data || {};
+            
+            const entry = document.createElement('div');
+            entry.className = 'text-xs mb-1';
+            entry.innerHTML = `[${timestamp}] 📊 ${dataPoint.machine_id}: Temp=${sensorData.temperature_c?.toFixed(1)}°C, Power=${sensorData.power_w?.toFixed(0)}W, Vib=${sensorData.vibration_x_g?.toFixed(3)}g`;
+            
+            feed.insertBefore(entry, feed.firstChild);
+            
+            // Keep only last 50 entries
+            while (feed.children.length > 50) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        function checkForAlerts(dataPoint) {
+            const sensorData = dataPoint.sensor_data || {};
+            const metadata = dataPoint.metadata || {};
+            const alerts = [];
+            
+            // Temperature alert
+            if (sensorData.temperature_c > 80) {
+                alerts.push({
+                    type: 'warning',
+                    message: `High temperature: ${sensorData.temperature_c.toFixed(1)}°C`,
+                    machine: dataPoint.machine_id
+                });
+            }
+            
+            // Health score alert
+            if (metadata.health_score < 75) {
+                alerts.push({
+                    type: 'danger',
+                    message: `Low health score: ${metadata.health_score.toFixed(1)}%`,
+                    machine: dataPoint.machine_id
+                });
+            }
+            
+            // Vibration alert
+            if (sensorData.vibration_x_g > 0.5) {
+                alerts.push({
+                    type: 'warning',
+                    message: `High vibration: ${sensorData.vibration_x_g.toFixed(3)}g`,
+                    machine: dataPoint.machine_id
+                });
+            }
+            
+            // Add alerts to UI
+            alerts.forEach(alert => addAlert(alert));
+        }
+
+        function addAlert(alert) {
+            const alertsContainer = document.getElementById('recentAlerts');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const alertElement = document.createElement('div');
+            alertElement.className = `p-3 rounded-lg border-l-4 ${
+                alert.type === 'danger' ? 'bg-red-50 border-red-400' : 'bg-yellow-50 border-yellow-400'
+            }`;
+            
+            alertElement.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium text-sm ${alert.type === 'danger' ? 'text-red-800' : 'text-yellow-800'}">
+                            ${alert.machine}
+                        </p>
+                        <p class="text-sm ${alert.type === 'danger' ? 'text-red-600' : 'text-yellow-600'}">
+                            ${alert.message}
+                        </p>
+                    </div>
+                    <span class="text-xs text-gray-500">${timestamp}</span>
+                </div>
+            `;
+            
+            // Remove "No alerts" message if present
+            if (alertsContainer.children.length === 1 && 
+                alertsContainer.children[0].textContent === 'No alerts detected') {
+                alertsContainer.innerHTML = '';
+            }
+            
+            alertsContainer.insertBefore(alertElement, alertsContainer.firstChild);
+            
+            // Keep only last 10 alerts
+            while (alertsContainer.children.length > 10) {
+                alertsContainer.removeChild(alertsContainer.lastChild);
+            }
+        }
+
+        function updateDataPointsCounter() {
+            document.getElementById('dataPointsCount').textContent = dataPointsReceived;
+        }
+
+        // Initialize the dashboard
+        async function initializeDashboard() {
+            await connectToAPI();
+            
+            // If no connection, start with simulation
+            if (!isConnected) {
+                console.log('Starting in simulation mode...');
+                loadDefaultClients();
+                startDataPolling();
+            }
+        }
+
+        // Start the dashboard when page loads
+        window.addEventListener('load', initializeDashboard);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+
+        // Auto-reconnect functionality
+        setInterval(async () => {
+            if (!isConnected) {
+                console.log('Attempting auto-reconnect...');
+                await connectToAPI();
+            }
+        }, 30000); // Try to reconnect every 30 seconds
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            // Ctrl+R or Cmd+R to refresh connection
+            if ((event.ctrlKey || event.metaKey) && event.key === 'r') {
+                event.preventDefault();
+                connectToAPI();
+            }
+            
+            // Ctrl+1-5 to select clients
+            if ((event.ctrlKey || event.metaKey) && event.key >= '1' && event.key <= '5') {
+                event.preventDefault();
+                const clientsArray = Array.from(clients.keys());
+                const index = parseInt(event.key) - 1;
+                if (index < clientsArray.length) {
+                    selectClient(clientsArray[index]);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

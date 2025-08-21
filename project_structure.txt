@@ -1,0 +1,106 @@
+.
+├── Makefile
+├── README.md
+├── backend
+│   ├── Dockerfile
+│   ├── __pycache__
+│   │   └── simple_api.cpython-311.pyc
+│   ├── app
+│   │   ├── __pycache__
+│   │   │   └── main.cpython-311.pyc
+│   │   ├── core
+│   │   │   ├── __pycache__
+│   │   │   │   ├── config.cpython-311.pyc
+│   │   │   │   ├── database.cpython-311.pyc
+│   │   │   │   ├── logging.cpython-311.pyc
+│   │   │   │   └── redis.cpython-311.pyc
+│   │   │   ├── config.py
+│   │   │   ├── database.py
+│   │   │   ├── logging.py
+│   │   │   └── redis.py
+│   │   ├── main.py
+│   │   ├── main.py.backup
+│   │   ├── middleware
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-311.pyc
+│   │   │   │   ├── auth.cpython-311.pyc
+│   │   │   │   ├── rate_limit.cpython-311.pyc
+│   │   │   │   └── tenant.cpython-311.pyc
+│   │   │   ├── auth.py
+│   │   │   ├── rate_limit.py
+│   │   │   └── tenant.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-311.pyc
+│   │   │   │   └── database.cpython-311.pyc
+│   │   │   └── database.py
+│   │   ├── routers
+│   │   │   └── __init__.py
+│   │   └── services
+│   │       └── __init__.py
+│   ├── complete_backend.py
+│   ├── migrations
+│   │   └── init.sql
+│   ├── ml_service
+│   │   ├── __pycache__
+│   │   │   └── main.cpython-311.pyc
+│   │   └── main.py
+│   ├── pdm_platform.db
+│   ├── requirements.txt
+│   ├── simple_api.py
+│   ├── simple_api_backup.py
+│   ├── simple_backend.py
+│   └── tests
+│       ├── integration
+│       └── unit
+├── dashboard.html
+├── deploy
+│   ├── k8s
+│   ├── monitoring
+│   └── terraform
+├── docker-compose.override.yml
+├── docker-compose.yml
+├── docs
+├── enhanced_dashboard.html
+├── frontend
+│   ├── Dockerfile.dev
+│   ├── next-env.d.ts
+│   ├── next.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── components
+│   │   │   ├── Layout
+│   │   │   └── ui
+│   │   ├── contexts
+│   │   ├── hooks
+│   │   ├── lib
+│   │   ├── pages
+│   │   │   └── index.tsx
+│   │   └── styles
+│   │       └── globals.css
+│   ├── tailwind.config.js
+│   └── tsconfig.json
+├── incredible_dashboard.html
+├── machine_config.json
+├── ml
+│   ├── Dockerfile
+│   ├── models
+│   ├── notebooks
+│   ├── requirements.txt
+│   └── service
+│       ├── __pycache__
+│       │   └── main.cpython-311.pyc
+│       └── main.py
+├── multi-client-dashboard.html
+├── project_structure.txt
+├── requirements.txt
+└── tools
+    ├── machine_config.json
+    ├── multi_client_generator.py
+    └── send_payload.py
+
+42 directories, 62 files

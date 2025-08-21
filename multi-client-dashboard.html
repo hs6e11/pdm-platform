@@ -1,0 +1,521 @@
+# Create an enhanced multi-client dashboard
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PdM Platform - Multi-Client Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .status-online { background-color: #22c55e; }
+        .status-maintenance { background-color: #f59e0b; }
+        .status-offline { background-color: #ef4444; }
+        .client-selector { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .machine-card { transition: all 0.2s ease; }
+        .machine-card:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Top Navigation -->
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-900">🏭 PdM Platform</h1>
+                        <span class="ml-4 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                            Multi-Client Dashboard
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-500">Live since <span id="startTime"></span></span>
+                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto p-6">
+            <!-- Client Selector -->
+            <div class="mb-8">
+                <div class="bg-white rounded-lg shadow-lg p-6 client-selector">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">👥 Select Client</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        <button onclick="selectClient('acme-corp')" class="client-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🏢</div>
+                                <div class="font-semibold">ACME Corp</div>
+                                <div class="text-sm text-gray-500">Manufacturing</div>
+                                <div class="text-sm text-green-600">5 machines</div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectClient('tech-solutions')" class="client-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">⚙️</div>
+                                <div class="font-semibold">Tech Solutions</div>
+                                <div class="text-sm text-gray-500">Industrial</div>
+                                <div class="text-sm text-green-600">5 machines</div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectClient('global-motors')" class="client-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🚗</div>
+                                <div class="font-semibold">Global Motors</div>
+                                <div class="text-sm text-gray-500">Automotive</div>
+                                <div class="text-sm text-green-600">5 machines</div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectClient('petro-industries')" class="client-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🛢️</div>
+                                <div class="font-semibold">Petro Industries</div>
+                                <div class="text-sm text-gray-500">Oil & Gas</div>
+                                <div class="text-sm text-green-600">5 machines</div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectClient('food-processing')" class="client-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">🍎</div>
+                                <div class="font-semibold">Food Processing</div>
+                                <div class="text-sm text-gray-500">Food & Beverage</div>
+                                <div class="text-sm text-green-600">5 machines</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Client Info -->
+            <div id="clientInfo" class="mb-6 hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold" id="clientName">Client Name</h2>
+                            <p class="text-blue-100" id="clientDescription">Client Description</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-blue-100">Contract Status</p>
+                            <p class="text-xl font-bold">Active</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Metrics -->
+            <div id="clientMetrics" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 hidden">
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <span class="text-2xl">🟢</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Online Machines</p>
+                            <p id="onlineMachinesCount" class="text-3xl font-bold text-gray-900">-/-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <span class="text-2xl">📊</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Avg Health Score</p>
+                            <p id="avgHealthScore" class="text-3xl font-bold text-gray-900">--%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-orange-100 rounded-full">
+                            <span class="text-2xl">⚠️</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Alerts</p>
+                            <p id="activeAlertsCount" class="text-3xl font-bold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <span class="text-2xl">💰</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Cost Savings</p>
+                            <p id="costSavings" class="text-3xl font-bold text-gray-900">$--K</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Machine Grid -->
+            <div id="machineGrid" class="mb-8 hidden">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-6">🏭 Machine Overview</h3>
+                    <div id="machinesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Machines will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div id="chartsSection" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 hidden">
+                <!-- Temperature Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🌡️ Fleet Temperature Monitoring</h3>
+                    <canvas id="temperatureChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">⚡ Fleet Performance</h3>
+                    <canvas id="performanceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- ML Insights and Recent Activity -->
+            <div id="insightsSection" class="grid grid-cols-1 lg:grid-cols-2 gap-6 hidden">
+                <!-- ML Insights -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">🤖 AI Insights</h3>
+                    <div id="mlInsights" class="space-y-4">
+                        <!-- ML insights will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">📡 Recent Activity</h3>
+                    <div id="recentActivity" class="space-y-3 max-h-64 overflow-y-auto">
+                        <!-- Recent activity will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize dashboard
+        document.getElementById('startTime').textContent = new Date().toLocaleTimeString();
+        
+        // Client configurations
+        const clients = {
+            'acme-corp': {
+                name: 'ACME Corporation',
+                description: 'Leading manufacturer of industrial equipment',
+                icon: '🏢',
+                machines: [
+                    {id: 'acme-pump-01', name: 'Primary Water Pump', type: 'Centrifugal Pump', status: 'online', health: 92},
+                    {id: 'acme-motor-02', name: 'Conveyor Motor A1', type: 'AC Motor', status: 'online', health: 88},
+                    {id: 'acme-comp-03', name: 'Air Compressor Unit', type: 'Rotary Compressor', status: 'maintenance', health: 75},
+                    {id: 'acme-fan-04', name: 'Cooling Fan System', type: 'Centrifugal Fan', status: 'online', health: 95},
+                    {id: 'acme-mill-05', name: 'Ball Mill Crusher', type: 'Ball Mill', status: 'online', health: 82}
+                ],
+                baseTemp: 45, tempVariation: 8,
+                costSavings: 125
+            },
+            'tech-solutions': {
+                name: 'Tech Solutions Inc.',
+                description: 'Advanced industrial automation solutions',
+                icon: '⚙️',
+                machines: [
+                    {id: 'tech-robot-01', name: 'Robotic Arm Unit 1', type: 'Industrial Robot', status: 'online', health: 96},
+                    {id: 'tech-servo-02', name: 'Servo Motor Drive', type: 'Servo Motor', status: 'online', health: 91},
+                    {id: 'tech-cnc-03', name: 'CNC Machine Center', type: 'CNC Machine', status: 'online', health: 87},
+                    {id: 'tech-laser-04', name: 'Laser Cutting System', type: 'Laser Cutter', status: 'maintenance', health: 78},
+                    {id: 'tech-press-05', name: 'Hydraulic Press', type: 'Hydraulic Press', status: 'online', health: 89}
+                ],
+                baseTemp: 38, tempVariation: 12,
+                costSavings: 89
+            },
+            'global-motors': {
+                name: 'Global Motors Ltd.',
+                description: 'Automotive manufacturing and assembly',
+                icon: '🚗',
+                machines: [
+                    {id: 'gm-engine-01', name: 'Engine Test Rig', type: 'Test Equipment', status: 'online', health: 85},
+                    {id: 'gm-weld-02', name: 'Welding Robot Station', type: 'Welding Robot', status: 'online', health: 93},
+                    {id: 'gm-paint-03', name: 'Paint Booth System', type: 'Paint Booth', status: 'offline', health: 65},
+                    {id: 'gm-press-04', name: 'Stamping Press Line', type: 'Stamping Press', status: 'online', health: 88},
+                    {id: 'gm-assembly-05', name: 'Assembly Line Motor', type: 'Conveyor Motor', status: 'online', health: 90}
+                ],
+                baseTemp: 52, tempVariation: 15,
+                costSavings: 203
+            },
+            'petro-industries': {
+                name: 'Petro Industries',
+                description: 'Oil refining and petrochemical processing',
+                icon: '🛢️',
+                machines: [
+                    {id: 'petro-pump-01', name: 'Crude Oil Pump', type: 'Centrifugal Pump', status: 'online', health: 79},
+                    {id: 'petro-turbine-02', name: 'Gas Turbine Generator', type: 'Gas Turbine', status: 'online', health: 84},
+                    {id: 'petro-comp-03', name: 'Gas Compressor Unit', type: 'Reciprocating Compressor', status: 'maintenance', health: 72},
+                    {id: 'petro-reactor-04', name: 'Catalytic Reactor', type: 'Chemical Reactor', status: 'online', health: 86},
+                    {id: 'petro-distill-05', name: 'Distillation Column', type: 'Distillation Unit', status: 'online', health: 91}
+                ],
+                baseTemp: 68, tempVariation: 20,
+                costSavings: 340
+            },
+            'food-processing': {
+                name: 'Food Processing Co.',
+                description: 'Food manufacturing and packaging',
+                icon: '🍎',
+                machines: [
+                    {id: 'food-mixer-01', name: 'Industrial Mixer', type: 'Planetary Mixer', status: 'online', health: 94},
+                    {id: 'food-oven-02', name: 'Convection Oven System', type: 'Industrial Oven', status: 'online', health: 87},
+                    {id: 'food-pack-03', name: 'Packaging Machine', type: 'Packaging System', status: 'online', health: 91},
+                    {id: 'food-cool-04', name: 'Refrigeration Unit', type: 'Industrial Chiller', status: 'maintenance', health: 76},
+                    {id: 'food-belt-05', name: 'Conveyor Belt System', type: 'Belt Conveyor', status: 'online', health: 89}
+                ],
+                baseTemp: 28, tempVariation: 10,
+                costSavings: 67
+            }
+        };
+
+        let currentClient = null;
+        let tempChart = null;
+        let perfChart = null;
+        let updateInterval = null;
+
+        function selectClient(clientId) {
+            currentClient = clients[clientId];
+            
+            // Update UI
+            updateClientSelector(clientId);
+            showClientData();
+            initializeCharts();
+            startDataUpdates();
+            
+            // Show sections
+            document.getElementById('clientInfo').classList.remove('hidden');
+            document.getElementById('clientMetrics').classList.remove('hidden');
+            document.getElementById('machineGrid').classList.remove('hidden');
+            document.getElementById('chartsSection').classList.remove('hidden');
+            document.getElementById('insightsSection').classList.remove('hidden');
+        }
+
+        function updateClientSelector(selectedId) {
+            // Reset all buttons
+            document.querySelectorAll('.client-btn').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'bg-blue-50');
+                btn.classList.add('border-gray-200');
+            });
+            
+            // Highlight selected
+            const selectedBtn = document.querySelector(`button[onclick="selectClient('${selectedId}')"]`);
+            selectedBtn.classList.add('border-blue-500', 'bg-blue-50');
+            selectedBtn.classList.remove('border-gray-200');
+        }
+
+        function showClientData() {
+            // Update client info
+            document.getElementById('clientName').textContent = currentClient.name;
+            document.getElementById('clientDescription').textContent = currentClient.description;
+            
+            // Update metrics
+            const onlineMachines = currentClient.machines.filter(m => m.status === 'online').length;
+            document.getElementById('onlineMachinesCount').textContent = `${onlineMachines}/${currentClient.machines.length}`;
+            
+            const avgHealth = Math.round(currentClient.machines.reduce((sum, m) => sum + m.health, 0) / currentClient.machines.length);
+            document.getElementById('avgHealthScore').textContent = `${avgHealth}%`;
+            
+            const alerts = currentClient.machines.filter(m => m.health < 80).length;
+            document.getElementById('activeAlertsCount').textContent = alerts;
+            
+            document.getElementById('costSavings').textContent = `$${currentClient.costSavings}K`;
+            
+            // Update machines grid
+            updateMachinesGrid();
+        }
+
+        function updateMachinesGrid() {
+            const machinesList = document.getElementById('machinesList');
+            machinesList.innerHTML = currentClient.machines.map(machine => `
+                <div class="machine-card bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-gray-900">${machine.name}</h4>
+                        <div class="w-3 h-3 rounded-full status-${machine.status}"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">${machine.type}</p>
+                    <p class="text-xs text-gray-500 mb-3">${machine.id}</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-xs text-gray-500 mr-2">Health:</span>
+                                <span class="text-sm font-bold ${machine.health > 85 ? 'text-green-600' : machine.health > 75 ? 'text-yellow-600' : 'text-red-600'}">${machine.health}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="h-2 rounded-full ${machine.health > 85 ? 'bg-green-500' : machine.health > 75 ? 'bg-yellow-500' : 'bg-red-500'}" 
+                                     style="width: ${machine.health}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 text-xs">
+                        <span class="inline-block px-2 py-1 rounded-full text-xs ${
+                            machine.status === 'online' ? 'bg-green-100 text-green-800' :
+                            machine.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                        }">${machine.status.charAt(0).toUpperCase() + machine.status.slice(1)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function initializeCharts() {
+            // Destroy existing charts
+            if (tempChart) tempChart.destroy();
+            if (perfChart) perfChart.destroy();
+
+            // Temperature Chart
+            const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+            tempChart = new Chart(tempCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: currentClient.machines.filter(m => m.status === 'online').map((machine, index) => ({
+                        label: machine.name,
+                        data: [],
+                        borderColor: ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][index % 5],
+                        backgroundColor: ['rgba(239, 68, 68, 0.1)', 'rgba(59, 130, 246, 0.1)', 'rgba(16, 185, 129, 0.1)', 'rgba(245, 158, 11, 0.1)', 'rgba(139, 92, 246, 0.1)'][index % 5],
+                        tension: 0.4,
+                        fill: false
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: false } }
+                }
+            });
+
+            // Performance Chart
+            const perfCtx = document.getElementById('performanceChart').getContext('2d');
+            perfChart = new Chart(perfCtx, {
+                type: 'bar',
+                data: {
+                    labels: currentClient.machines.map(m => m.name.split(' ').slice(0, 2).join(' ')),
+                    datasets: [{
+                        label: 'Health Score (%)',
+                        data: currentClient.machines.map(m => m.health),
+                        backgroundColor: currentClient.machines.map(m => 
+                            m.health > 85 ? 'rgba(34, 197, 94, 0.7)' :
+                            m.health > 75 ? 'rgba(245, 158, 11, 0.7)' :
+                            'rgba(239, 68, 68, 0.7)'
+                        )
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+        }
+
+        function startDataUpdates() {
+            if (updateInterval) clearInterval(updateInterval);
+            
+            updateInterval = setInterval(() => {
+                updateCharts();
+                updateMLInsights();
+                updateRecentActivity();
+            }, 3000);
+        }
+
+        function updateCharts() {
+            const now = new Date();
+            const timeLabel = now.toLocaleTimeString();
+            
+            // Update temperature chart
+            if (tempChart.data.labels.length > 15) {
+                tempChart.data.labels.shift();
+                tempChart.data.datasets.forEach(dataset => dataset.data.shift());
+            }
+            
+            tempChart.data.labels.push(timeLabel);
+            tempChart.data.datasets.forEach((dataset, index) => {
+                const temp = currentClient.baseTemp + (Math.random() - 0.5) * currentClient.tempVariation;
+                dataset.data.push(temp);
+            });
+            tempChart.update('none');
+            
+            // Update performance chart (simulate minor changes)
+            perfChart.data.datasets[0].data = currentClient.machines.map(m => {
+                const variation = (Math.random() - 0.5) * 4; // ±2% variation
+                return Math.max(60, Math.min(100, m.health + variation));
+            });
+            perfChart.update('none');
+        }
+
+        function updateMLInsights() {
+            const insights = document.getElementById('mlInsights');
+            const randomScore = Math.random();
+            const isAnomalous = randomScore > 0.75;
+            
+            insights.innerHTML = `
+                <div class="p-4 ${isAnomalous ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200'} border rounded-lg">
+                    <div class="flex items-center">
+                        <span class="${isAnomalous ? 'text-red-500' : 'text-green-500'} text-xl mr-3">
+                            ${isAnomalous ? '⚠️' : '✅'}
+                        </span>
+                        <div>
+                            <p class="font-medium ${isAnomalous ? 'text-red-900' : 'text-green-900'}">
+                                ${isAnomalous ? 'Anomaly Detected' : 'Fleet Operating Normally'}
+                            </p>
+                            <p class="text-sm ${isAnomalous ? 'text-red-700' : 'text-green-700'}">
+                                AI Confidence: ${(randomScore * 100).toFixed(1)}%
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-blue-50 border-blue-200 border rounded-lg">
+                    <div class="flex items-center">
+                        <span class="text-blue-500 text-xl mr-3">💡</span>
+                        <div>
+                            <p class="font-medium text-blue-900">Optimization Suggestion</p>
+                            <p class="text-sm text-blue-700">Consider scheduling maintenance for machines below 80% health</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateRecentActivity() {
+            const activity = document.getElementById('recentActivity');
+            const now = new Date();
+            const timeLabel = now.toLocaleTimeString();
+            
+            const activities = [
+                `${currentClient.machines[Math.floor(Math.random() * 5)].name} - Temperature reading: ${(currentClient.baseTemp + Math.random() * 10).toFixed(1)}°C`,
+                `${currentClient.machines[Math.floor(Math.random() * 5)].name} - Performance check completed`,
+                `${currentClient.machines[Math.floor(Math.random() * 5)].name} - Vibration levels normal`,
+                `Fleet health score updated: ${85 + Math.floor(Math.random() * 10)}%`,
+                `Preventive maintenance scheduled for next week`
+            ];
+            
+            const newActivity = `<div class="flex items-center text-sm">
+                <span class="text-gray-500 mr-2">${timeLabel}</span>
+                <span class="text-gray-700">${activities[Math.floor(Math.random() * activities.length)]}</span>
+            </div>`;
+            
+            activity.insertAdjacentHTML('afterbegin', newActivity);
+            
+            // Keep only last 10 activities
+            while (activity.children.length > 10) {
+                activity.removeChild(activity.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
