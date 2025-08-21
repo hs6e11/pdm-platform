@@ -39,6 +39,10 @@
             background: linear-gradient(135deg, #ef4444, #dc2626);
             box-shadow: 0 0 20px #ef4444;
         }
+        .connection-connecting {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 0 20px #f59e0b;
+        }
         .data-feed { font-family: 'Monaco', 'Menlo', monospace; }
         
         /* Client-specific backgrounds */
@@ -127,11 +131,27 @@
             border: 2px solid rgba(255,215,0,0.3);
             box-shadow: 0 10px 30px rgba(255,215,0,0.2);
         }
+
+        /* Enhanced ML-specific styles */
+        .ml-badge {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .confidence-bar {
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
+            height: 4px;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body class="animated-bg min-h-screen">
     <div class="min-h-screen">
-        <!-- Top Navigation with Dr. Hemdan Signature -->
+        <!-- Enhanced Top Navigation -->
         <nav class="glass-dark shadow-lg relative overflow-hidden">
             <div class="max-w-7xl mx-auto px-6 py-4">
                 <div class="flex items-center justify-between">
@@ -156,6 +176,11 @@
                             <div id="connectionStatus" class="w-4 h-4 connection-indicator rounded-full"></div>
                             <span id="connectionText" class="text-sm text-gray-300 ml-2">Connecting...</span>
                         </div>
+                        <div class="flex items-center">
+                            <span class="text-sm text-gray-300 mr-2">ML Service:</span>
+                            <div id="mlConnectionStatus" class="w-4 h-4 connection-indicator rounded-full"></div>
+                            <span id="mlConnectionText" class="text-sm text-gray-300 ml-2">Checking...</span>
+                        </div>
                         <span class="text-sm text-gray-300">Live since <span id="startTime"></span></span>
                     </div>
                 </div>
@@ -163,13 +188,16 @@
         </nav>
 
         <div class="max-w-7xl mx-auto p-6">
-            <!-- API Configuration -->
+            <!-- Enhanced API Configuration -->
             <div class="mb-6">
                 <div class="glass rounded-2xl shadow-2xl p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <label class="text-sm font-medium text-white">🌐 API Endpoint:</label>
                             <input id="apiEndpoint" type="text" value="http://localhost:8000" 
+                                   class="px-4 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-gray-300 backdrop-blur-lg">
+                            <label class="text-sm font-medium text-white">🤖 ML Service:</label>
+                            <input id="mlEndpoint" type="text" value="http://localhost:8001" 
                                    class="px-4 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-gray-300 backdrop-blur-lg">
                             <button onclick="connectToAPI()" 
                                     class="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg">
@@ -286,7 +314,7 @@
                 </div>
             </div>
 
-            <!-- Advanced Machine Grid -->
+            <!-- Enhanced Machine Grid -->
             <div id="machineGrid" class="mb-8 hidden">
                 <div class="glass rounded-2xl shadow-2xl p-8">
                     <h3 class="text-2xl font-semibold text-white mb-6 text-center">🏭 AI-Monitored Equipment Fleet</h3>
@@ -296,9 +324,9 @@
                 </div>
             </div>
 
-            <!-- Revolutionary Charts Section -->
+            <!-- Charts Section -->
             <div id="chartsSection" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-8 hidden">
-                <!-- Real-time Temperature Monitoring -->
+                <!-- Temperature Chart -->
                 <div class="chart-container p-6">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">🌡️ Real-time Temperature Analytics</h3>
                     <canvas id="temperatureChart" width="400" height="300"></canvas>
@@ -309,7 +337,7 @@
                     </div>
                 </div>
 
-                <!-- Power Consumption Analysis -->
+                <!-- Power Chart -->
                 <div class="chart-container p-6">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">⚡ Power Consumption Insights</h3>
                     <canvas id="powerChart" width="400" height="300"></canvas>
@@ -330,7 +358,7 @@
                     </div>
                 </div>
 
-                <!-- Vibration Analysis -->
+                <!-- Vibration Spectrum Analysis -->
                 <div class="chart-container p-6">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">📳 Vibration Spectrum Analysis</h3>
                     <canvas id="vibrationChart" width="400" height="300"></canvas>
@@ -340,7 +368,7 @@
                     </div>
                 </div>
 
-                <!-- Health Score Trends -->
+                <!-- Equipment Health Trends -->
                 <div class="chart-container p-6">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">💊 Equipment Health Trends</h3>
                     <canvas id="healthChart" width="400" height="300"></canvas>
@@ -365,7 +393,7 @@
 
             <!-- AI Insights and Live Data -->
             <div id="dataSection" class="grid grid-cols-1 lg:grid-cols-2 gap-8 hidden">
-                <!-- AI-Powered Insights -->
+                <!-- AI Intelligence Center -->
                 <div class="glass rounded-2xl shadow-2xl p-6">
                     <h3 class="text-2xl font-semibold text-white mb-6 text-center">🧠 AI Intelligence Center</h3>
                     <div id="aiInsights" class="space-y-4">
@@ -404,12 +432,14 @@
     <script>
         // Global variables
         let apiEndpoint = 'http://localhost:8000';
+        let mlEndpoint = 'http://localhost:8001';
         let currentClient = null;
         let machineData = new Map();
         let clients = new Map();
         let charts = {};
         let updateInterval = null;
         let isConnected = false;
+        let isMlConnected = false;
         let dataPointsReceived = 0;
 
         // Client background configurations
@@ -456,11 +486,54 @@
                 updateConnectionStatus('offline', 'Disconnected');
                 loadDefaultClients();
             }
+
+            // Also try ML service
+            await connectToMLService();
+        }
+
+        async function connectToMLService() {
+            try {
+                updateMLConnectionStatus('connecting', 'Connecting...');
+                
+                const mlUrl = document.getElementById('mlEndpoint').value;
+                mlEndpoint = mlUrl;
+                
+                const response = await fetch(`${mlEndpoint}/health`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const healthData = await response.json();
+                    isMlConnected = true;
+                    updateMLConnectionStatus('online', 'Connected');
+                } else {
+                    throw new Error(`ML Service returned ${response.status}`);
+                }
+            } catch (error) {
+                console.error('ML Service connection failed:', error);
+                isMlConnected = false;
+                updateMLConnectionStatus('offline', 'Disconnected');
+            }
         }
 
         function updateConnectionStatus(status, text) {
             const statusElement = document.getElementById('connectionStatus');
             const textElement = document.getElementById('connectionText');
+            
+            statusElement.className = `w-4 h-4 connection-indicator rounded-full connection-${status}`;
+            textElement.textContent = text;
+            
+            if (status === 'connecting') {
+                statusElement.classList.add('pulse');
+            } else {
+                statusElement.classList.remove('pulse');
+            }
+        }
+
+        function updateMLConnectionStatus(status, text) {
+            const statusElement = document.getElementById('mlConnectionStatus');
+            const textElement = document.getElementById('mlConnectionText');
             
             statusElement.className = `w-4 h-4 connection-indicator rounded-full connection-${status}`;
             textElement.textContent = text;
@@ -521,7 +594,7 @@
                 'food-processing': {
                     name: 'Food Processing Co.',
                     description: 'Food manufacturing and packaging',
-                    icon: '🍎',
+                    icon: '🎃',
                     industry: 'Food & Beverage',
                     machines: ['food-mixer-01', 'food-oven-02', 'food-pack-03', 'food-cool-04', 'food-belt-05']
                 }
@@ -550,23 +623,20 @@
                 const clientMachines = Array.from(machineData.values())
                     .filter(machine => machine.client_id === clientId);
                 
-                // Use actual machine data if available, otherwise fall back to config
                 let activeMachines, totalMachines;
                 
                 if (clientMachines.length > 0) {
-                    // Use real data from API
                     activeMachines = clientMachines.filter(m => m.metadata?.status !== 'offline').length;
                     totalMachines = clientMachines.length;
                 } else {
-                    // Fall back to static config when no data yet
                     totalMachines = clientConfig.machines ? clientConfig.machines.length : 5;
-                    activeMachines = Math.floor(totalMachines * 0.8); // Assume 80% online
+                    activeMachines = Math.floor(totalMachines * 0.8);
                 }
 
                 const button = document.createElement('button');
                 button.onclick = () => selectClient(clientId);
                 button.className = `client-btn p-6 glass rounded-2xl hover:scale-105 transition-all shadow-2xl border border-white/20`;
-                button.id = `client-btn-${clientId}`; // Add ID for easy updating
+                button.id = `client-btn-${clientId}`;
                 
                 const onlinePercentage = totalMachines > 0 ? Math.round((activeMachines / totalMachines) * 100) : 0;
                 const statusColor = onlinePercentage > 80 ? 'text-green-300 bg-green-500/20' : 
@@ -594,49 +664,52 @@
             }
         }
 
-        // New function to update client selector with live data
-        function updateClientSelectorCounts() {
-            for (const [clientId, clientConfig] of clients) {
-                const button = document.getElementById(`client-btn-${clientId}`);
-                if (!button) continue;
-
-                const clientMachines = Array.from(machineData.values())
-                    .filter(machine => machine.client_id === clientId);
-                
-                if (clientMachines.length > 0) {
-                    const activeMachines = clientMachines.filter(m => m.metadata?.status !== 'offline').length;
-                    const totalMachines = clientMachines.length;
-                    const onlinePercentage = Math.round((activeMachines / totalMachines) * 100);
-                    
-                    const statusColor = onlinePercentage > 80 ? 'text-green-300 bg-green-500/20' : 
-                                       onlinePercentage > 60 ? 'text-yellow-300 bg-yellow-500/20' : 
-                                       'text-red-300 bg-red-500/20';
-
-                    // Update just the status span
-                    const statusSpan = button.querySelector('.px-3.py-1');
-                    if (statusSpan) {
-                        statusSpan.className = `px-3 py-1 ${statusColor} rounded-full text-xs font-medium`;
-                        statusSpan.textContent = `${activeMachines}/${totalMachines} Online`;
-                    }
-                }
-            }
-        }
-
         function selectClient(clientId) {
+            console.log('Selecting client:', clientId);
+            
             currentClient = clientId;
             const clientConfig = clients.get(clientId);
             
-            updateClientSelector(clientId);
-            showClientData(clientConfig);
-            initializeCharts();
+            if (!clientConfig) {
+                console.error('Client config not found for:', clientId);
+                return;
+            }
             
-            // Show sections with animation
-            const sections = ['clientInfo', 'clientMetrics', 'machineGrid', 'chartsSection', 'dataSection'];
-            sections.forEach((sectionId, index) => {
-                setTimeout(() => {
-                    document.getElementById(sectionId).classList.remove('hidden');
-                }, index * 200);
-            });
+            console.log('Client config found:', clientConfig);
+            
+            try {
+                updateClientSelector(clientId);
+                showClientData(clientConfig);
+                
+                // Show sections with animation
+                const sections = ['clientInfo', 'clientMetrics', 'machineGrid', 'chartsSection', 'dataSection'];
+                sections.forEach((sectionId, index) => {
+                    setTimeout(() => {
+                        const element = document.getElementById(sectionId);
+                        if (element) {
+                            element.classList.remove('hidden');
+                            console.log(`Showing section: ${sectionId}`);
+                            
+                            // Initialize charts after chartsSection is visible
+                            if (sectionId === 'chartsSection') {
+                                setTimeout(() => {
+                                    initializeCharts();
+                                    // Wait a bit more before starting chart updates
+                                    setTimeout(() => {
+                                        updateCharts();
+                                    }, 200);
+                                }, 100);
+                            }
+                        } else {
+                            console.error(`Element not found: ${sectionId}`);
+                        }
+                    }, index * 200);
+                });
+                
+                console.log('Client selection completed for:', clientId);
+            } catch (error) {
+                console.error('Error in selectClient:', error);
+            }
         }
 
         function updateClientSelector(selectedId) {
@@ -652,76 +725,135 @@
         }
 
         function showClientData(clientConfig) {
-            // Update client info with specific background
-            const clientInfoCard = document.getElementById('clientInfoCard');
-            const bgClass = clientBackgrounds[currentClient] || 'acme-bg';
-            clientInfoCard.className = `${bgClass} rounded-2xl p-8 shadow-2xl`;
+            console.log('Showing client data for:', clientConfig.name);
             
-            document.getElementById('clientName').textContent = clientConfig.name;
-            document.getElementById('clientDescription').textContent = clientConfig.description;
-            document.getElementById('clientIcon').textContent = clientConfig.icon;
-            document.getElementById('clientIndustry').textContent = clientConfig.industry;
-            
-            updateClientMetrics();
-            updateMachinesGrid();
+            try {
+                // Update client info with specific background
+                const clientInfoCard = document.getElementById('clientInfoCard');
+                if (!clientInfoCard) {
+                    console.error('clientInfoCard element not found');
+                    return;
+                }
+                
+                const bgClass = clientBackgrounds[currentClient] || 'acme-bg';
+                clientInfoCard.className = `${bgClass} rounded-2xl p-8 shadow-2xl`;
+                
+                // Update client details safely
+                const elements = {
+                    'clientName': clientConfig.name,
+                    'clientDescription': clientConfig.description,
+                    'clientIcon': clientConfig.icon,
+                    'clientIndustry': clientConfig.industry
+                };
+                
+                for (const [elementId, value] of Object.entries(elements)) {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.textContent = value;
+                    } else {
+                        console.warn(`Element ${elementId} not found`);
+                    }
+                }
+                
+                console.log('Client info updated successfully');
+                
+                // Update metrics and machines
+                updateClientMetrics();
+                updateMachinesGrid();
+                
+            } catch (error) {
+                console.error('Error in showClientData:', error);
+            }
         }
 
         async function updateClientMetrics() {
-            if (!currentClient) return;
-
-            const clientMachines = Array.from(machineData.values())
-                .filter(machine => machine.client_id === currentClient);
-
-            if (clientMachines.length === 0) {
-                setDefaultMetrics();
+            console.log('Updating client metrics for:', currentClient);
+            
+            if (!currentClient) {
+                console.warn('No current client selected');
                 return;
             }
 
-            // Enhanced metrics calculations
-            const onlineMachines = clientMachines.filter(m => m.metadata?.status === 'online').length;
-            const totalMachines = clientMachines.length;
-            
-            // Online machines with progress bar
-            document.getElementById('onlineMachinesCount').textContent = `${onlineMachines}/${totalMachines}`;
-            const onlinePercentage = (onlineMachines / totalMachines) * 100;
-            document.getElementById('onlineMachinesBar').style.width = `${onlinePercentage}%`;
-
-            // Temperature analytics
-            const temperatures = clientMachines.map(m => m.sensor_data?.temperature_c || 0);
-            const avgTemp = temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
-            const minTemp = Math.min(...temperatures);
-            const maxTemp = Math.max(...temperatures);
-            
-            document.getElementById('avgTemperature').textContent = `${avgTemp.toFixed(1)}°C`;
-            document.getElementById('tempMin').textContent = `${minTemp.toFixed(1)}°C`;
-            document.getElementById('tempMax').textContent = `${maxTemp.toFixed(1)}°C`;
-            document.getElementById('tempAvg').textContent = `${avgTemp.toFixed(1)}°C`;
-
-            // Power calculations
-            const totalPower = clientMachines.reduce((sum, m) => sum + (m.sensor_data?.power_w || 0), 0);
-            document.getElementById('totalPower').textContent = `${(totalPower/1000).toFixed(1)}kW`;
-            document.getElementById('powerLoad').textContent = `${(totalPower/1000).toFixed(1)}kW`;
-
-            // AI Alerts and ML data
             try {
-                const mlResponse = await fetch(`${apiEndpoint}/api/v1/ml/summary`);
-                if (mlResponse.ok) {
-                    const mlData = await mlResponse.json();
-                    document.getElementById('mlModelsCount').textContent = mlData.machines_with_ml_models || 0;
-                    document.getElementById('anomaliesCount').textContent = mlData.current_anomalies || 0;
-                    document.getElementById('activeAlertsCount').textContent = mlData.current_anomalies || 0;
+                const clientMachines = Array.from(machineData.values())
+                    .filter(machine => machine.client_id === currentClient);
+
+                console.log(`Found ${clientMachines.length} machines for client ${currentClient}`);
+
+                if (clientMachines.length === 0) {
+                    console.log('No machines found, setting default metrics');
+                    setDefaultMetrics();
+                    return;
                 }
+
+                // Enhanced metrics calculations
+                const onlineMachines = clientMachines.filter(m => m.metadata?.status === 'online').length;
+                const totalMachines = clientMachines.length;
+                
+                console.log(`Online machines: ${onlineMachines}/${totalMachines}`);
+                
+                // Safely update elements
+                const safeUpdate = (elementId, value) => {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.textContent = value;
+                    } else {
+                        console.warn(`Element ${elementId} not found`);
+                    }
+                };
+                
+                // Online machines with progress bar
+                safeUpdate('onlineMachinesCount', `${onlineMachines}/${totalMachines}`);
+                
+                const onlinePercentage = (onlineMachines / totalMachines) * 100;
+                const onlineBar = document.getElementById('onlineMachinesBar');
+                if (onlineBar) {
+                    onlineBar.style.width = `${onlinePercentage}%`;
+                }
+
+                // Temperature analytics
+                const temperatures = clientMachines.map(m => m.sensor_data?.temperature_c || 0).filter(t => t > 0);
+                if (temperatures.length > 0) {
+                    const avgTemp = temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
+                    const minTemp = Math.min(...temperatures);
+                    const maxTemp = Math.max(...temperatures);
+                    
+                    safeUpdate('avgTemperature', `${avgTemp.toFixed(1)}°C`);
+                    safeUpdate('tempMin', `${minTemp.toFixed(1)}°C`);
+                    safeUpdate('tempMax', `${maxTemp.toFixed(1)}°C`);
+                    safeUpdate('tempAvg', `${avgTemp.toFixed(1)}°C`);
+                } else {
+                    safeUpdate('avgTemperature', '--°C');
+                    safeUpdate('tempMin', '--°C');
+                    safeUpdate('tempMax', '--°C');
+                    safeUpdate('tempAvg', '--°C');
+                }
+
+                // Power calculations
+                const totalPower = clientMachines.reduce((sum, m) => sum + (m.sensor_data?.power_w || 0), 0);
+                safeUpdate('totalPower', `${(totalPower/1000).toFixed(1)}kW`);
+                safeUpdate('powerLoad', `${(totalPower/1000).toFixed(1)}kW`);
+
+                // AI Alerts and ML data
+                let mlAlerts = 0;
+                for (const machine of clientMachines) {
+                    if (machine.ml_prediction?.anomaly_detected) {
+                        mlAlerts++;
+                    }
+                }
+
+                safeUpdate('activeAlertsCount', mlAlerts.toString());
+                safeUpdate('anomaliesCount', mlAlerts.toString());
+
+                // Update last update time
+                safeUpdate('lastUpdateTime', new Date().toLocaleTimeString());
+                
+                console.log('Client metrics updated successfully');
+                
             } catch (error) {
-                console.log('ML summary not available:', error);
+                console.error('Error updating client metrics:', error);
+                setDefaultMetrics();
             }
-
-            // Fleet health calculation
-            const healthScores = clientMachines.map(m => m.metadata?.health_score || 100);
-            const avgHealth = healthScores.reduce((sum, health) => sum + health, 0) / healthScores.length;
-            document.getElementById('fleetHealth').textContent = `${avgHealth.toFixed(1)}%`;
-
-            // Update last update time
-            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleTimeString();
         }
 
         function setDefaultMetrics() {
@@ -733,7 +865,8 @@
             };
             
             Object.entries(defaults).forEach(([id, value]) => {
-                document.getElementById(id).textContent = value;
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
             });
         }
 
@@ -764,9 +897,16 @@
                        </div>`
                     : '';
 
+                const mlBadge = mlPrediction.method 
+                    ? `<div class="absolute -top-2 -left-2">
+                         <span class="ml-badge text-xs">${mlPrediction.method.includes('ensemble') ? '🤖 ML' : '📊 Rules'}</span>
+                       </div>`
+                    : '';
+
                 return `
                     <div class="machine-card glass rounded-xl p-4 border border-white/20 relative">
                         ${anomalyBadge}
+                        ${mlBadge}
                         <div class="flex items-center justify-between mb-3">
                             <h4 class="font-semibold text-white text-sm">${metadata.machine_name || machine.machine_id}</h4>
                             <div class="w-3 h-3 rounded-full bg-gradient-to-r ${statusColors[status]} shadow-lg"></div>
@@ -790,13 +930,26 @@
                             </div>
                             ${mlPrediction.anomaly_score ? `
                             <div class="flex justify-between text-xs text-gray-300">
-                                <span>🤖 AI Score:</span>
-                                <span class="font-medium text-red-300">${(mlPrediction.anomaly_score * 100).toFixed(1)}%</span>
+                                <span>🤖 AI Risk:</span>
+                                <span class="font-medium ${mlPrediction.anomaly_score > 0.7 ? 'text-red-300' : mlPrediction.anomaly_score > 0.4 ? 'text-yellow-300' : 'text-green-300'}">${(mlPrediction.anomaly_score * 100).toFixed(1)}%</span>
                             </div>
                             ` : ''}
                         </div>
                         
-                        <div class="mb-3">
+                        ${mlPrediction.confidence ? `
+                        <div class="mt-2">
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>AI Confidence:</span>
+                                <span class="font-medium">${(mlPrediction.confidence * 100).toFixed(1)}%</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="h-full rounded transition-all" 
+                                     style="width: ${mlPrediction.confidence * 100}%; background: ${mlPrediction.confidence > 0.8 ? '#22c55e' : mlPrediction.confidence > 0.6 ? '#f59e0b' : '#ef4444'};"></div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="mb-3 mt-3">
                             <div class="flex items-center justify-between mb-1">
                                 <span class="text-xs text-gray-400">Health:</span>
                                 <span class="text-sm font-bold ${health > 85 ? 'text-green-400' : health > 75 ? 'text-yellow-400' : 'text-red-400'}">${health.toFixed(1)}%</span>
@@ -829,202 +982,396 @@
         }
 
         function initializeCharts() {
-            // Destroy existing charts
-            Object.values(charts).forEach(chart => {
-                if (chart) chart.destroy();
-            });
-
-            // Temperature Chart
-            const tempCtx = document.getElementById('temperatureChart').getContext('2d');
-            charts.temperature = new Chart(tempCtx, {
-                type: 'line',
-                data: { labels: [], datasets: [] },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { 
-                        y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.1)' } },
-                        x: { grid: { color: 'rgba(0,0,0,0.1)' } }
+            console.log('Initializing charts...');
+            
+            try {
+                // Destroy existing charts
+                Object.values(charts).forEach(chart => {
+                    if (chart && typeof chart.destroy === 'function') {
+                        chart.destroy();
                     }
-                }
-            });
+                });
+                
+                // Clear charts object
+                charts = {};
 
-            // Power Chart
-            const powerCtx = document.getElementById('powerChart').getContext('2d');
-            charts.power = new Chart(powerCtx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Power (W)',
-                        data: [],
-                        backgroundColor: 'rgba(147, 51, 234, 0.7)',
-                        borderColor: 'rgba(147, 51, 234, 1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                // Check if chart elements exist
+                const tempCanvas = document.getElementById('temperatureChart');
+                const powerCanvas = document.getElementById('powerChart');
+                const anomalyCanvas = document.getElementById('anomalyChart');
+                const vibrationCanvas = document.getElementById('vibrationChart');
+                const healthCanvas = document.getElementById('healthChart');
+                const maintenanceCanvas = document.getElementById('maintenanceChart');
+                
+                if (!tempCanvas || !powerCanvas || !anomalyCanvas || !vibrationCanvas || !healthCanvas || !maintenanceCanvas) {
+                    console.warn('Chart canvas elements not found, skipping chart initialization');
+                    return false;
                 }
-            });
 
-            // Anomaly Chart
-            const anomalyCtx = document.getElementById('anomalyChart').getContext('2d');
-            charts.anomaly = new Chart(anomalyCtx, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Anomaly Scores',
-                        data: [],
-                        backgroundColor: 'rgba(239, 68, 68, 0.6)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { type: 'linear', title: { display: true, text: 'Time' } },
-                        y: { min: 0, max: 1, title: { display: true, text: 'Anomaly Score' } }
+                // Temperature Chart - Enhanced with better curve visualization
+                const tempCtx = tempCanvas.getContext('2d');
+                charts.temperature = new Chart(tempCtx, {
+                    type: 'line',
+                    data: { 
+                        labels: [], 
+                        datasets: []
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { 
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: { 
+                            y: { 
+                                beginAtZero: false, 
+                                grid: { color: 'rgba(0,0,0,0.1)' },
+                                title: { display: true, text: 'Temperature (°C)' }
+                            },
+                            x: { 
+                                grid: { color: 'rgba(0,0,0,0.1)' },
+                                title: { display: true, text: 'Time' }
+                            }
+                        },
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
+                        },
+                        elements: {
+                            line: {
+                                tension: 0.4
+                            },
+                            point: {
+                                radius: 3,
+                                hoverRadius: 6
+                            }
+                        }
                     }
-                }
-            });
+                });
 
-            // Vibration Chart
-            const vibrationCtx = document.getElementById('vibrationChart').getContext('2d');
-            charts.vibration = new Chart(vibrationCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Vibration (g)',
-                        data: [],
-                        borderColor: 'rgba(245, 158, 11, 1)',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
+                // Power Chart
+                const powerCtx = powerCanvas.getContext('2d');
+                charts.power = new Chart(powerCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Power (W)',
+                            data: [],
+                            backgroundColor: 'rgba(147, 51, 234, 0.7)',
+                            borderColor: 'rgba(147, 51, 234, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
 
-            // Health Chart
-            const healthCtx = document.getElementById('healthChart').getContext('2d');
-            charts.health = new Chart(healthCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Excellent (>90%)', 'Good (80-90%)', 'Fair (70-80%)', 'Poor (<70%)'],
-                    datasets: [{
-                        data: [0, 0, 0, 0],
-                        backgroundColor: [
-                            'rgba(34, 197, 94, 0.8)',
-                            'rgba(59, 130, 246, 0.8)', 
-                            'rgba(245, 158, 11, 0.8)',
-                            'rgba(239, 68, 68, 0.8)'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
+                // Anomaly Chart
+                const anomalyCtx = anomalyCanvas.getContext('2d');
+                charts.anomaly = new Chart(anomalyCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Anomaly Scores',
+                            data: [],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { type: 'linear', title: { display: true, text: 'Time' } },
+                            y: { min: 0, max: 1, title: { display: true, text: 'Anomaly Score' } }
+                        }
+                    }
+                });
 
-            // Maintenance Chart
-            const maintenanceCtx = document.getElementById('maintenanceChart').getContext('2d');
-            charts.maintenance = new Chart(maintenanceCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['Temperature', 'Vibration', 'Power', 'Health', 'Runtime'],
-                    datasets: [{
-                        label: 'Risk Level',
-                        data: [0, 0, 0, 0, 0],
-                        borderColor: 'rgba(239, 68, 68, 1)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.2)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { r: { beginAtZero: true, max: 100 } }
-                }
-            });
+                // Vibration Chart
+                const vibrationCtx = vibrationCanvas.getContext('2d');
+                charts.vibration = new Chart(vibrationCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Vibration (g)',
+                            data: [],
+                            borderColor: 'rgba(245, 158, 11, 1)',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            y: { 
+                                beginAtZero: true,
+                                title: { display: true, text: 'Vibration (g)' }
+                            },
+                            x: { 
+                                title: { display: true, text: 'Time' }
+                            }
+                        }
+                    }
+                });
 
-            updateCharts();
+                // Health Chart - Doughnut chart showing health distribution
+                const healthCtx = healthCanvas.getContext('2d');
+                charts.health = new Chart(healthCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Excellent (>90%)', 'Good (80-90%)', 'Fair (70-80%)', 'Poor (<70%)'],
+                        datasets: [{
+                            data: [0, 0, 0, 0],
+                            backgroundColor: [
+                                'rgba(34, 197, 94, 0.8)',
+                                'rgba(59, 130, 246, 0.8)', 
+                                'rgba(245, 158, 11, 0.8)',
+                                'rgba(239, 68, 68, 0.8)'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { 
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + ' machines';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Maintenance Chart - Radar chart showing risk factors
+                const maintenanceCtx = maintenanceCanvas.getContext('2d');
+                charts.maintenance = new Chart(maintenanceCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Temperature', 'Vibration', 'Power', 'Health', 'Runtime'],
+                        datasets: [{
+                            label: 'Risk Level',
+                            data: [0, 0, 0, 0, 0],
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                            pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(239, 68, 68, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed.r.toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        },
+                        scales: { 
+                            r: { 
+                                beginAtZero: true, 
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            } 
+                        }
+                    }
+                });
+
+                console.log('Charts initialized successfully:', Object.keys(charts));
+                return true;
+                
+            } catch (error) {
+                console.error('Error initializing charts:', error);
+                return false;
+            }
         }
 
         function updateCharts() {
-            if (!currentClient) return;
-
-            const clientMachines = Array.from(machineData.values())
-                .filter(machine => machine.client_id === currentClient);
-
-            if (clientMachines.length === 0) return;
-
-            const now = new Date().toLocaleTimeString();
-            const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
-
-            // Temperature Chart
-            if (charts.temperature.data.labels.length > 20) {
-                charts.temperature.data.labels.shift();
-                charts.temperature.data.datasets.forEach(dataset => dataset.data.shift());
-            }
-
-            charts.temperature.data.labels.push(now);
-            clientMachines.slice(0, 5).forEach((machine, index) => {
-                let dataset = charts.temperature.data.datasets.find(d => d.label === machine.machine_id);
-                if (!dataset) {
-                    dataset = {
-                        label: machine.metadata?.machine_name || machine.machine_id,
-                        data: [],
-                        borderColor: colors[index % colors.length],
-                        backgroundColor: colors[index % colors.length] + '20',
-                        tension: 0.4
-                    };
-                    charts.temperature.data.datasets.push(dataset);
-                }
-                dataset.data.push(machine.sensor_data?.temperature_c || 0);
-            });
-            charts.temperature.update('none');
-
-            // Power Chart
-            charts.power.data.labels = clientMachines.slice(0, 8).map(m => 
-                (m.metadata?.machine_name || m.machine_id).split(' ').slice(0, 2).join(' ')
-            );
-            charts.power.data.datasets[0].data = clientMachines.slice(0, 8).map(m => m.sensor_data?.power_w || 0);
-            charts.power.update('none');
-
-            // Vibration Chart
-            if (charts.vibration.data.labels.length > 20) {
-                charts.vibration.data.labels.shift();
-                charts.vibration.data.datasets[0].data.shift();
-            }
+            console.log('Updating charts...');
             
-            charts.vibration.data.labels.push(now);
-            const avgVibration = clientMachines.reduce((sum, m) => 
-                sum + Math.abs(m.sensor_data?.vibration_x_g || 0), 0) / clientMachines.length;
-            charts.vibration.data.datasets[0].data.push(avgVibration);
-            charts.vibration.update('none');
+            if (!currentClient) {
+                console.warn('No current client selected for charts');
+                return;
+            }
 
-            // Health Chart
-            const healthBuckets = [0, 0, 0, 0];
-            clientMachines.forEach(m => {
-                const health = m.metadata?.health_score || 0;
-                if (health > 90) healthBuckets[0]++;
-                else if (health > 80) healthBuckets[1]++;
-                else if (health > 70) healthBuckets[2]++;
-                else healthBuckets[3]++;
-            });
-            charts.health.data.datasets[0].data = healthBuckets;
-            charts.health.update('none');
+            // Check if charts are initialized and ready
+            if (!charts.temperature || !charts.power || !charts.anomaly || !charts.vibration || !charts.health || !charts.maintenance ||
+                !charts.temperature.data || !charts.power.data || !charts.anomaly.data || !charts.vibration.data || !charts.health.data || !charts.maintenance.data) {
+                console.warn('Charts not fully initialized, skipping update');
+                return;
+            }
 
-            // Update display metrics
-            document.getElementById('vibrationRMS').textContent = `${avgVibration.toFixed(3)}g`;
-            document.getElementById('vibrationPeak').textContent = `${Math.max(...clientMachines.map(m => Math.abs(m.sensor_data?.vibration_x_g || 0))).toFixed(3)}g`;
+            try {
+                const clientMachines = Array.from(machineData.values())
+                    .filter(machine => machine.client_id === currentClient);
+
+                console.log(`Updating charts with ${clientMachines.length} machines`);
+
+                if (clientMachines.length === 0) {
+                    console.log('No machines data for charts');
+                    return;
+                }
+
+                const now = new Date().toLocaleTimeString();
+                const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+
+                // Temperature Chart - Enhanced with better data handling
+                if (charts.temperature && charts.temperature.data) {
+                    // Keep last 20 data points for smooth curves
+                    if (charts.temperature.data.labels.length > 20) {
+                        charts.temperature.data.labels.shift();
+                        charts.temperature.data.datasets.forEach(dataset => {
+                            if (dataset.data) dataset.data.shift();
+                        });
+                    }
+
+                    charts.temperature.data.labels.push(now);
+                    
+                    // Add data for each machine with proper initialization
+                    clientMachines.slice(0, 5).forEach((machine, index) => {
+                        let dataset = charts.temperature.data.datasets.find(d => d.label === machine.machine_id);
+                        if (!dataset) {
+                            // Initialize dataset with some starting data points for smooth curves
+                            const startValue = machine.sensor_data?.temperature_c || 25;
+                            dataset = {
+                                label: machine.metadata?.machine_name || machine.machine_id,
+                                data: Array(Math.min(charts.temperature.data.labels.length - 1, 5)).fill(startValue),
+                                borderColor: colors[index % colors.length],
+                                backgroundColor: colors[index % colors.length] + '20',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 3,
+                                pointHoverRadius: 6
+                            };
+                            charts.temperature.data.datasets.push(dataset);
+                        }
+                        
+                        const currentTemp = machine.sensor_data?.temperature_c || dataset.data[dataset.data.length - 1] || 25;
+                        dataset.data.push(currentTemp);
+                    });
+                    
+                    charts.temperature.update('none');
+                }
+
+                // Power Chart
+                if (charts.power && charts.power.data) {
+                    charts.power.data.labels = clientMachines.slice(0, 8).map(m => 
+                        (m.metadata?.machine_name || m.machine_id).split(' ').slice(0, 2).join(' ')
+                    );
+                    charts.power.data.datasets[0].data = clientMachines.slice(0, 8).map(m => m.sensor_data?.power_w || 0);
+                    charts.power.update('none');
+                }
+
+                // Anomaly Chart
+                if (charts.anomaly && charts.anomaly.data) {
+                    const anomalyData = [];
+                    clientMachines.forEach((machine, index) => {
+                        if (machine.ml_prediction?.anomaly_score !== undefined) {
+                            anomalyData.push({
+                                x: index,
+                                y: machine.ml_prediction.anomaly_score
+                            });
+                        }
+                    });
+                    charts.anomaly.data.datasets[0].data = anomalyData;
+                    charts.anomaly.update('none');
+                }
+
+                // Vibration Chart - Enhanced
+                if (charts.vibration && charts.vibration.data) {
+                    if (charts.vibration.data.labels.length > 20) {
+                        charts.vibration.data.labels.shift();
+                        charts.vibration.data.datasets[0].data.shift();
+                    }
+                    
+                    charts.vibration.data.labels.push(now);
+                    const avgVibration = clientMachines.reduce((sum, m) => 
+                        sum + Math.abs(m.sensor_data?.vibration_x_g || 0), 0) / clientMachines.length;
+                    charts.vibration.data.datasets[0].data.push(avgVibration);
+                    charts.vibration.update('none');
+                    
+                    // Update vibration metrics
+                    const safeUpdate = (elementId, value) => {
+                        const element = document.getElementById(elementId);
+                        if (element) element.textContent = value;
+                    };
+                    
+                    safeUpdate('vibrationRMS', `${avgVibration.toFixed(3)}g`);
+                    safeUpdate('vibrationPeak', `${Math.max(...clientMachines.map(m => Math.abs(m.sensor_data?.vibration_x_g || 0))).toFixed(3)}g`);
+                }
+
+                // Health Chart - Equipment health distribution
+                if (charts.health && charts.health.data) {
+                    const healthBuckets = [0, 0, 0, 0];
+                    clientMachines.forEach(m => {
+                        const health = m.metadata?.health_score || 0;
+                        if (health > 90) healthBuckets[0]++;
+                        else if (health > 80) healthBuckets[1]++;
+                        else if (health > 70) healthBuckets[2]++;
+                        else healthBuckets[3]++;
+                    });
+                    charts.health.data.datasets[0].data = healthBuckets;
+                    charts.health.update('none');
+                    
+                    // Update fleet health
+                    const healthScores = clientMachines.map(m => m.metadata?.health_score || 100);
+                    const avgHealth = healthScores.reduce((sum, health) => sum + health, 0) / healthScores.length;
+                    const element = document.getElementById('fleetHealth');
+                    if (element) element.textContent = `${avgHealth.toFixed(1)}%`;
+                }
+
+                // Maintenance Chart - Risk analysis radar
+                if (charts.maintenance && charts.maintenance.data) {
+                    // Calculate risk factors based on sensor data
+                    const tempRisk = Math.min(100, Math.max(0, 
+                        (clientMachines.reduce((sum, m) => sum + (m.sensor_data?.temperature_c || 0), 0) / clientMachines.length - 20) * 2));
+                    
+                    const vibrationRisk = Math.min(100, 
+                        (clientMachines.reduce((sum, m) => sum + Math.abs(m.sensor_data?.vibration_x_g || 0), 0) / clientMachines.length) * 1000);
+                    
+                    const powerRisk = Math.min(100, 
+                        (clientMachines.reduce((sum, m) => sum + (m.sensor_data?.power_w || 0), 0) / clientMachines.length) / 50);
+                    
+                    const healthRisk = 100 - (clientMachines.reduce((sum, m) => sum + (m.metadata?.health_score || 100), 0) / clientMachines.length);
+                    
+                    const runtimeRisk = Math.min(100, Math.random() * 30 + 10); // Simulated runtime risk
+                    
+                    charts.maintenance.data.datasets[0].data = [tempRisk, vibrationRisk, powerRisk, healthRisk, runtimeRisk];
+                    charts.maintenance.update('none');
+                    
+                    // Calculate next maintenance prediction
+                    const maxRisk = Math.max(tempRisk, vibrationRisk, powerRisk, healthRisk, runtimeRisk);
+                    const daysToMaintenance = Math.max(1, Math.round(30 - (maxRisk / 100) * 25));
+                    const element = document.getElementById('nextMaintenance');
+                    if (element) element.textContent = `${daysToMaintenance} days`;
+                }
+                
+                console.log('Charts updated successfully');
+                
+            } catch (error) {
+                console.error('Error updating charts:', error);
+            }
         }
 
         function startDataPolling() {
@@ -1037,7 +1384,6 @@
                     updateMachinesGrid();
                     updateCharts();
                 }
-                // Update client selector counts with live data
                 updateClientSelectorCounts();
                 updateDataPointsCounter();
                 updateAIInsights();
@@ -1057,7 +1403,46 @@
             } catch (error) {
                 console.error('Data polling failed:', error);
                 updateConnectionStatus('offline', 'Disconnected');
-                simulateIncomingData();
+                // Generate new simulation data when API is not available
+                updateSimulationData();
+            }
+        }
+
+        // Update simulation data to keep charts dynamic
+        function updateSimulationData() {
+            if (machineData.size === 0) {
+                generateSimulationData();
+                return;
+            }
+            
+            // Update existing machine data with small variations
+            for (const [machineId, data] of machineData) {
+                const currentTemp = data.sensor_data.temperature_c;
+                const currentPower = data.sensor_data.power_w;
+                const currentVibration = data.sensor_data.vibration_x_g;
+                
+                // Add realistic variations
+                data.sensor_data.temperature_c = Math.max(20, Math.min(60, currentTemp + (Math.random() - 0.5) * 2));
+                data.sensor_data.power_w = Math.max(500, Math.min(5000, currentPower + (Math.random() - 0.5) * 200));
+                data.sensor_data.vibration_x_g = Math.max(0, Math.min(0.2, currentVibration + (Math.random() - 0.5) * 0.01));
+                
+                // Occasionally trigger anomalies
+                if (Math.random() > 0.95) {
+                    data.ml_prediction.anomaly_detected = true;
+                    data.ml_prediction.anomaly_score = 0.7 + Math.random() * 0.3;
+                    data.ml_prediction.alerts = ['Anomaly detected in simulation'];
+                } else if (Math.random() > 0.9) {
+                    data.ml_prediction.anomaly_detected = false;
+                    data.ml_prediction.anomaly_score = Math.random() * 0.3;
+                    data.ml_prediction.alerts = [];
+                }
+                
+                // Update timestamp
+                data.timestamp = new Date().toISOString();
+                
+                // Update live feed
+                updateLiveDataFeed(data);
+                dataPointsReceived++;
             }
         }
 
@@ -1075,13 +1460,9 @@
             }
         }
 
-        function simulateIncomingData() {
-            // Fallback simulation if API is not available
-        }
-
         function updateLiveDataFeed(dataPoint) {
             const feed = document.getElementById('liveDataFeed');
-            const timestamp = new Date(dataPoint.timestamp).toLocaleTimeString();
+            const timestamp = new Date(dataPoint.timestamp || Date.now()).toLocaleTimeString();
             const sensorData = dataPoint.sensor_data || {};
             
             const entry = document.createElement('div');
@@ -1089,6 +1470,8 @@
             
             const statusColor = dataPoint.ml_prediction?.anomaly_detected ? 'text-red-400' : 'text-green-400';
             const aiIcon = dataPoint.ml_prediction?.anomaly_detected ? '🚨' : '✅';
+            const mlMethod = dataPoint.ml_prediction?.method || 'rules';
+            const confidence = dataPoint.ml_prediction?.confidence || 0;
             
             entry.innerHTML = `
                 <span class="text-blue-400">[${timestamp}]</span>
@@ -1099,6 +1482,8 @@
                 <span>V=${sensorData.vibration_x_g?.toFixed(3)}g</span>
                 ${dataPoint.ml_prediction?.anomaly_detected ? 
                     `<span class="text-red-400">ANOMALY=${(dataPoint.ml_prediction.anomaly_score * 100).toFixed(1)}%</span>` : ''}
+                <span class="ml-badge text-xs">${mlMethod.includes('ensemble') ? 'ML' : 'Rule'}</span>
+                ${confidence > 0 ? `<span class="text-purple-400">Conf=${(confidence * 100).toFixed(0)}%</span>` : ''}
             `;
             
             feed.insertBefore(entry, feed.firstChild);
@@ -1111,18 +1496,36 @@
         function updateAIInsights() {
             const insights = document.getElementById('aiInsights');
             const totalMachines = machineData.size;
+            
+            // Count anomalies more carefully
             const anomalousMachines = Array.from(machineData.values())
-                .filter(m => m.ml_prediction?.anomaly_detected).length;
+                .filter(m => m.ml_prediction?.anomaly_detected === true).length;
             
-            const currentTime = new Date().toLocaleTimeString();
+            // Count ML-enabled machines (those with ensemble models)
+            const mlEnabledMachines = Array.from(machineData.values())
+                .filter(m => m.ml_prediction?.method?.includes('ensemble')).length;
             
+            // Count rule-based machines
+            const ruleBasedMachines = Array.from(machineData.values())
+                .filter(m => m.ml_prediction?.method?.includes('rule')).length;
+
+            console.log(`AI Insights: Total=${totalMachines}, Anomalies=${anomalousMachines}, ML=${mlEnabledMachines}, Rules=${ruleBasedMachines}`);
+
+            // Calculate average confidence
+            const machinesWithConfidence = Array.from(machineData.values())
+                .filter(m => m.ml_prediction?.confidence > 0);
+            
+            const avgConfidence = machinesWithConfidence.length > 0 
+                ? machinesWithConfidence.reduce((sum, m) => sum + m.ml_prediction.confidence, 0) / machinesWithConfidence.length
+                : 0;
+
             insights.innerHTML = `
                 <div class="glass-dark rounded-lg p-4 mb-3">
                     <div class="flex items-center">
                         <span class="text-green-400 text-2xl mr-3">🤖</span>
                         <div>
-                            <p class="font-medium text-white">AI System Status: Active</p>
-                            <p class="text-sm text-gray-300">Processing ${totalMachines} machines in real-time</p>
+                            <p class="font-medium text-white">Advanced ML System: Active</p>
+                            <p class="text-sm text-gray-300">Processing ${totalMachines} machines • ${mlEnabledMachines} with ML models • ${ruleBasedMachines} rule-based</p>
                         </div>
                     </div>
                 </div>
@@ -1132,8 +1535,8 @@
                     <div class="flex items-center">
                         <span class="text-red-400 text-2xl mr-3">🚨</span>
                         <div>
-                            <p class="font-medium text-red-400">Anomalies Detected</p>
-                            <p class="text-sm text-gray-300">${anomalousMachines} machines require attention</p>
+                            <p class="font-medium text-red-400">AI Anomalies Detected</p>
+                            <p class="text-sm text-gray-300">${anomalousMachines} machines flagged • Avg confidence: ${(avgConfidence * 100).toFixed(1)}%</p>
                         </div>
                     </div>
                 </div>
@@ -1142,8 +1545,8 @@
                     <div class="flex items-center">
                         <span class="text-green-400 text-2xl mr-3">✅</span>
                         <div>
-                            <p class="font-medium text-green-400">All Systems Normal</p>
-                            <p class="text-sm text-gray-300">Fleet operating within parameters</p>
+                            <p class="font-medium text-green-400">All Systems Optimal</p>
+                            <p class="text-sm text-gray-300">Fleet operating within AI-calculated parameters</p>
                         </div>
                     </div>
                 </div>
@@ -1153,12 +1556,40 @@
                     <div class="flex items-center">
                         <span class="text-purple-400 text-2xl mr-3">🧠</span>
                         <div>
-                            <p class="font-medium text-white">Dr. Hemdan's AI Engine</p>
-                            <p class="text-sm text-gray-300">Advanced predictive analytics active</p>
+                            <p class="font-medium text-white">Dr. Hemdan's Ensemble AI</p>
+                            <p class="text-sm text-gray-300">Multi-algorithm predictive analytics • ${anomalousMachines > 0 ? 'Anomalies detected' : 'All systems normal'}</p>
                         </div>
                     </div>
                 </div>
             `;
+        }
+
+        function updateClientSelectorCounts() {
+            for (const [clientId, clientConfig] of clients) {
+                const button = document.getElementById(`client-btn-${clientId}`);
+                if (!button) continue;
+
+                const clientMachines = Array.from(machineData.values())
+                    .filter(machine => machine.client_id === clientId);
+                
+                if (clientMachines.length > 0) {
+                    const activeMachines = clientMachines.filter(m => m.metadata?.status !== 'offline').length;
+                    const totalMachines = clientMachines.length;
+                    const onlinePercentage = Math.round((activeMachines / totalMachines) * 100);
+                    
+                    const statusColor = onlinePercentage > 80 ? 'text-green-300 bg-green-500/20' : 
+                                       onlinePercentage > 60 ? 'text-yellow-300 bg-yellow-500/20' : 
+                                       'text-red-300 bg-red-500/20';
+
+                    // Update status spans
+                    const statusSpan = button.querySelector('.px-3.py-1');
+                    
+                    if (statusSpan) {
+                        statusSpan.className = `px-3 py-1 ${statusColor} rounded-full text-xs font-medium`;
+                        statusSpan.textContent = `${activeMachines}/${totalMachines} Online`;
+                    }
+                }
+            }
         }
 
         function updateDataPointsCounter() {
@@ -1172,8 +1603,54 @@
             if (!isConnected) {
                 console.log('Starting in simulation mode...');
                 loadDefaultClients();
+                generateSimulationData(); // Add simulation data
                 startDataPolling();
             }
+        }
+
+        // Add simulation data for testing when API is not available
+        function generateSimulationData() {
+            const clientIds = ['acme-corp', 'tech-solutions', 'global-motors', 'petro-industries', 'food-processing'];
+            const machineTypes = ['pump', 'motor', 'compressor', 'fan', 'mill', 'robot', 'servo', 'cnc', 'laser', 'press'];
+            
+            clientIds.forEach(clientId => {
+                const clientConfig = clients.get(clientId);
+                if (clientConfig && clientConfig.machines) {
+                    clientConfig.machines.forEach((machineId, index) => {
+                        const simulatedData = {
+                            machine_id: machineId,
+                            client_id: clientId,
+                            timestamp: new Date().toISOString(),
+                            sensor_data: {
+                                temperature_c: 25 + Math.random() * 30,
+                                power_w: 1000 + Math.random() * 2000,
+                                vibration_x_g: Math.random() * 0.1,
+                                vibration_y_g: Math.random() * 0.1,
+                                vibration_z_g: Math.random() * 0.1
+                            },
+                            metadata: {
+                                machine_name: `${machineTypes[index % machineTypes.length].charAt(0).toUpperCase() + machineTypes[index % machineTypes.length].slice(1)} ${String(index + 1).padStart(2, '0')}`,
+                                machine_type: machineTypes[index % machineTypes.length],
+                                status: Math.random() > 0.2 ? 'online' : (Math.random() > 0.5 ? 'maintenance' : 'offline'),
+                                health_score: 70 + Math.random() * 30,
+                                location: `Floor ${Math.ceil(Math.random() * 3)}`
+                            },
+                            ml_prediction: {
+                                method: Math.random() > 0.6 ? 'ensemble_model' : 'rule_based',
+                                anomaly_detected: Math.random() > 0.8,
+                                anomaly_score: Math.random(),
+                                confidence: Math.random() * 0.3 + 0.7,
+                                alerts: Math.random() > 0.7 ? ['Temperature trending high', 'Vibration spike detected'] : []
+                            }
+                        };
+                        
+                        machineData.set(machineId, simulatedData);
+                        dataPointsReceived++;
+                    });
+                }
+            });
+            
+            console.log(`Generated simulation data for ${machineData.size} machines`);
         }
 
         // Start the dashboard when page loads
@@ -1186,7 +1663,7 @@
             }
         });
 
-        console.log('🚀 Dr. Hemdan\'s Advanced PdM Platform Initialized');
+        console.log('🚀 Dr. Hemdan\'s Enhanced PdM Platform Initialized');
     </script>
 </body>
 </html>
