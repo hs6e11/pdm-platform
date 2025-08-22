@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Portal - AISPARK | Secure Access to Your Factory Data</title>
-    <meta name="description" content="Secure login portal for AISPARK clients to access real-time factory monitoring and predictive maintenance dashboards.">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>PDM Platform - Enhanced Client Login</title>
     <style>
         * {
             margin: 0;
@@ -14,21 +12,24 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow-x: hidden;
         }
 
         .login-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            padding: 40px;
             width: 100%;
             max-width: 450px;
+            margin: 20px;
             position: relative;
             overflow: hidden;
         }
@@ -39,138 +40,203 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #f59e0b, #f97316, #ef4444);
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 100%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .logo-section {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 40px;
         }
 
         .logo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1e40af;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
 
-        .tagline {
-            color: #64748b;
-            font-size: 1rem;
+        h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .login-form {
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .company-info {
+            background: linear-gradient(135deg, #f8f9ff, #e8f2ff);
+            border: 1px solid #e1e8ff;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .company-info .stats {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-toggle {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 30px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-container {
             position: relative;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #374151;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .form-group i {
+        .password-toggle {
             position: absolute;
-            right: 1rem;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #9ca3af;
-            margin-top: 0.75rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 4px;
         }
 
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: auto;
-        }
-
-        .forgot-password {
-            color: #3b82f6;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .forgot-password:hover {
-            color: #1d4ed8;
-        }
-
-        .login-button {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 1rem;
             border: none;
             border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .login-button:hover {
+        .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .login-button:active {
+        .submit-btn:active {
             transform: translateY(0);
         }
 
-        .login-button.loading {
-            background: #9ca3af;
+        .submit-btn:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .loading-spinner {
+        .loading {
             display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
             width: 20px;
             height: 20px;
-            border: 2px solid #ffffff40;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
         }
 
         @keyframes spin {
@@ -178,350 +244,621 @@
             100% { transform: rotate(360deg); }
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: #9ca3af;
-            font-size: 0.9rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e5e7eb;
-        }
-
-        .divider span {
-            padding: 0 1rem;
-        }
-
-        .sso-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .sso-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            background: white;
-            color: #374151;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .sso-button:hover {
-            border-color: #3b82f6;
-            background: #f8fafc;
-        }
-
-        .demo-access {
-            background: #f0f9ff;
-            border: 1px solid #0ea5e9;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            text-align: center;
-        }
-
-        .demo-access h4 {
-            color: #0369a1;
-            margin-bottom: 0.5rem;
-        }
-
-        .demo-access p {
-            font-size: 0.9rem;
-            color: #0c4a6e;
-            margin-bottom: 1rem;
-        }
-
-        .demo-button {
-            background: linear-gradient(45deg, #0ea5e9, #0284c7);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
+        .error-message, .success-message, .email-notification {
+            padding: 12px;
             border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .demo-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
-        }
-
-        .back-to-website {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .back-to-website a {
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .back-to-website a:hover {
-            color: #3b82f6;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid;
             display: none;
         }
 
-        .alert.error {
-            background: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
+        .error-message {
+            background: #fff5f5;
+            color: #e53e3e;
+            border-color: #fed7d7;
         }
 
-        .alert.success {
-            background: #f0fdf4;
-            color: #16a34a;
-            border: 1px solid #bbf7d0;
+        .success-message {
+            background: #f0fff4;
+            color: #38a169;
+            border-color: #9ae6b4;
         }
 
-        /* Responsive */
+        .email-notification {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            border-color: #90cdf4;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .email-sent-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            margin: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+
+        .modal-text {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 480px) {
             .login-container {
-                margin: 1rem;
-                padding: 2rem;
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
             }
             
             .logo {
-                font-size: 2rem;
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Email Sent Modal -->
+    <div class="email-sent-modal" id="emailModal">
+        <div class="modal-content">
+            <div class="modal-icon">📧</div>
+            <h2 class="modal-title">Welcome Email Sent!</h2>
+            <p class="modal-text">
+                We've sent a welcome email to your inbox with account details and next steps. 
+                Please check your email and click the verification link to activate your account.
+            </p>
+            <button class="modal-btn" onclick="closeEmailModal()">Got it!</button>
+        </div>
+    </div>
+
     <div class="login-container">
         <div class="logo-section">
-            <div class="logo">
-                <i class="fas fa-bolt"></i>
-                AISPARK
+            <div class="logo">PDM</div>
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Industrial IoT Predictive Maintenance Platform</p>
+            
+            <div class="company-info">
+                <div style="font-weight: 600; color: #333; margin-bottom: 8px;">Platform Overview</div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">24</span>
+                        <span class="stat-label">Machines</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">17</span>
+                        <span class="stat-label">Active Alerts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">ML Coverage</span>
+                    </div>
+                </div>
             </div>
-            <p class="tagline">Client Portal Access</p>
         </div>
 
-        <div id="alertMessage" class="alert"></div>
-
-        <form class="login-form" id="loginForm">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required placeholder="your.email@company.com">
-                <i class="fas fa-envelope"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
-                <i class="fas fa-lock"></i>
-            </div>
-
-            <div class="remember-forgot">
-                <label class="remember-me">
-                    <input type="checkbox" id="remember">
-                    <span>Remember me</span>
-                </label>
-                <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot password?</a>
-            </div>
-
-            <button type="submit" class="login-button" id="loginButton">
-                <div class="loading-spinner" id="loadingSpinner"></div>
-                <span id="buttonText">Access Dashboard</span>
-            </button>
-        </form>
-
-        <div class="divider">
-            <span>Or continue with</span>
+        <div class="form-toggle">
+            <button class="toggle-btn active" onclick="switchForm('login')">Sign In</button>
+            <button class="toggle-btn" onclick="switchForm('register')">Create Account</button>
         </div>
 
-        <div class="sso-buttons">
-            <a href="#" class="sso-button" onclick="loginWithSSO('microsoft')">
-                <i class="fab fa-microsoft" style="color: #0078d4;"></i>
-                Microsoft 365
-            </a>
-            <a href="#" class="sso-button" onclick="loginWithSSO('google')">
-                <i class="fab fa-google" style="color: #ea4335;"></i>
-                Google Workspace
-            </a>
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        <div class="email-notification" id="emailNotification"></div>
+
+        <!-- Login Form -->
+        <div class="form-section active" id="loginForm">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="loginPassword" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="loginBtn">
+                    <span class="btn-text">Sign In to Dashboard</span>
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <span>Signing In...</span>
+                    </div>
+                </button>
+            </form>
+
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+            </div>
         </div>
 
-        <div class="demo-access">
-            <h4><i class="fas fa-eye"></i> Try Our Live Demo</h4>
-            <p>Explore AISPARK with sample factory data before signing in</p>
-            <a href="../pages/demo.html" class="demo-button">View Interactive Demo</a>
-        </div>
+        <!-- Register Form -->
+        <div class="form-section" id="registerForm">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" required>
+                </div>
 
-        <div class="back-to-website">
-            <a href="../index.html">
-                <i class="fas fa-arrow-left"></i> Back to AISPARK Website
-            </a>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="registerCompany">Company Name</label>
+                    <input type="text" id="registerCompany" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="registerIndustry">Industry Type</label>
+                    <select id="registerIndustry" required>
+                        <option value="">Select Industry</option>
+                        <option value="oil-gas">Oil & Gas</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="automotive">Automotive</option>
+                        <option value="food-processing">Food Processing</option>
+                        <option value="tech-solutions">Tech Solutions</option>
+                        <option value="pharmaceuticals">Pharmaceuticals</option>
+                        <option value="aerospace">Aerospace</option>
+                        <option value="energy">Energy & Power</option>
+                        <option value="mining">Mining & Extraction</option>
+                        <option value="textiles">Textiles & Clothing</option>
+                        <option value="chemicals">Chemical Processing</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="registerPassword" required minlength="8">
+                        <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <div class="password-container">
+                        <input type="password" id="registerConfirmPassword" required minlength="8">
+                        <button type="button" class="password-toggle" onclick="togglePassword('registerConfirmPassword', this)">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="registerBtn">
+                    <span class="btn-text">Create Account & Send Welcome Email</span>
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <span>Creating Account...</span>
+                    </div>
+                </button>
+            </form>
         </div>
     </div>
 
     <script>
-        // Client credentials for demo (in production, this would be server-side)
-        const clientCredentials = {
+        // Enhanced user database with industry-specific routing
+        const users = {
             'demo@petroindustries.com': {
                 password: 'demo123',
-                clientId: 'petro_industries',
-                companyName: 'Petro Industries',
-                role: 'client_admin',
-                machines: ['Petro-Oil-Pump-01', 'Petro-Compressor-A', 'Petro-Turbine-03']
+                name: 'John Smith',
+                company: 'Petro Industries',
+                industry: 'oil-gas'
             },
-            'manager@foodprocessing.com': {
-                password: 'demo123', 
-                clientId: 'food_processing',
-                companyName: 'Food Processing Ltd',
-                role: 'operator',
-                machines: ['Food-Oven-Alpha', 'Food-Mixer-B2', 'Food-Packaging-01']
-            },
-            'admin@aispark.ai': {
+            'admin@foodprocessing.com': {
                 password: 'admin123',
-                clientId: 'aispark_admin',
-                companyName: 'AISPARK Admin',
-                role: 'admin',
-                machines: 'all'
+                name: 'Sarah Johnson',
+                company: 'Food Processing Corp',
+                industry: 'food-processing'
+            },
+            'tech@automation.com': {
+                password: 'tech123',
+                name: 'Mike Chen',
+                company: 'Tech Solutions Inc',
+                industry: 'tech-solutions'
             }
         };
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // Industry-specific dashboard routing
+        const industryDashboards = {
+            'oil-gas': 'oil-gas-dashboard.html',
+            'manufacturing': 'manufacturing-dashboard.html',
+            'automotive': 'automotive-dashboard.html',
+            'food-processing': 'food-processing-dashboard.html',
+            'tech-solutions': 'tech-solutions-dashboard.html',
+            'pharmaceuticals': 'pharmaceuticals-dashboard.html',
+            'aerospace': 'aerospace-dashboard.html',
+            'energy': 'energy-dashboard.html',
+            'mining': 'mining-dashboard.html',
+            'textiles': 'textiles-dashboard.html',
+            'chemicals': 'chemicals-dashboard.html',
+            'other': 'general-dashboard.html'
+        };
+
+        function switchForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            hideMessages();
             
-            // Show loading state
-            showLoading(true);
+            if (type === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                toggleBtns[0].classList.add('active');
+                toggleBtns[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                toggleBtns[0].classList.remove('active');
+                toggleBtns[1].classList.add('active');
+            }
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showEmailNotification() {
+            const emailDiv = document.getElementById('emailNotification');
+            emailDiv.innerHTML = '📧 Welcome email sent! Check your inbox for account verification.';
+            emailDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                emailDiv.style.display = 'none';
+            }, 8000);
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('emailNotification').style.display = 'none';
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            const btnText = button.querySelector('.btn-text');
+            const loading = button.querySelector('.loading');
+            
+            if (isLoading) {
+                btnText.style.display = 'none';
+                loading.classList.add('active');
+                button.disabled = true;
+            } else {
+                btnText.style.display = 'block';
+                loading.classList.remove('active');
+                button.disabled = false;
+            }
+        }
+
+        function showEmailModal() {
+            document.getElementById('emailModal').style.display = 'flex';
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        // Simulate sending welcome email
+        async function sendWelcomeEmail(userData) {
+            // In production, this would make an API call to your email service
+            console.log('Sending welcome email to:', userData.email);
+            console.log('Email content would include:');
+            console.log('- Welcome message');
+            console.log('- Account verification link');
+            console.log('- Industry-specific getting started guide');
+            console.log('- Support contact information');
+            
+            // Simulate email sending delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            return {
+                success: true,
+                message: 'Welcome email sent successfully'
+            };
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            setLoading('loginBtn', true);
+            hideMessages();
             
             // Simulate API call delay
             await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // Check credentials
-            if (clientCredentials[email] && clientCredentials[email].password === password) {
-                const client = clientCredentials[email];
+            // Check credentials against mock database
+            if (users[email] && users[email].password === password) {
+                const user = users[email];
                 
-                // Store authentication data
-                localStorage.setItem('aispark_auth', JSON.stringify({
+                // Store user session
+                sessionStorage.setItem('pdm_user', JSON.stringify({
                     email: email,
-                    clientId: client.clientId,
-                    companyName: client.companyName,
-                    role: client.role,
-                    machines: client.machines,
-                    loginTime: new Date().toISOString()
+                    name: user.name,
+                    company: user.company,
+                    industry: user.industry
                 }));
                 
-                // Show success message
-                showAlert('success', 'Login successful! Redirecting to your dashboard...');
+                showSuccess('Login successful! Redirecting to your industry dashboard...');
                 
-                // Redirect to client portal
+                // Redirect to industry-specific dashboard
                 setTimeout(() => {
-                    if (client.role === 'admin') {
-                        window.location.href = '../dashboard/admin-panel.html';
-                    } else {
-                        window.location.href = '../dashboard/client-portal.html';
-                    }
-                }, 1500);
-                
+                    const dashboardUrl = industryDashboards[user.industry] || 'general-dashboard.html';
+                    window.location.href = dashboardUrl;
+                }, 2000);
             } else {
-                showAlert('error', 'Invalid email or password. Please try again.');
-                showLoading(false);
+                showError('Invalid email or password. Try demo@petroindustries.com / demo123');
             }
-        });
-
-        function showLoading(isLoading) {
-            const button = document.getElementById('loginButton');
-            const spinner = document.getElementById('loadingSpinner');
-            const buttonText = document.getElementById('buttonText');
             
-            if (isLoading) {
-                button.classList.add('loading');
-                button.disabled = true;
-                spinner.style.display = 'inline-block';
-                buttonText.textContent = 'Authenticating...';
-            } else {
-                button.classList.remove('loading');
-                button.disabled = false;
-                spinner.style.display = 'none';
-                buttonText.textContent = 'Access Dashboard';
-            }
+            setLoading('loginBtn', false);
         }
 
-        function showAlert(type, message) {
-            const alert = document.getElementById('alertMessage');
-            alert.className = `alert ${type}`;
-            alert.textContent = message;
-            alert.style.display = 'block';
+        async function handleRegister(event) {
+            event.preventDefault();
             
-            if (type === 'error') {
-                setTimeout(() => {
-                    alert.style.display = 'none';
-                }, 5000);
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const company = document.getElementById('registerCompany').value;
+            const industry = document.getElementById('registerIndustry').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                showError('Passwords do not match!');
+                return;
             }
+            
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters long!');
+                return;
+            }
+            
+            if (users[email]) {
+                showError('An account with this email already exists!');
+                return;
+            }
+            
+            if (!industry) {
+                showError('Please select an industry type!');
+                return;
+            }
+            
+            setLoading('registerBtn', true);
+            hideMessages();
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Create user account
+                const userData = {
+                    password: password,
+                    name: name,
+                    company: company,
+                    industry: industry,
+                    email: email,
+                    registrationDate: new Date().toISOString()
+                };
+                
+                // Add to mock database
+                users[email] = userData;
+                
+                // Send welcome email
+                const emailResult = await sendWelcomeEmail(userData);
+                
+                if (emailResult.success) {
+                    showSuccess('Account created successfully!');
+                    showEmailModal(); // Show email sent modal
+                    
+                    // Switch to login form and pre-fill email
+                    setTimeout(() => {
+                        switchForm('login');
+                        document.getElementById('loginEmail').value = email;
+                        closeEmailModal();
+                    }, 3000);
+                } else {
+                    showError('Account created but failed to send welcome email. Please contact support.');
+                }
+                
+            } catch (error) {
+                showError('Registration failed. Please try again.');
+                console.error('Registration error:', error);
+            }
+            
+            setLoading('registerBtn', false);
         }
 
         function showForgotPassword() {
-            showAlert('success', 'Password reset instructions will be sent to your email address.');
+            alert('Password reset functionality would be implemented here.\n\nFor demo purposes:\n- Email: demo@petroindustries.com\n- Password: demo123');
         }
 
-        function loginWithSSO(provider) {
-            showAlert('success', `Redirecting to ${provider} login...`);
-            // In production, this would redirect to OAuth provider
-            setTimeout(() => {
-                showAlert('error', 'SSO integration coming soon. Please use email/password for now.');
-            }, 2000);
-        }
-
-        // Auto-fill demo credentials for testing
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add demo credentials hint
-            const emailInput = document.getElementById('email');
-            emailInput.addEventListener('focus', function() {
-                if (!this.value) {
-                    showAlert('success', 'Demo credentials: demo@petroindustries.com / demo123');
-                }
-            });
+        // Auto-fill demo credentials on page load
+        window.addEventListener('load', () => {
+            document.getElementById('loginEmail').value = 'demo@petroindustries.com';
+            document.getElementById('loginPassword').value = 'demo123';
         });
 
-        // Check if user is already logged in
-        if (localStorage.getItem('aispark_auth')) {
-            const auth = JSON.parse(localStorage.getItem('aispark_auth'));
-            const loginTime = new Date(auth.loginTime);
-            const now = new Date();
-            const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+        // Add smooth entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.login-container');
+            container.style.transform = 'translateY(20px)';
+            container.style.opacity = '0';
             
-            // Auto-redirect if login is less than 24 hours old
-            if (hoursSinceLogin < 24) {
-                showAlert('success', 'Already logged in. Redirecting...');
-                setTimeout(() => {
-                    if (auth.role === 'admin') {
-                        window.location.href = '../dashboard/admin-panel.html';
-                    } else {
-                        window.location.href = '../dashboard/client-portal.html';
-                    }
-                }, 1500);
-            }
-        }
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease';
+                container.style.transform = 'translateY(0)';
+                container.style.opacity = '1';
+            }, 100);
+        });
     </script>
 </body>
 </html>

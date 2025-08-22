@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDM Platform - Manufacturing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3182ce, #2b6cb0);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .industry-badge {
+            background: rgba(49, 130, 206, 0.2);
+            color: #3182ce;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .company-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .company-name {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .add-machine-btn {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-machine-btn:hover {
+            background: #2c5282;
+            transform: translateY(-1px);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '🏭';
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            font-size: 120px;
+            opacity: 0.1;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-icon.efficiency { background: #e6fffa; color: #00695c; }
+        .stat-icon.temperature { background: #fed7e2; color: #97266d; }
+        .stat-icon.speed { background: #fef5e7; color: #c05621; }
+        .stat-icon.power { background: #ebf8ff; color: #2b6cb0; }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .card-label {
+            color: #718096;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .machines-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3182ce;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2c5282;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+
+        .machines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .machine-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .machine-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .machine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .machine-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .machine-type {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .machine-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f7fafc;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.healthy {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-badge.warning {
+            background: #fef5e7;
+            color: #c05621;
+        }
+
+        .status-badge.critical {
+            background: #fed7e2;
+            color: #97266d;
+        }
+
+        .machine-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 0.75rem;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .health-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .health-fill.healthy { background: #48bb78; }
+        .health-fill.warning { background: #ed8936; }
+        .health-fill.critical { background: #f56565; }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #718096;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .sensor-config {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .sensor-config h4 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .stats-grid, .machines-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">🏭</div>
+                <div class="industry-badge">Manufacturing</div>
+                <div class="company-info">
+                    <div class="company-name" id="companyName">Loading...</div>
+                    <div class="user-name" id="userName">Loading...</div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="add-machine-btn" onclick="openAddMachineModal()">
+                    ➕ Add Machine
+                </button>
+                <button class="logout-btn" onclick="logout()">
+                    🚪 Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="welcome-section">
+            <h1 class="welcome-title" id="welcomeTitle">Manufacturing Operations Dashboard</h1>
+            <p class="welcome-subtitle">Monitor your production lines, assembly equipment, and quality systems</p>
+            
+            <div class="quick-stats" id="quickStats">
+                <!-- Stats populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="card-value" id="avgEfficiency">89.2%</div>
+                        <div class="card-label">Production Efficiency</div>
+                    </div>
+                    <div class="stat-icon efficiency">⚡</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="card-value" id="avgTemperature">65.4°C</div>
+                        <div class="card-label">Average Temperature</div>
+                    </div>
+                    <div class="stat-icon temperature">🌡️</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="card-value" id="avgSpeed">1,250 RPM</div>
+                        <div class="card-label">Average Speed</div>
+                    </div>
+                    <div class="stat-icon speed">🔄</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="card-value" id="powerConsumption">5.8MW</div>
+                        <div class="card-label">Power Consumption</div>
+                    </div>
+                    <div class="stat-icon power">⚡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="machines-section">
+            <div class="section-header">
+                <h2 class="section-title">Your Manufacturing Equipment</h2>
+                <div class="section-actions">
+                    <button class="btn btn-secondary" onclick="exportMachineData()">
+                        📊 Export Data
+                    </button>
+                    <button class="btn btn-primary" onclick="openAddMachineModal()">
+                        ➕ Add New Machine
+                    </button>
+                </div>
+            </div>
+            <div class="machines-grid" id="machinesGrid">
+                <!-- Machines populated by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Machine Modal -->
+    <div class="modal" id="addMachineModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Manufacturing Equipment</h2>
+                <button class="close-btn" onclick="closeAddMachineModal()">&times;</button>
+            </div>
+            
+            <form onsubmit="addMachine(event)">
+                <div class="form-group">
+                    <label for="machineName">Equipment Name</label>
+                    <input type="text" id="machineName" required placeholder="e.g., Assembly Line A">
+                </div>
+                
+                <div class="form-group">
+                    <label for="machineType">Equipment Type</label>
+                    <select id="machineType" required>
+                        <option value="">Select Type</option>
+                        <option value="CNC Machine">CNC Machine</option>
+                        <option value="Assembly Line">Assembly Line</option>
+                        <option value="Injection Molding">Injection Molding</option>
+                        <option value="Conveyor System">Conveyor System</option>
+                        <option value="Industrial Robot">Industrial Robot</option>
+                        <option value="Press Machine">Press Machine</option>
+                        <option value="Welding Station">Welding Station</option>
+                        <option value="Quality Tester">Quality Tester</option>
+                        <option value="Packaging Machine">Packaging Machine</option>
+                        <option value="Material Handler">Material Handler</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="machineLocation">Production Area</label>
+                    <input type="text" id="machineLocation" required placeholder="e.g., Line 1, Zone B">
+                </div>
+                
+                <div class="sensor-config">
+                    <h4>Sensor Configuration</h4>
+                    <div class="sensor-grid">
+                        <div class="form-group">
+                            <label for="tempRange">Temperature Range (°C)</label>
+                            <input type="text" id="tempRange" placeholder="20-80" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="speedRange">Speed Range (RPM)</label>
+                            <input type="text" id="speedRange" placeholder="100-2000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="powerRange">Power Range (kW)</label>
+                            <input type="text" id="powerRange" placeholder="5-50" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="efficiencyTarget">Efficiency Target (%)</label>
+                            <input type="number" id="efficiencyTarget" placeholder="85" min="50" max="100" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddMachineModal()" style="flex: 1;">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        Add Equipment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let userMachines = JSON.parse(localStorage.getItem('pdm_manufacturing_machines')) || [
+            {
+                id: 1,
+                name: 'CNC Mill Station 1',
+                type: 'CNC Machine',
+                location: 'Line 1, Zone A',
+                status: 'healthy',
+                health: 92,
+                temperature: 45.2,
+                speed: 1800,
+                powerConsumption: 15.5,
+                efficiency: 94.2,
+                lastReading: '1 minute ago',
+                owner: 'user'
+            },
+            {
+                id: 2,
+                name: 'Assembly Line Beta',
+                type: 'Assembly Line',
+                location: 'Line 2, Zone B',
+                status: 'warning',
+                health: 78,
+                temperature: 68.7,
+                speed: 850,
+                powerConsumption: 28.3,
+                efficiency: 82.1,
+                lastReading: '2 minutes ago',
+                owner: 'user'
+            }
+        ];
+
+        function initializeDashboard() {
+            const userData = JSON.parse(sessionStorage.getItem('pdm_user') || '{}');
+            
+            if (!userData.email) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Update header
+            document.getElementById('companyName').textContent = userData.company || 'Manufacturing Company';
+            document.getElementById('userName').textContent = userData.name || 'User';
+            document.getElementById('welcomeTitle').textContent = `Welcome back, ${(userData.name || 'User').split(' ')[0]}!`;
+
+            // Load user's machines
+            loadUserMachines();
+            updateQuickStats();
+        }
+
+        function loadUserMachines() {
+            const machinesGrid = document.getElementById('machinesGrid');
+            
+            if (userMachines.length === 0) {
+                machinesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🏭</div>
+                        <h3>No equipment added yet</h3>
+                        <p>Click "Add New Machine" to start monitoring your manufacturing equipment</p>
+                    </div>
+                `;
+                return;
+            }
+
+            machinesGrid.innerHTML = userMachines.map(machine => `
+                <div class="machine-card">
+                    <div class="machine-header">
+                        <div class="machine-info">
+                            <h3>${machine.name}</h3>
+                            <div class="machine-type">${machine.type}</div>
+                            <div class="machine-type">📍 ${machine.location}</div>
+                        </div>
+                        <div class="machine-actions">
+                            <button class="action-btn" onclick="editMachine(${machine.id})" title="Edit">
+                                ✏️
+                            </button>
+                            <button class="action-btn" onclick="deleteMachine(${machine.id})" title="Delete">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <span class="status-badge ${machine.status}">${machine.status}</span>
+                    
+                    <div class="machine-metrics">
+                        <div class="metric">
+                            <div class="metric-value">${machine.temperature}°C</div>
+                            <div class="metric-label">Temperature</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${machine.speed} RPM</div>
+                            <div class="metric-label">Speed</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${machine.powerConsumption}kW</div>
+                            <div class="metric-label">Power</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${machine.efficiency}%</div>
+                            <div class="metric-label">Efficiency</div>
+                        </div>
+                    </div>
+                    
+                    <div class="health-bar">
+                        <div class="health-fill ${machine.status}" style="width: ${machine.health}%"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: 14px; font-weight: 600; color: #2d3748;">
+                            Health: ${machine.health}%
+                        </div>
+                        <div style="font-size: 12px; color: #718096;">${machine.lastReading}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateQuickStats() {
+            const totalMachines = userMachines.length;
+            const healthyMachines = userMachines.filter(m => m.status === 'healthy').length;
+            const avgEfficiency = userMachines.reduce((sum, m) => sum + m.efficiency, 0) / totalMachines || 0;
+            const totalPower = userMachines.reduce((sum, m) => sum + m.powerConsumption, 0);
+
+            document.getElementById('quickStats').innerHTML = `
+                <div class="quick-stat">
+                    <span class="stat-value">${totalMachines}</span>
+                    <span class="stat-label">Total Equipment</span>
+                </div>
+                <div class="quick-stat">
+                    <span class="stat-value">${healthyMachines}</span>
+                    <span class="stat-label">Healthy</span>
+                </div>
+                <div class="quick-stat">
+                    <span class="stat-value">${avgEfficiency.toFixed(1)}%</span>
+                    <span class="stat-label">Avg Efficiency</span>
+                </div>
+                <div class="quick-stat">
+                    <span class="stat-value">${totalPower.toFixed(1)}kW</span>
+                    <span class="stat-label">Total Power</span>
+                </div>
+            `;
+
+            // Update main stats
+            const avgTemp = userMachines.reduce((sum, m) => sum + m.temperature, 0) / totalMachines || 0;
+            const avgSpeed = userMachines.reduce((sum, m) => sum + m.speed, 0) / totalMachines || 0;
+            
+            document.getElementById('avgEfficiency').textContent = `${avgEfficiency.toFixed(1)}%`;
+            document.getElementById('avgTemperature').textContent = `${avgTemp.toFixed(1)}°C`;
+            document.getElementById('avgSpeed').textContent = `${Math.round(avgSpeed)} RPM`;
+            document.getElementById('powerConsumption').textContent = `${totalPower.toFixed(1)}kW`;
+        }
+
+        function openAddMachineModal() {
+            document.getElementById('addMachineModal').style.display = 'flex';
+        }
+
+        function closeAddMachineModal() {
+            document.getElementById('addMachineModal').style.display = 'none';
+            document.getElementById('addMachineModal').querySelector('form').reset();
+        }
+
+        function addMachine(event) {
+            event.preventDefault();
+            
+            const newMachine = {
+                id: Date.now(),
+                name: document.getElementById('machineName').value,
+                type: document.getElementById('machineType').value,
+                location: document.getElementById('machineLocation').value,
+                status: 'healthy',
+                health: Math.floor(Math.random() * 20) + 80,
+                temperature: Math.floor(Math.random() * 30) + 40,
+                speed: Math.floor(Math.random() * 1000) + 500,
+                powerConsumption: Math.random() * 40 + 10,
+                efficiency: Math.floor(Math.random() * 15) + 85,
+                lastReading: 'Just now',
+                owner: 'user',
+                tempRange: document.getElementById('tempRange').value,
+                speedRange: document.getElementById('speedRange').value,
+                powerRange: document.getElementById('powerRange').value,
+                efficiencyTarget: document.getElementById('efficiencyTarget').value
+            };
+            
+            userMachines.push(newMachine);
+            saveMachines();
+            loadUserMachines();
+            updateQuickStats();
+            closeAddMachineModal();
+            
+            alert(`Equipment "${newMachine.name}" added successfully! It will start generating production data immediately.`);
+        }
+
+        function editMachine(machineId) {
+            const machine = userMachines.find(m => m.id === machineId);
+            if (machine) {
+                const newName = prompt('Enter new equipment name:', machine.name);
+                if (newName && newName.trim()) {
+                    machine.name = newName.trim();
+                    saveMachines();
+                    loadUserMachines();
+                }
+            }
+        }
+
+        function deleteMachine(machineId) {
+            if (confirm('Are you sure you want to delete this equipment? All production data will be lost.')) {
+                userMachines = userMachines.filter(m => m.id !== machineId);
+                saveMachines();
+                loadUserMachines();
+                updateQuickStats();
+            }
+        }
+
+        function exportMachineData() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "Name,Type,Location,Status,Health,Temperature,Speed,Power,Efficiency\n"
+                + userMachines.map(m => 
+                    `${m.name},${m.type},${m.location},${m.status},${m.health},${m.temperature},${m.speed},${m.powerConsumption},${m.efficiency}`
+                ).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "manufacturing_equipment_data.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('pdm_user');
+            window.location.href = 'login.html';
+        }
+
+        function saveMachines() {
+            localStorage.setItem('pdm_manufacturing_machines', JSON.stringify(userMachines));
+        }
+
+        // Simulate real-time data updates for manufacturing
+        setInterval(() => {
+            userMachines.forEach(machine => {
+                if (Math.random() < 0.4) { // 40% chance to update each machine
+                    // Update values with manufacturing-specific patterns
+                    machine.temperature += (Math.random() - 0.5) * 3;
+                    machine.speed += (Math.random() - 0.5) * 100;
+                    machine.powerConsumption += (Math.random() - 0.5) * 2;
+                    machine.efficiency += (Math.random() - 0.5) * 2;
+                    
+                    // Manufacturing-specific status logic
+                    if (machine.temperature > 80 || machine.efficiency < 70) {
+                        machine.status = 'critical';
+                        machine.health = Math.max(40, machine.health - 2);
+                    } else if (machine.temperature > 65 || machine.efficiency < 80) {
+                        machine.status = 'warning';
+                        machine.health = Math.max(60, machine.health - 1);
+                    } else {
+                        machine.status = 'healthy';
+                        machine.health = Math.min(100, machine.health + 0.5);
+                    }
+                    
+                    // Keep values within reasonable ranges
+                    machine.temperature = Math.max(20, Math.min(100, machine.temperature));
+                    machine.speed = Math.max(100, Math.min(3000, machine.speed));
+                    machine.powerConsumption = Math.max(5, Math.min(100, machine.powerConsumption));
+                    machine.efficiency = Math.max(50, Math.min(100, machine.efficiency));
+                }
+            });
+            
+            saveMachines();
+            loadUserMachines();
+            updateQuickStats();
+        }, 25000); // Update every 25 seconds for manufacturing
+
+        // Handle modal click outside to close
+        document.getElementById('addMachineModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddMachineModal();
+            }
+        });
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
+</body>
+</html>
