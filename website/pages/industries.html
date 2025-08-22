@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industries - AISPARK | Industry-Specific Predictive Maintenance Solutions</title>
+    <meta name="description" content="AISPARK delivers industry-specific predictive maintenance solutions for Oil & Gas, Manufacturing, Food Processing, Automotive, and more.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f59e0b, #f97316);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Industries Grid */
+        .industries-section {
+            padding: 4rem 2rem;
+        }
+
+        .industries-section:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .industry-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .industry-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .industry-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            position: relative;
+        }
+
+        .industry-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .industry-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .industry-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .industry-content {
+            padding: 2rem;
+        }
+
+        .challenge-section {
+            margin-bottom: 2rem;
+        }
+
+        .challenge-section h4 {
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .solution-section {
+            margin-bottom: 2rem;
+        }
+
+        .solution-section h4 {
+            color: #059669;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .results-section {
+            background: #f0f9ff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .results-section h4 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .result-item {
+            text-align: center;
+        }
+
+        .result-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .industry-cta {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        /* Success Stories */
+        .success-stories {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .story-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .story-quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .story-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .author-info h5 {
+            color: #1e40af;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-buttons .cta-button {
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: #1e40af;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .industries-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-bolt"></i>
+                AISPARK
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="industries.html" class="active">Industries</a></li>
+                <li><a href="demo.html">Demo</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="contact.html" class="cta-button">Schedule Expert Demo</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Industry-Specific Solutions</h1>
+            <p class="hero-subtitle">Tailored predictive maintenance for your industry's unique challenges</p>
+        </div>
+    </section>
+
+    <!-- Industries Overview -->
+    <section class="industries-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🏭 Industries We Serve</h2>
+                <p>AISPARK delivers specialized predictive maintenance solutions across critical industries</p>
+            </div>
+            
+            <div class="industries-grid">
+                <!-- Oil & Gas -->
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <div class="industry-icon">🛢️</div>
+                        <div class="industry-title">Oil & Gas</div>
+                        <div class="industry-subtitle">High-pressure, high-temperature operations</div>
+                    </div>
+                    <div class="industry-content">
+                        <div class="challenge-section">
+                            <h4>🚨 Key Challenges</h4>
+                            <p>Equipment failures in remote locations can cost millions. High-temperature operations (97°C+) and extreme pressure environments require continuous monitoring.</p>
+                        </div>
+                        
+                        <div class="solution-section">
+                            <h4>✅ AISPARK Solution</h4>
+                            <p>Real-time monitoring of pumps, compressors, and turbines with specialized algorithms for high-temperature anomaly detection and vibration analysis.</p>
+                        </div>
+                        
+                        <div class="results-section">
+                            <h4>📊 Proven Results</h4>
+                            <div class="results-grid">
+                                <div class="result-item">
+                                    <div class="result-number">£2.3M</div>
+                                    <div class="result-label">Annual Savings</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">60%</div>
+                                    <div class="result-label">Downtime Reduction</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">24h</div>
+                                    <div class="result-label">Advance Warning</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">99.7%</div>
+                                    <div class="result-label">Uptime Achieved</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="industry-cta">
+                            <a href="contact.html?industry=oil-gas" class="cta-button">Get Oil & Gas Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Food Processing -->
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <div class="industry-icon">🍕</div>
+                        <div class="industry-title">Food Processing</div>
+                        <div class="industry-subtitle">Temperature-critical manufacturing</div>
+                    </div>
+                    <div class="industry-content">
+                        <div class="challenge-section">
+                            <h4>🚨 Key Challenges</h4>
+                            <p>Temperature deviations can spoil entire batches. Ovens operating at 176°C+ require precise monitoring to maintain food safety and quality standards.</p>
+                        </div>
+                        
+                        <div class="solution-section">
+                            <h4>✅ AISPARK Solution</h4>
+                            <p>Precision temperature monitoring with automated threshold management, contamination prevention, and HACCP compliance tracking.</p>
+                        </div>
+                        
+                        <div class="results-section">
+                            <h4>📊 Proven Results</h4>
+                            <div class="results-grid">
+                                <div class="result-item">
+                                    <div class="result-number">40%</div>
+                                    <div class="result-label">Waste Reduction</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">99.7%</div>
+                                    <div class="result-label">Uptime</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">4.2mo</div>
+                                    <div class="result-label">ROI Timeline</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">100%</div>
+                                    <div class="result-label">Compliance</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="industry-cta">
+                            <a href="contact.html?industry=food-processing" class="cta-button">Get Food Processing Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manufacturing -->
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <div class="industry-icon">🏭</div>
+                        <div class="industry-title">Manufacturing</div>
+                        <div class="industry-subtitle">General industrial equipment</div>
+                    </div>
+                    <div class="industry-content">
+                        <div class="challenge-section">
+                            <h4>🚨 Key Challenges</h4>
+                            <p>Unplanned downtime disrupts entire production lines. Multiple machine types require different monitoring approaches and maintenance schedules.</p>
+                        </div>
+                        
+                        <div class="solution-section">
+                            <h4>✅ AISPARK Solution</h4>
+                            <p>Universal monitoring across conveyors, presses, motors, and assembly equipment with adaptive ML models for each machine type.</p>
+                        </div>
+                        
+                        <div class="results-section">
+                            <h4>📊 Proven Results</h4>
+                            <div class="results-grid">
+                                <div class="result-item">
+                                    <div class="result-number">35%</div>
+                                    <div class="result-label">OEE Improvement</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">50%</div>
+                                    <div class="result-label">Fewer Callouts</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">25%</div>
+                                    <div class="result-label">Equipment Lifespan</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">£890K</div>
+                                    <div class="result-label">Annual Savings</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="industry-cta">
+                            <a href="contact.html?industry=manufacturing" class="cta-button">Get Manufacturing Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Automotive -->
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <div class="industry-icon">🚗</div>
+                        <div class="industry-title">Automotive</div>
+                        <div class="industry-subtitle">Precision manufacturing</div>
+                    </div>
+                    <div class="industry-content">
+                        <div class="challenge-section">
+                            <h4>🚨 Key Challenges</h4>
+                            <p>High-precision machinery requires minimal tolerances. Any deviation can result in quality issues and costly rework across the entire production line.</p>
+                        </div>
+                        
+                        <div class="solution-section">
+                            <h4>✅ AISPARK Solution</h4>
+                            <p>Multi-sensor monitoring with ensemble ML models for precision equipment, quality control integration, and real-time mobile alerts for production managers.</p>
+                        </div>
+                        
+                        <div class="results-section">
+                            <h4>📊 Proven Results</h4>
+                            <div class="results-grid">
+                                <div class="result-item">
+                                    <div class="result-number">35%</div>
+                                    <div class="result-label">OEE Increase</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">50%</div>
+                                    <div class="result-label">Fewer Callouts</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">15%</div>
+                                    <div class="result-label">Quality Improvement</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-number">6.1mo</div>
+                                    <div class="result-label">ROI Timeline</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="industry-cta">
+                            <a href="contact.html?industry=automotive" class="cta-button">Get Automotive Demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section class="success-stories">
+        <div class="container">
+            <div class="section-header">
+                <h2>💬 What Our Clients Say</h2>
+                <p>Real results from real customers across industries</p>
+            </div>
+            
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-quote">
+                        "AISPARK prevented a catastrophic pump failure that would have cost us £500K in lost production. The 24-hour advance warning gave us time to schedule maintenance properly."
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">JM</div>
+                        <div class="author-info">
+                            <h5>James Mitchell</h5>
+                            <p>Operations Manager, Petro Industries</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-quote">
+                        "Our oven temperature anomalies dropped to zero after implementing AISPARK. We haven't had a batch quality issue in 8 months."
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">SR</div>
+                        <div class="author-info">
+                            <h5>Sarah Richardson</h5>
+                            <p>Quality Director, FreshFood Processing Ltd</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-quote">
+                        "The ROI was incredible - we saved more in the first quarter than the entire annual subscription cost. Our maintenance team loves the mobile alerts."
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">DK</div>
+                        <div class="author-info">
+                            <h5>David Kumar</h5>
+                            <p>Plant Manager, AutoTech Manufacturing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready for Industry-Specific Results?</h2>
+            <p>Get a customized demo for your industry and see exactly how AISPARK solves your unique challenges</p>
+            <div class="cta-buttons">
+                <a href="contact.html" class="cta-button">Schedule Expert Demo</a>
+                <a href="demo.html" class="cta-button cta-secondary">Try Interactive Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    AISPARK
+                </div>
+                <div style="display: flex; gap: 2rem;">
+                    <a href="../index.html" style="color: #94a3b8; text-decoration: none;">Home</a>
+                    <a href="features.html" style="color: #94a3b8; text-decoration: none;">Features</a>
+                    <a href="demo.html" style="color: #94a3b8; text-decoration: none;">Demo</a>
+                    <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #334155; color: #94a3b8;">
+                © 2025 AISPARK Ltd. All rights reserved. | London, UK
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

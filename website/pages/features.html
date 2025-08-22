@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - AISPARK | Advanced AI-Powered Predictive Maintenance</title>
+    <meta name="description" content="Discover AISPARK's advanced features: ensemble AI models, real-time IoT monitoring, edge computing, and enterprise security for predictive maintenance.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f59e0b, #f97316);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Features Sections */
+        .features-section {
+            padding: 4rem 2rem;
+        }
+
+        .features-section:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        /* AI Features Grid */
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .ai-feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .ai-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .ai-feature-icon {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+
+        .ai-feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #1e40af;
+        }
+
+        .ai-feature p {
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .feature-metrics {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        /* IoT Protocols */
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .protocol-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .protocol-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .protocol-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .protocol-card.production { border-top: 4px solid #10b981; }
+        .protocol-card.production .protocol-icon { color: #10b981; }
+
+        .protocol-card.development { border-top: 4px solid #f59e0b; }
+        .protocol-card.development .protocol-icon { color: #f59e0b; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .status-production {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-development {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Security Features */
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .security-feature {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .security-feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+        }
+
+        .security-feature-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .security-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fbbf24;
+        }
+
+        /* Performance Metrics */
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-top: 4px solid #3b82f6;
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-buttons .cta-button {
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: #1e40af;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .ai-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-bolt"></i>
+                AISPARK
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="features.html" class="active">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="industries.html">Industries</a></li>
+                <li><a href="demo.html">Demo</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="demo.html" class="cta-button">Try Demo</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Advanced AI & Technology Features</h1>
+            <p class="hero-subtitle">Discover the cutting-edge technology that makes AISPARK the most advanced predictive maintenance platform</p>
+        </div>
+    </section>
+
+    <!-- AI & ML Features -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🧠 Next-Generation AI & Machine Learning</h2>
+                <p>Our ensemble AI approach combines multiple algorithms for unmatched accuracy</p>
+            </div>
+            
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <div class="ai-feature-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Ensemble Anomaly Detection</h3>
+                    <p>Combines Isolation Forest, LSTM Neural Networks, and Statistical Models for maximum accuracy. Each algorithm contributes to the final decision with weighted confidence scores.</p>
+                    <div class="feature-metrics">
+                        <span class="metric">97.3% Accuracy</span>
+                        <span class="metric"><2% False Positives</span>
+                        <span class="metric">50ms Inference</span>
+                    </div>
+                </div>
+                
+                <div class="ai-feature">
+                    <div class="ai-feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>LSTM Time Series Prediction</h3>
+                    <p>Deep learning models trained on historical patterns to predict equipment failures 24-48 hours in advance with trend analysis and seasonal pattern recognition.</p>
+                    <div class="feature-metrics">
+                        <span class="metric">48h Prediction</span>
+                        <span class="metric">95% Precision</span>
+                        <span class="metric">Real-time Training</span>
+                    </div>
+                </div>
+                
+                <div class="ai-feature">
+                    <div class="ai-feature-icon"><i class="fas fa-robot"></i></div>
+                    <h3>AutoML Pipeline</h3>
+                    <p>Automatically selects the best algorithm and hyperparameters for each machine using Optuna optimization with continuous A/B testing and model performance monitoring.</p>
+                    <div class="feature-metrics">
+                        <span class="metric">Auto-Optimization</span>
+                        <span class="metric">100+ Trials</span>
+                        <span class="metric">No Manual Tuning</span>
+                    </div>
+                </div>
+                
+                <div class="ai-feature">
+                    <div class="ai-feature-icon"><i class="fas fa-eye"></i></div>
+                    <h3>Explainable AI</h3>
+                    <p>SHAP values and feature importance analysis explain why each anomaly was detected, providing actionable insights for maintenance teams and root cause analysis.</p>
+                    <div class="feature-metrics">
+                        <span class="metric">SHAP Analysis</span>
+                        <span class="metric">Root Cause ID</span>
+                        <span class="metric">Actionable Insights</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IoT Integration -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🌐 Universal IoT Connectivity</h2>
+                <p>Connect any industrial device with our comprehensive protocol support</p>
+            </div>
+            
+            <div class="protocols-grid">
+                <div class="protocol-card production">
+                    <div class="protocol-icon"><i class="fas fa-wifi"></i></div>
+                    <h3>MQTT</h3>
+                    <p>Industry-standard messaging protocol for IoT devices and sensors</p>
+                    <span class="status-badge status-production">Production Ready</span>
+                </div>
+                
+                <div class="protocol-card production">
+                    <div class="protocol-icon"><i class="fas fa-industry"></i></div>
+                    <h3>OPC-UA</h3>
+                    <p>Industrial automation protocol for PLCs and manufacturing equipment</p>
+                    <span class="status-badge status-production">Production Ready</span>
+                </div>
+                
+                <div class="protocol-card production">
+                    <div class="protocol-icon"><i class="fas fa-network-wired"></i></div>
+                    <h3>Modbus TCP/RTU</h3>
+                    <p>Legacy industrial protocol for connecting older equipment</p>
+                    <span class="status-badge status-production">Production Ready</span>
+                </div>
+                
+                <div class="protocol-card production">
+                    <div class="protocol-icon"><i class="fas fa-globe"></i></div>
+                    <h3>HTTP/HTTPS</h3>
+                    <p>Web-based APIs and RESTful sensor interfaces</p>
+                    <span class="status-badge status-production">Production Ready</span>
+                </div>
+                
+                <div class="protocol-card development">
+                    <div class="protocol-icon"><i class="fas fa-satellite-dish"></i></div>
+                    <h3>LoRaWAN</h3>
+                    <p>Long-range, low-power wireless sensor networks</p>
+                    <span class="status-badge status-development">Coming Q2 2025</span>
+                </div>
+                
+                <div class="protocol-card development">
+                    <div class="protocol-icon"><i class="fas fa-cog"></i></div>
+                    <h3>Ethernet/IP</h3>
+                    <p>Allen-Bradley PLC communication protocol</p>
+                    <span class="status-badge status-development">Coming Q2 2025</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enterprise Security -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🔐 Enterprise-Grade Security</h2>
+                <p>Bank-level security with compliance-ready features</p>
+            </div>
+            
+            <div class="security-grid">
+                <div class="security-feature">
+                    <div class="security-feature-content">
+                        <div class="security-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Authentication & Authorization</h3>
+                        <p>JWT tokens, OAuth 2.0, multi-factor authentication, and role-based access control with fine-grained permissions.</p>
+                    </div>
+                </div>
+                
+                <div class="security-feature">
+                    <div class="security-feature-content">
+                        <div class="security-icon"><i class="fas fa-lock"></i></div>
+                        <h3>Data Encryption</h3>
+                        <p>AES-256 encryption at rest and in transit, with client-specific encryption keys and secure key management.</p>
+                    </div>
+                </div>
+                
+                <div class="security-feature">
+                    <div class="security-feature-content">
+                        <div class="security-icon"><i class="fas fa-certificate"></i></div>
+                        <h3>Compliance Ready</h3>
+                        <p>GDPR, SOC 2 Type II, and ISO 27001 compliance with audit logging and data retention policies.</p>
+                    </div>
+                </div>
+                
+                <div class="security-feature">
+                    <div class="security-feature-content">
+                        <div class="security-icon"><i class="fas fa-users-cog"></i></div>
+                        <h3>Multi-Tenancy</h3>
+                        <p>Complete data isolation between clients with role-based access and client-specific customization.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Metrics -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>⚡ Performance & Scalability</h2>
+                <p>Built for enterprise scale with guaranteed performance</p>
+            </div>
+            
+            <div class="performance-metrics">
+                <div class="metric-card">
+                    <div class="metric-number"><200ms</div>
+                    <div class="metric-label">API Response Time</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-number">10,000+</div>
+                    <div class="metric-label">Readings/Second</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-number">99.9%</div>
+                    <div class="metric-label">Uptime SLA</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-number">50ms</div>
+                    <div class="metric-label">ML Inference Time</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-number">1,000+</div>
+                    <div class="metric-label">Concurrent Users</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-number">2 Years</div>
+                    <div class="metric-label">Data Retention</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Experience AISPARK's Advanced Features</h2>
+            <p>See how our cutting-edge technology can transform your maintenance operations</p>
+            <div class="cta-buttons">
+                <a href="demo.html" class="cta-button">Try Interactive Demo</a>
+                <a href="contact.html" class="cta-button cta-secondary">Schedule Expert Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    AISPARK
+                </div>
+                <div style="display: flex; gap: 2rem;">
+                    <a href="../index.html" style="color: #94a3b8; text-decoration: none;">Home</a>
+                    <a href="pricing.html" style="color: #94a3b8; text-decoration: none;">Pricing</a>
+                    <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                    <a href="login.html" style="color: #94a3b8; text-decoration: none;">Client Login</a>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #334155; color: #94a3b8;">
+                © 2025 AISPARK Ltd. All rights reserved. | London, UK
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

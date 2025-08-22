@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISPARK - AI-Powered Predictive Maintenance Platform | Prevent Equipment Failures</title>
+    <meta name="description" content="AISPARK's AI-powered predictive maintenance platform prevents equipment failures before they happen. Reduce downtime by 60% and maintenance costs by 40%.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f59e0b, #f97316);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Live Demo Section */
+        .demo-section {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .demo-frame {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .demo-dashboard {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            color: white;
+            text-align: left;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .status-card.critical { border-left-color: #ef4444; }
+        .status-card.warning { border-left-color: #f59e0b; }
+        .status-card.normal { border-left-color: #10b981; }
+
+        .machine-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .machine-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .health-bar {
+            width: 100px;
+            height: 8px;
+            background: #374151;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            border-radius: 4px;
+            transition: width 2s ease;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid #3b82f6;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1e40af;
+            margin: 1rem 0;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .contact-form button {
+            background: linear-gradient(45deg, #f59e0b, #f97316);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                AISPARK
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="pages/features.html">Features</a></li>
+                <li><a href="#demo">Live Demo</a></li>
+                <li><a href="pages/pricing.html">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="pages/login.html" class="cta-button">Client Login</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Prevent Equipment Failures<br>Before They Happen</h1>
+            <p class="hero-subtitle">AI-powered predictive maintenance that reduces downtime by 60% and cuts maintenance costs by 40%</p>
+            
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Machines Monitored</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Active Anomalies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">ML Coverage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">97.3%</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+            </div>
+            
+            <a href="#demo" class="cta-button" style="font-size: 1.2rem; padding: 1rem 2rem; margin-top: 1rem;">
+                See Live Demo <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Live Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="demo-container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #1e40af;">Live Dashboard Demo</h2>
+            <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 2rem;">Real-time predictive maintenance monitoring across multiple industrial clients</p>
+            
+            <div class="demo-frame">
+                <div class="demo-dashboard">
+                    <div class="dashboard-header">
+                        <h3>AISPARK Industrial Monitor</h3>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <span style="color: #10b981;"><i class="fas fa-circle"></i> Live</span>
+                            <span id="demo-time">12:34:56</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-grid">
+                        <div class="status-card critical">
+                            <h4>Critical Alerts</h4>
+                            <div style="font-size: 2rem; font-weight: bold;">5</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Immediate attention required</div>
+                        </div>
+                        <div class="status-card warning">
+                            <h4>Warnings</h4>
+                            <div style="font-size: 2rem; font-weight: bold;">12</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Schedule maintenance soon</div>
+                        </div>
+                        <div class="status-card normal">
+                            <h4>Healthy Machines</h4>
+                            <div style="font-size: 2rem; font-weight: bold;">7</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Operating normally</div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 1rem;">Machine Health Status</h4>
+                    <div class="machine-list" id="machineList">
+                        <!-- Machines will be populated by JavaScript -->
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <a href="dashboard/incredible_dashboard.html" class="cta-button" style="font-size: 1.1rem; padding: 1rem 2rem; margin: 0.5rem;">
+                            <i class="fas fa-external-link-alt"></i> Open Full Dashboard
+                        </a>
+                        <a href="pages/demo.html" class="cta-button" style="font-size: 1.1rem; padding: 1rem 2rem; margin: 0.5rem; background: linear-gradient(45deg, #10b981, #059669);">
+                            <i class="fas fa-play"></i> Interactive Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="features-container">
+            <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem; color: #1e40af;">Why Choose AISPARK?</h2>
+            <p style="font-size: 1.2rem; text-align: center; color: #64748b; margin-bottom: 2rem;">Advanced AI meets industrial reliability</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Advanced AI Models</h3>
+                    <p>Cutting-edge machine learning algorithms including LSTM, Transformers, and Ensemble methods for maximum accuracy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Real-time Processing</h3>
+                    <p>Sub-second anomaly detection with real-time alerts and automatic model retraining for continuous improvement.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade security with end-to-end encryption, GDPR compliance, and SOC 2 Type II readiness.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
+                    <h3>Universal IoT Support</h3>
+                    <p>Connect any device with MQTT, OPC-UA, Modbus, HTTP, and 15+ other industrial protocols.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Predictive Analytics</h3>
+                    <p>Predict failures 24-48 hours in advance with 97%+ accuracy and detailed root cause analysis.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Multi-tenant Ready</h3>
+                    <p>Manage multiple facilities, clients, or business units with advanced role-based access control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="pricing-container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #1e40af;">Simple, Transparent Pricing</h2>
+            <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 1rem;">60% less than GE Predix, Siemens MindSphere, or IBM Watson IoT</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">£999<span class="price-period">/month</span></div>
+                    <ul style="text-align: left; margin: 2rem 0; list-style: none;">
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Up to 25 machines</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Real-time monitoring</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Basic ML models</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Email alerts</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Standard support</li>
+                    </ul>
+                    <a href="#contact" class="cta-button" style="width: 100%; text-align: center;">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <h3>Professional</h3>
+                    <div class="price">£2,999<span class="price-period">/month</span></div>
+                    <ul style="text-align: left; margin: 2rem 0; list-style: none;">
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Up to 100 machines</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Advanced AI models</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Predictive analytics</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> SMS + Email alerts</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Priority support</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Custom dashboards</li>
+                    </ul>
+                    <a href="#contact" class="cta-button" style="width: 100%; text-align: center;">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">£7,999<span class="price-period">/month</span></div>
+                    <ul style="text-align: left; margin: 2rem 0; list-style: none;">
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Unlimited machines</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> All AI models</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> White-label options</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Multi-tenant support</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Dedicated support</li>
+                        <li><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> SLA guarantee</li>
+                    </ul>
+                    <a href="#contact" class="cta-button" style="width: 100%; text-align: center;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Ready to Prevent Failures?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Get started with a free 30-day trial. No credit card required.</p>
+            
+            <form class="contact-form" id="contactForm">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Work Email" required>
+                <input type="text" placeholder="Company Name" required>
+                <input type="tel" placeholder="Phone Number">
+                <textarea rows="4" placeholder="Tell us about your maintenance challenges..."></textarea>
+                <button type="submit">Request Free Demo <i class="fas fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    AISPARK
+                </div>
+                <div style="display: flex; gap: 2rem;">
+                    <a href="pages/features.html" style="color: #94a3b8; text-decoration: none;">Features</a>
+                    <a href="pages/demo.html" style="color: #94a3b8; text-decoration: none;">Demo</a>
+                    <a href="pages/login.html" style="color: #94a3b8; text-decoration: none;">Client Login</a>
+                    <a href="#contact" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #334155; color: #94a3b8;">
+                © 2025 AISPARK Ltd. All rights reserved. | London, UK | Registered Company: [TBD]
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Demo dashboard functionality
+        function updateDemo() {
+            // Update time
+            const now = new Date();
+            document.getElementById('demo-time').textContent = now.toLocaleTimeString();
+            
+            // Update machine list
+            const machines = [
+                { name: 'Petro-Oil-Pump-01', health: 45, status: 'critical', alerts: ['High Temperature', 'Vibration'] },
+                { name: 'Food-Oven-Alpha', health: 92, status: 'normal', alerts: [] },
+                { name: 'Auto-Press-07', health: 78, status: 'warning', alerts: ['Power Spike'] },
+                { name: 'Mfg-Conveyor-B3', health: 88, status: 'normal', alerts: [] },
+                { name: 'Tech-Robot-Arm-12', health: 34, status: 'critical', alerts: ['Servo Error', 'Overheating'] },
+                { name: 'Petro-Compressor-A', health: 67, status: 'warning', alerts: ['Pressure Anomaly'] }
+            ];
+            
+            const machineList = document.getElementById('machineList');
+            machineList.innerHTML = machines.map(machine => `
+                <div class="machine-item">
+                    <div>
+                        <div style="font-weight: bold;">${machine.name}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7;">
+                            ${machine.alerts.length > 0 ? machine.alerts.join(', ') : 'Operating normally'}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">${machine.health}% Health</div>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: ${machine.health}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update demo every 3 seconds
+        updateDemo();
+        setInterval(updateDemo, 3000);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Contact form handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const button = this.querySelector('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Demo Request Sent!';
+            button.style.background = '#10b981';
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '';
+                this.reset();
+            }, 3000);
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Dynamic pricing calculator (optional enhancement)
+        function calculateROI(machines, currentDowntime, maintenanceCost) {
+            const downTimeReduction = 0.6; // 60% reduction
+            const costReduction = 0.4; // 40% reduction
+            const hoursPerYear = 8760;
+            
+            const currentDowntimeHours = machines * currentDowntime * hoursPerYear / 100;
+            const savedHours = currentDowntimeHours * downTimeReduction;
+            const savedCosts = maintenanceCost * costReduction;
+            
+            return {
+                savedHours: Math.round(savedHours),
+                savedCosts: Math.round(savedCosts),
+                totalSavings: Math.round(savedCosts + (savedHours * 500)) // Assume £500/hour downtime cost
+            };
+        }
+
+        // Add ROI calculator functionality (can be expanded)
+        window.calculateCustomROI = calculateROI;
+    </script>
+</body>
+</html>

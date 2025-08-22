@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - AISPARK | 60% Less Than Competitors | Transparent Pricing</title>
+    <meta name="description" content="AISPARK pricing starts at £999/month - 60% less than GE Predix, Siemens MindSphere. No hidden fees, transparent pricing with 30-day free trial.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f59e0b, #f97316);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .savings-highlight {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            margin: 2rem auto;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .savings-highlight h3 {
+            color: #fbbf24;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Pricing Comparison */
+        .comparison-section {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .comparison-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 0;
+        }
+
+        .comparison-row {
+            display: contents;
+        }
+
+        .comparison-cell {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .comparison-cell:first-child {
+            justify-content: flex-start;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .comparison-cell.aispark {
+            background: #f0f9ff;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .comparison-cell.competitor {
+            color: #6b7280;
+        }
+
+        .check-icon {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+
+        .cross-icon {
+            color: #ef4444;
+            font-size: 1.2rem;
+        }
+
+        .price-highlight {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Pricing Plans */
+        .pricing-section {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .pricing-card.featured {
+            border-color: #3b82f6;
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 2rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-description {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .plan-price {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .price-note {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: #374151;
+        }
+
+        .features-list .check {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .features-list .highlight {
+            background: #fef3c7;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .plan-button {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .plan-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .plan-button.secondary {
+            background: #6b7280;
+        }
+
+        .plan-button.secondary:hover {
+            background: #4b5563;
+        }
+
+        /* ROI Calculator */
+        .roi-section {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .roi-calculator {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .roi-results {
+            background: #f0f9ff;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .roi-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e7ff;
+        }
+
+        .roi-metric:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            color: #1e40af;
+            font-size: 1.1rem;
+        }
+
+        .roi-value {
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .faq-item {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .faq-question {
+            color: #1e40af;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-buttons .cta-button {
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: #1e40af;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .comparison-cell {
+                padding: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-bolt"></i>
+                AISPARK
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="industries.html">Industries</a></li>
+                <li><a href="demo.html">Demo</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="contact.html" class="cta-button">Start Free Trial</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Simple, Transparent Pricing</h1>
+            <p class="hero-subtitle">Enterprise-grade predictive maintenance at 60% less cost than competitors</p>
+            
+            <div class="savings-highlight">
+                <h3>💰 Save £50,000+ Per Year</h3>
+                <p>Compared to GE Predix, Siemens MindSphere, or IBM Watson IoT</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Competitor Comparison -->
+    <section class="comparison-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🏆 How We Compare to Industry Leaders</h2>
+                <p>See why customers choose AISPARK over expensive enterprise alternatives</p>
+            </div>
+            
+            <div class="comparison-table">
+                <div class="comparison-header">
+                    <h3>Feature & Pricing Comparison</h3>
+                </div>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-row">
+                        <div class="comparison-cell"><strong>Feature</strong></div>
+                        <div class="comparison-cell"><strong>AISPARK</strong></div>
+                        <div class="comparison-cell"><strong>GE Predix</strong></div>
+                        <div class="comparison-cell"><strong>Siemens MindSphere</strong></div>
+                        <div class="comparison-cell"><strong>IBM Watson IoT</strong></div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Annual Cost (100 machines)</div>
+                        <div class="comparison-cell aispark price-highlight">£35,988</div>
+                        <div class="comparison-cell competitor">£120,000+</div>
+                        <div class="comparison-cell competitor">£90,000+</div>
+                        <div class="comparison-cell competitor">£150,000+</div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Setup Time</div>
+                        <div class="comparison-cell aispark">2-4 weeks</div>
+                        <div class="comparison-cell competitor">6-12 months</div>
+                        <div class="comparison-cell competitor">4-8 months</div>
+                        <div class="comparison-cell competitor">3-6 months</div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Real-time Processing</div>
+                        <div class="comparison-cell aispark"><i class="fas fa-check check-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-check check-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-check check-icon"></i></div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Advanced AI Models</div>
+                        <div class="comparison-cell aispark"><i class="fas fa-check check-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-check check-icon"></i></div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Universal IoT Support</div>
+                        <div class="comparison-cell aispark"><i class="fas fa-check check-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-check check-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">No Vendor Lock-in</div>
+                        <div class="comparison-cell aispark"><i class="fas fa-check check-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                        <div class="comparison-cell competitor"><i class="fas fa-times cross-icon"></i></div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Free Trial</div>
+                        <div class="comparison-cell aispark">30 days</div>
+                        <div class="comparison-cell competitor">None</div>
+                        <div class="comparison-cell competitor">Limited</div>
+                        <div class="comparison-cell competitor">None</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>💎 Choose Your Plan</h2>
+                <p>All plans include our complete platform, AI models, and support</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Starter Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <div class="plan-name">Starter</div>
+                        <div class="plan-description">Perfect for small facilities getting started</div>
+                    </div>
+                    
+                    <div class="plan-price">
+                        <div class="price-amount">£999<span class="price-period">/month</span></div>
+                        <div class="price-note">Billed monthly • No setup fees</div>
+                    </div>
+                    
+                    <ul class="features-list">
+                        <li><span class="check">✓</span> Up to 25 machines</li>
+                        <li><span class="check">✓</span> Real-time monitoring</li>
+                        <li><span class="check">✓</span> Basic ML models</li>
+                        <li><span class="check">✓</span> Email alerts</li>
+                        <li><span class="check">✓</span> Mobile app access</li>
+                        <li><span class="check">✓</span> Standard support</li>
+                        <li><span class="check">✓</span> API access</li>
+                        <li><span class="check">✓</span> Basic dashboards</li>
+                    </ul>
+                    
+                    <a href="contact.html?plan=starter" class="plan-button">Start Free Trial</a>
+                </div>
+
+                <!-- Professional Plan -->
+                <div class="pricing-card featured">
+                    <div class="plan-header">
+                        <div class="plan-name">Professional</div>
+                        <div class="plan-description">Most popular for mid-size operations</div>
+                    </div>
+                    
+                    <div class="plan-price">
+                        <div class="price-amount">£2,999<span class="price-period">/month</span></div>
+                        <div class="price-note">Billed monthly • Free onboarding</div>
+                    </div>
+                    
+                    <ul class="features-list">
+                        <li><span class="check">✓</span> Up to 100 machines</li>
+                        <li><span class="check">✓</span> <span class="highlight">Advanced AI models</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Predictive analytics</span></li>
+                        <li><span class="check">✓</span> SMS + Email alerts</li>
+                        <li><span class="check">✓</span> Priority support</li>
+                        <li><span class="check">✓</span> Custom dashboards</li>
+                        <li><span class="check">✓</span> <span class="highlight">Advanced reporting</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Multi-user access</span></li>
+                        <li><span class="check">✓</span> White-label options</li>
+                        <li><span class="check">✓</span> <span class="highlight">Edge computing</span></li>
+                    </ul>
+                    
+                    <a href="contact.html?plan=professional" class="plan-button">Start Free Trial</a>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <div class="plan-name">Enterprise</div>
+                        <div class="plan-description">For large-scale industrial operations</div>
+                    </div>
+                    
+                    <div class="plan-price">
+                        <div class="price-amount">£7,999<span class="price-period">/month</span></div>
+                        <div class="price-note">Billed monthly • Dedicated support</div>
+                    </div>
+                    
+                    <ul class="features-list">
+                        <li><span class="check">✓</span> <span class="highlight">Unlimited machines</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">All AI models & features</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Custom integrations</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Multi-tenant support</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Dedicated support team</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">99.9% SLA guarantee</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">On-premise deployment</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Custom ML models</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Advanced security</span></li>
+                        <li><span class="check">✓</span> <span class="highlight">Dedicated CSM</span></li>
+                    </ul>
+                    
+                    <a href="contact.html?plan=enterprise" class="plan-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="roi-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🧮 Calculate Your Savings</h2>
+                <p>See exactly how much AISPARK can save your operation</p>
+            </div>
+            
+            <div class="roi-calculator">
+                <div class="calculator-grid">
+                    <div>
+                        <h4 style="color: #1e40af; margin-bottom: 1.5rem;">Your Current Operation</h4>
+                        
+                        <div class="input-group">
+                            <label for="machineCount">Number of Machines</label>
+                            <input type="number" id="machineCount" value="50" min="1" max="1000" onchange="calculateROI()">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="downtimeHours">Current Downtime (hours/month)</label>
+                            <input type="number" id="downtimeHours" value="20" min="0" max="744" onchange="calculateROI()">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="downtimeCost">Downtime Cost (£/hour)</label>
+                            <input type="number" id="downtimeCost" value="500" min="100" max="10000" onchange="calculateROI()">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="maintenanceCost">Current Maintenance Cost (£/month)</label>
+                            <input type="number" id="maintenanceCost" value="15000" min="1000" max="500000" onchange="calculateROI()">
+                        </div>
+                    </div>
+                    
+                    <div class="roi-results">
+                        <h4 style="color: #1e40af; margin-bottom: 1.5rem;">Your Savings with AISPARK</h4>
+                        
+                        <div class="roi-metric">
+                            <span>Reduced Downtime (60%)</span>
+                            <span class="roi-value" id="downtimeSavings">£6,000/month</span>
+                        </div>
+                        
+                        <div class="roi-metric">
+                            <span>Maintenance Cost Reduction (40%)</span>
+                            <span class="roi-value" id="maintenanceSavings">£6,000/month</span>
+                        </div>
+                        
+                        <div class="roi-metric">
+                            <span>AISPARK Professional Cost</span>
+                            <span class="roi-value">-£2,999/month</span>
+                        </div>
+                        
+                        <div class="roi-metric">
+                            <span>Net Monthly Savings</span>
+                            <span class="roi-value" id="netSavings">£9,001/month</span>
+                        </div>
+                        
+                        <div class="roi-metric">
+                            <span>Annual ROI</span>
+                            <span class="roi-value" id="annualROI">301%</span>
+                        </div>
+                        
+                        <div class="roi-metric">
+                            <span>Payback Period</span>
+                            <span class="roi-value" id="paybackPeriod">1.2 months</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="contact.html?roi=calculated" class="cta-button">Get Personalized ROI Analysis</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>❓ Pricing Questions</h2>
+                <p>Everything you need to know about AISPARK pricing</p>
+            </div>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">Are there any setup fees?</div>
+                    <div class="faq-answer">No setup fees for any plan. We include free onboarding and training for Professional and Enterprise plans.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Can I change plans anytime?</div>
+                    <div class="faq-answer">Yes! You can upgrade or downgrade your plan at any time. Changes take effect on your next billing cycle with prorated adjustments.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What's included in the free trial?</div>
+                    <div class="faq-answer">Full access to all features of your chosen plan for 30 days. No credit card required. We'll help you connect up to 5 machines during the trial.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Do you offer annual discounts?</div>
+                    <div class="faq-answer">Yes! Pay annually and save 15%. Enterprise customers can negotiate multi-year agreements for additional savings.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What if I exceed my machine limit?</div>
+                    <div class="faq-answer">We'll automatically suggest an upgrade or you can purchase additional machine capacity at £40/machine/month.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Is support included?</div>
+                    <div class="faq-answer">Yes! All plans include support. Starter gets email support, Professional gets priority support, Enterprise gets dedicated support team.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Can I get a custom quote?</div>
+                    <div class="faq-answer">Absolutely! Contact our sales team for custom pricing based on your specific requirements, volume discounts, or special integrations.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What payment methods do you accept?</div>
+                    <div class="faq-answer">We accept credit cards, wire transfers, and can accommodate purchase orders for Enterprise customers.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Save 60% on Predictive Maintenance?</h2>
+            <p>Join 150+ companies already saving millions with AISPARK</p>
+            <div class="cta-buttons">
+                <a href="contact.html?source=pricing" class="cta-button">Start Free Trial</a>
+                <a href="demo.html" class="cta-button cta-secondary">Try Interactive Demo</a>
+                <a href="contact.html?request=custom-quote" class="cta-button cta-secondary">Get Custom Quote</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    AISPARK
+                </div>
+                <div style="display: flex; gap: 2rem;">
+                    <a href="../index.html" style="color: #94a3b8; text-decoration: none;">Home</a>
+                    <a href="features.html" style="color: #94a3b8; text-decoration: none;">Features</a>
+                    <a href="industries.html" style="color: #94a3b8; text-decoration: none;">Industries</a>
+                    <a href="demo.html" style="color: #94a3b8; text-decoration: none;">Demo</a>
+                    <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: #94a3b8; font-size: 1.5rem;"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #334155; color: #94a3b8;">
+                © 2025 AISPARK Ltd. All rights reserved. | London, UK
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ROI Calculator functionality
+        function calculateROI() {
+            const machines = parseInt(document.getElementById('machineCount').value) || 50;
+            const downtimeHours = parseInt(document.getElementById('downtimeHours').value) || 20;
+            const downtimeCost = parseInt(document.getElementById('downtimeCost').value) || 500;
+            const maintenanceCost = parseInt(document.getElementById('maintenanceCost').value) || 15000;
+            
+            // Calculate current costs
+            const currentDowntimeCost = downtimeHours * downtimeCost;
+            const totalCurrentCost = currentDowntimeCost + maintenanceCost;
+            
+            // Calculate savings (60% downtime reduction, 40% maintenance reduction)
+            const downtimeSavings = currentDowntimeCost * 0.6;
+            const maintenanceSavingsAmount = maintenanceCost * 0.4;
+            const totalSavings = downtimeSavings + maintenanceSavingsAmount;
+            
+            // Determine AISPARK cost based on machine count
+            let aiSparkCost;
+            if (machines <= 25) {
+                aiSparkCost = 999;
+            } else if (machines <= 100) {
+                aiSparkCost = 2999;
+            } else {
+                aiSparkCost = 7999;
+            }
+            
+            // Calculate net savings and ROI
+            const netMonthlySavings = totalSavings - aiSparkCost;
+            const annualSavings = netMonthlySavings * 12;
+            const annualCost = aiSparkCost * 12;
+            const roi = annualCost > 0 ? ((annualSavings / annualCost) * 100) : 0;
+            const paybackMonths = aiSparkCost > 0 ? (aiSparkCost / netMonthlySavings) : 0;
+            
+            // Update display
+            document.getElementById('downtimeSavings').textContent = `£${downtimeSavings.toLocaleString()}/month`;
+            document.getElementById('maintenanceSavings').textContent = `£${maintenanceSavingsAmount.toLocaleString()}/month`;
+            document.getElementById('netSavings').textContent = `£${netMonthlySavings.toLocaleString()}/month`;
+            document.getElementById('annualROI').textContent = `${Math.round(roi)}%`;
+            document.getElementById('paybackPeriod').textContent = `${paybackMonths.toFixed(1)} months`;
+            
+            // Update color based on profitability
+            const netSavingsElement = document.getElementById('netSavings');
+            const roiElement = document.getElementById('annualROI');
+            
+            if (netMonthlySavings > 0) {
+                netSavingsElement.style.color = '#10b981';
+                roiElement.style.color = '#10b981';
+            } else {
+                netSavingsElement.style.color = '#ef4444';
+                roiElement.style.color = '#ef4444';
+            }
+        }
+        
+        // Plan selection tracking
+        function trackPlanSelection(planName) {
+            console.log('Plan selected:', planName);
+            // In production, you could send this to your analytics
+            // gtag('event', 'plan_selected', { plan_name: planName });
+        }
+        
+        // Add click tracking to plan buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate initial ROI
+            calculateROI();
+            
+            // Add plan tracking
+            document.querySelectorAll('.plan-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const planCard = e.target.closest('.pricing-card');
+                    const planName = planCard.querySelector('.plan-name').textContent;
+                    trackPlanSelection(planName.toLowerCase());
+                });
+            });
+            
+            // Add comparison table animations
+            const comparisonCells = document.querySelectorAll('.comparison-cell.aispark');
+            comparisonCells.forEach(cell => {
+                cell.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                cell.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Handle URL parameters for plan pre-selection
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedPlan = urlParams.get('plan');
+            
+            if (selectedPlan) {
+                const planCards = document.querySelectorAll('.pricing-card');
+                planCards.forEach(card => {
+                    const planName = card.querySelector('.plan-name').textContent.toLowerCase();
+                    if (planName === selectedPlan) {
+                        card.style.border = '3px solid #f59e0b';
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            }
+            
+            // ROI Calculator input validation
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    const min = parseInt(this.getAttribute('min'));
+                    const max = parseInt(this.getAttribute('max'));
+                    
+                    if (value < min) this.value = min;
+                    if (value > max) this.value = max;
+                    
+                    calculateROI();
+                });
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Animate pricing cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe pricing cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const pricingCards = document.querySelectorAll('.pricing-card');
+            pricingCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

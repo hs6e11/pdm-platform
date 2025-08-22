@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal - AISPARK | Your Factory Dashboard</title>
+    <meta name="description" content="AISPARK client portal - Access your real-time factory monitoring, predictive maintenance alerts, and machine health dashboards.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .client-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .company-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+        }
+
+        .user-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 0;
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #374151;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .user-dropdown a:hover {
+            background: #f3f4f6;
+        }
+
+        .user-dropdown a i {
+            margin-right: 0.5rem;
+            width: 16px;
+        }
+
+        /* Sidebar */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #f0f9ff;
+            color: #1e40af;
+            border-right-color: #3b82f6;
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .status-card h3 {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-card.healthy .status-value { color: #10b981; }
+        .status-card.warning .status-value { color: #f59e0b; }
+        .status-card.critical .status-value { color: #ef4444; }
+
+        .status-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        /* Dashboard Frame */
+        .dashboard-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            height: calc(100vh - 300px);
+            min-height: 600px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dashboard-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-frame {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+            background: white;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .action-icon {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+
+        .action-card h4 {
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 1rem;
+            }
+            
+            .sidebar-menu li {
+                margin-right: 1rem;
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .status-indicators {
+                flex-direction: column;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Loading states */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                AISPARK
+            </div>
+            <div class="client-info">
+                <div class="company-name" id="companyName">Loading...</div>
+                <div class="user-menu">
+                    <button class="user-button" onclick="toggleUserMenu()">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="userName">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" onclick="showProfile()">
+                            <i class="fas fa-user"></i>Profile Settings
+                        </a>
+                        <a href="#" onclick="showNotifications()">
+                            <i class="fas fa-bell"></i>Notifications
+                        </a>
+                        <a href="#" onclick="showSupport()">
+                            <i class="fas fa-headset"></i>Support
+                        </a>
+                        <a href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-header">Dashboard</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" onclick="showDashboard()">
+                        <i class="fas fa-tachometer-alt"></i>Real-time Overview
+                    </a></li>
+                    <li><a href="#" onclick="showMachines()">
+                        <i class="fas fa-cogs"></i>Machine Status
+                    </a></li>
+                    <li><a href="#" onclick="showAlerts()">
+                        <i class="fas fa-exclamation-triangle"></i>Active Alerts
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-header">Analytics</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" onclick="showAnalytics()">
+                        <i class="fas fa-chart-line"></i>Performance Trends
+                    </a></li>
+                    <li><a href="#" onclick="showReports()">
+                        <i class="fas fa-file-alt"></i>Maintenance Reports
+                    </a></li>
+                    <li><a href="#" onclick="showPredictions()">
+                        <i class="fas fa-crystal-ball"></i>Predictions
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-header">Management</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" onclick="showSettings()">
+                        <i class="fas fa-cog"></i>Settings
+                    </a></li>
+                    <li><a href="#" onclick="showUsers()">
+                        <i class="fas fa-users"></i>User Management
+                    </a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title" id="pageTitle">Factory Dashboard</h1>
+                    <p class="page-subtitle" id="pageSubtitle">Real-time monitoring and predictive maintenance</p>
+                </div>
+            </div>
+
+            <!-- Status Indicators -->
+            <div class="status-indicators" id="statusIndicators">
+                <div class="status-card healthy">
+                    <h3>Healthy Machines</h3>
+                    <div class="status-value" id="healthyCount">-</div>
+                    <div class="status-label">Operating normally</div>
+                </div>
+                <div class="status-card warning">
+                    <h3>Warnings</h3>
+                    <div class="status-value" id="warningCount">-</div>
+                    <div class="status-label">Attention required</div>
+                </div>
+                <div class="status-card critical">
+                    <h3>Critical Issues</h3>
+                    <div class="status-value" id="criticalCount">-</div>
+                    <div class="status-label">Immediate action</div>
+                </div>
+                <div class="status-card">
+                    <h3>Overall Health</h3>
+                    <div class="status-value" id="overallHealth" style="color: #3b82f6;">-</div>
+                    <div class="status-label">Average score</div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Container -->
+            <div class="dashboard-container" id="dashboardContainer">
+                <div class="dashboard-header">
+                    <h3 id="dashboardTitle">Live Factory Dashboard</h3>
+                    <div class="dashboard-controls">
+                        <button class="dashboard-button" onclick="refreshDashboard()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="dashboard-button" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <button class="dashboard-button" onclick="exportData()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <iframe 
+                    id="dashboardFrame" 
+                    class="dashboard-frame" 
+                    src="about:blank">
+                </iframe>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global state
+        let currentUser = null;
+        let currentView = 'dashboard';
+        let refreshInterval = null;
+
+        // Initialize the portal
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            initializeDashboard();
+            startAutoRefresh();
+        });
+
+        function checkAuthentication() {
+            const auth = localStorage.getItem('aispark_auth');
+            if (!auth) {
+                window.location.href = '../pages/login.html';
+                return;
+            }
+
+            currentUser = JSON.parse(auth);
+            
+            // Update UI with user info
+            document.getElementById('userName').textContent = currentUser.email.split('@')[0];
+            document.getElementById('companyName').textContent = currentUser.companyName;
+            
+            // Set page title based on client
+            document.getElementById('pageTitle').textContent = `${currentUser.companyName} Dashboard`;
+            document.getElementById('pageSubtitle').textContent = `Welcome back! Monitor your ${Array.isArray(currentUser.machines) ? currentUser.machines.length : 'all'} machines in real-time.`;
+        }
+
+        function initializeDashboard() {
+            // Load the incredible dashboard with client-specific data
+            loadDashboardView('dashboard');
+            updateStatusIndicators();
+        }
+
+        function loadDashboardView(view) {
+            const frame = document.getElementById('dashboardFrame');
+            const container = document.getElementById('dashboardContainer');
+            
+            // Show loading state
+            container.innerHTML = `
+                <div class="dashboard-header">
+                    <h3>Loading Dashboard...</h3>
+                </div>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading your ${view} data...</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                let dashboardUrl = '';
+                let title = '';
+
+                switch(view) {
+                    case 'dashboard':
+                        // Load your incredible_dashboard.html with client filter
+                        dashboardUrl = `../incredible_dashboard.html?client=${currentUser.clientId}&token=${btoa(currentUser.email)}`;
+                        title = 'Live Factory Dashboard';
+                        break;
+                    case 'machines':
+                        dashboardUrl = `../incredible_dashboard.html?view=machines&client=${currentUser.clientId}`;
+                        title = 'Machine Status Overview';
+                        break;
+                    case 'alerts':
+                        dashboardUrl = `../incredible_dashboard.html?view=alerts&client=${currentUser.clientId}`;
+                        title = 'Active Alerts & Notifications';
+                        break;
+                    case 'analytics':
+                        dashboardUrl = `../incredible_dashboard.html?view=analytics&client=${currentUser.clientId}`;
+                        title = 'Performance Analytics';
+                        break;
+                    default:
+                        dashboardUrl = `../incredible_dashboard.html?client=${currentUser.clientId}`;
+                        title = 'Dashboard';
+                }
+
+                // Rebuild dashboard container with iframe
+                container.innerHTML = `
+                    <div class="dashboard-header">
+                        <h3 id="dashboardTitle">${title}</h3>
+                        <div class="dashboard-controls">
+                            <button class="dashboard-button" onclick="refreshDashboard()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <button class="dashboard-button" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand"></i> Fullscreen
+                            </button>
+                            <button class="dashboard-button" onclick="exportData()">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    <iframe 
+                        id="dashboardFrame" 
+                        class="dashboard-frame" 
+                        src="${dashboardUrl}">
+                    </iframe>
+                `;
+
+                currentView = view;
+            }, 1000);
+        }
+
+        function updateStatusIndicators() {
+            // Simulate real data - in production, this would call your API
+            const clientData = getClientData(currentUser.clientId);
+            
+            document.getElementById('healthyCount').textContent = clientData.healthy;
+            document.getElementById('warningCount').textContent = clientData.warnings;
+            document.getElementById('criticalCount').textContent = clientData.critical;
+            document.getElementById('overallHealth').textContent = clientData.overallHealth + '%';
+        }
+
+        function getClientData(clientId) {
+            // Mock client-specific data - replace with real API calls
+            const clientData = {
+                'petro_industries': {
+                    healthy: 2,
+                    warnings: 2,
+                    critical: 1,
+                    overallHealth: 76
+                },
+                'food_processing': {
+                    healthy: 4,
+                    warnings: 1,
+                    critical: 0,
+                    overallHealth: 94
+                },
+                'aispark_admin': {
+                    healthy: 17,
+                    warnings: 5,
+                    critical: 2,
+                    overallHealth: 84
+                }
+            };
+
+            return clientData[clientId] || { healthy: 0, warnings: 0, critical: 0, overallHealth: 0 };
+        }
+
+        // Navigation functions
+        function showDashboard() {
+            updateActiveNav('dashboard');
+            loadDashboardView('dashboard');
+        }
+
+        function showMachines() {
+            updateActiveNav('machines');
+            loadDashboardView('machines');
+        }
+
+        function showAlerts() {
+            updateActiveNav('alerts');
+            loadDashboardView('alerts');
+        }
+
+        function showAnalytics() {
+            updateActiveNav('analytics');
+            loadDashboardView('analytics');
+        }
+
+        function showReports() {
+            updateActiveNav('reports');
+            loadDashboardView('reports');
+        }
+
+        function showPredictions() {
+            updateActiveNav('predictions');
+            loadDashboardView('predictions');
+        }
+
+        function showSettings() {
+            updateActiveNav('settings');
+            loadDashboardView('settings');
+        }
+
+        function showUsers() {
+            updateActiveNav('users');
+            loadDashboardView('users');
+        }
+
+        function updateActiveNav(activeItem) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to current item
+            event.target.classList.add('active');
+        }
+
+        // User menu functions
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showProfile() {
+            alert('Profile settings coming soon!');
+            toggleUserMenu();
+        }
+
+        function showNotifications() {
+            alert('Notifications panel coming soon!');
+            toggleUserMenu();
+        }
+
+        function showSupport() {
+            alert('Support system coming soon!');
+            toggleUserMenu();
+        }
+
+        function logout() {
+            localStorage.removeItem('aispark_auth');
+            window.location.href = '../pages/login.html';
+        }
+
+        // Dashboard controls
+        function refreshDashboard() {
+            const frame = document.getElementById('dashboardFrame');
+            frame.src = frame.src; // Reload iframe
+            updateStatusIndicators();
+        }
+
+        function toggleFullscreen() {
+            const container = document.getElementById('dashboardContainer');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function exportData() {
+            alert('Data export functionality coming soon!');
+        }
+
+        function startAutoRefresh() {
+            // Refresh status indicators every 30 seconds
+            refreshInterval = setInterval(() => {
+                updateStatusIndicators();
+            }, 30000);
+        }
+
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (!userMenu.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Handle window unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

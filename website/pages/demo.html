@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISPARK Demo - Simple Working Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .demo-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .demo-intro h1 {
+            font-size: 2.5rem;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+
+        .demo-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .demo-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .demo-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+
+        .demo-button {
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .demo-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .demo-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .control-button.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .demo-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+
+        .simple-demo {
+            padding: 2rem;
+            display: none;
+        }
+
+        .sandbox-controls {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: 500px;
+        }
+
+        .controls-panel {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .slider-value {
+            font-weight: bold;
+            color: #1e40af;
+            margin-left: 0.5rem;
+        }
+
+        .status-display {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .machine-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #10b981;
+            transition: background 0.3s ease;
+        }
+
+        .status-dot.warning {
+            background: #f59e0b;
+        }
+
+        .status-dot.critical {
+            background: #ef4444;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .alert-box {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        .alert-title {
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .test-button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .test-button.danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .test-button.reset {
+            background: #6b7280;
+            color: white;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sandbox-controls {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .demo-controls {
+                flex-direction: column;
+            }
+            
+            .demo-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-bolt"></i> AISPARK Demo
+        </div>
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Website
+        </a>
+    </header>
+
+    <div class="container">
+        <div class="demo-intro">
+            <h1>🚀 Try AISPARK Live</h1>
+            <p>Choose your demo experience below</p>
+        </div>
+
+        <!-- Demo Options -->
+        <div class="demo-options">
+            <div class="demo-card">
+                <div class="demo-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h3>Full Dashboard Demo</h3>
+                <p>Experience our complete dashboard with your existing incredible_dashboard.html</p>
+                <button class="demo-button" onclick="loadDashboardDemo()">
+                    <i class="fas fa-external-link-alt"></i> Open Dashboard
+                </button>
+            </div>
+
+            <div class="demo-card">
+                <div class="demo-icon"><i class="fas fa-sliders-h"></i></div>
+                <h3>Interactive Sandbox</h3>
+                <p>Control machine parameters and see AI respond in real-time</p>
+                <button class="demo-button" onclick="loadSandboxDemo()">
+                    <i class="fas fa-play"></i> Start Sandbox
+                </button>
+            </div>
+
+            <div class="demo-card">
+                <div class="demo-icon"><i class="fas fa-route"></i></div>
+                <h3>Guided Tour</h3>
+                <p>Step-by-step walkthrough of AISPARK features</p>
+                <button class="demo-button" onclick="loadGuidedDemo()">
+                    <i class="fas fa-map"></i> Take Tour
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Demo Container -->
+        <div class="demo-container" id="dashboardContainer">
+            <div class="demo-header">
+                <h3>AISPARK Dashboard Demo</h3>
+                <div class="demo-controls">
+                    <button class="control-button" onclick="window.open('../dashboard/incredible_dashboard.html', '_blank')">
+                        <i class="fas fa-external-link-alt"></i> Open in New Tab
+                    </button>
+                    <button class="control-button" onclick="closeDemos()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+            <iframe class="demo-frame" src="../dashboard/incredible_dashboard.html"></iframe>
+        </div>
+
+        <!-- Sandbox Demo -->
+        <div class="demo-container" id="sandboxContainer">
+            <div class="demo-header">
+                <h3>🔧 AISPARK Interactive Sandbox</h3>
+                <div class="demo-controls">
+                    <button class="control-button" onclick="closeDemos()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+            <div class="simple-demo" style="display: block;">
+                <div class="sandbox-controls">
+                    <div class="controls-panel">
+                        <h4 style="margin-bottom: 1rem; color: #1e40af;">Machine Controls</h4>
+                        
+                        <div class="control-group">
+                            <label>Select Machine</label>
+                            <select id="machineSelect" onchange="updateMachine()">
+                                <option value="pump">Oil Pump #1</option>
+                                <option value="compressor">Compressor A</option>
+                                <option value="turbine">Turbine #3</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Temperature</label>
+                            <input type="range" id="tempSlider" min="20" max="150" value="75" 
+                                   oninput="updateTemperature(this.value)">
+                            <span class="slider-value" id="tempValue">75°C</span>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Vibration</label>
+                            <input type="range" id="vibrationSlider" min="0" max="10" value="3" step="0.1"
+                                   oninput="updateVibration(this.value)">
+                            <span class="slider-value" id="vibrationValue">3.0 mm/s</span>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Power Consumption</label>
+                            <input type="range" id="powerSlider" min="50" max="500" value="200"
+                                   oninput="updatePower(this.value)">
+                            <span class="slider-value" id="powerValue">200 kW</span>
+                        </div>
+
+                        <div class="test-buttons">
+                            <button class="test-button danger" onclick="simulateFailure()">
+                                🚨 Simulate Failure
+                            </button>
+                            <button class="test-button reset" onclick="resetMachine()">
+                                ↻ Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="status-display">
+                        <div class="machine-status">
+                            <div class="status-dot" id="statusDot"></div>
+                            <h4 id="machineName">Oil Pump #1</h4>
+                        </div>
+
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value" id="displayTemp">75°C</div>
+                                <div class="metric-label">Temperature</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="displayVibration">3.0</div>
+                                <div class="metric-label">Vibration (mm/s)</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="displayPower">200</div>
+                                <div class="metric-label">Power (kW)</div>
+                            </div>
+                        </div>
+
+                        <div class="alert-box" id="alertBox">
+                            <div class="alert-title">⚠️ Anomaly Detected</div>
+                            <div id="alertMessage">Multiple anomalies detected</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem;">
+                                Confidence: <strong id="confidenceLevel">95%</strong>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                            <strong>AI Analysis:</strong>
+                            <div id="aiAnalysis">Machine operating within normal parameters.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guided Tour Demo -->
+        <div class="demo-container" id="guidedContainer">
+            <div class="demo-header">
+                <h3>📍 AISPARK Guided Tour</h3>
+                <div class="demo-controls">
+                    <button class="control-button" onclick="closeDemos()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+            <div class="simple-demo" style="display: block; text-align: center;">
+                <div id="tourStep1" class="tour-step">
+                    <h3 style="color: #1e40af; margin-bottom: 1rem;">🔍 Step 1: Real-time Monitoring</h3>
+                    <p style="margin-bottom: 2rem;">AISPARK continuously monitors your industrial equipment using IoT sensors and advanced AI algorithms.</p>
+                    <div class="success-message">
+                        <strong>Demo Feature:</strong> Real-time data from temperature, vibration, and power sensors across multiple machines.
+                    </div>
+                    <button class="demo-button" onclick="nextTourStep(2)" style="width: auto; margin-top: 1rem;">
+                        Next: AI Detection <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div id="tourStep2" class="tour-step" style="display: none;">
+                    <h3 style="color: #1e40af; margin-bottom: 1rem;">🧠 Step 2: AI-Powered Detection</h3>
+                    <p style="margin-bottom: 2rem;">Our ensemble ML models achieve 97.3% accuracy using Isolation Forest, LSTM networks, and statistical analysis.</p>
+                    <div class="success-message">
+                        <strong>Demo Feature:</strong> Watch AI detect anomalies in real-time with confidence scores and explanations.
+                    </div>
+                    <button class="demo-button" onclick="nextTourStep(3)" style="width: auto; margin-top: 1rem;">
+                        Next: Predictive Alerts <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div id="tourStep3" class="tour-step" style="display: none;">
+                    <h3 style="color: #1e40af; margin-bottom: 1rem;">🚨 Step 3: Predictive Alerts</h3>
+                    <p style="margin-bottom: 2rem;">Get 24-48 hour advance warnings of equipment failures with actionable maintenance recommendations.</p>
+                    <div class="success-message">
+                        <strong>Demo Feature:</strong> Smart alerting system that prioritizes critical issues and reduces false alarms.
+                    </div>
+                    <button class="demo-button" onclick="nextTourStep(4)" style="width: auto; margin-top: 1rem;">
+                        Next: Dashboard <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div id="tourStep4" class="tour-step" style="display: none;">
+                    <h3 style="color: #1e40af; margin-bottom: 1rem;">📊 Step 4: Complete Dashboard</h3>
+                    <p style="margin-bottom: 2rem;">Access all your data through our intuitive dashboard with real-time analytics and historical trends.</p>
+                    <div class="success-message">
+                        <strong>Ready to explore?</strong> Try our full dashboard or interactive sandbox!
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <button class="demo-button" onclick="window.open('../dashboard/incredible_dashboard.html', '_blank')" style="width: auto; margin: 0.5rem;">
+                            🚀 Try Full Dashboard
+                        </button>
+                        <button class="demo-button" onclick="loadSandboxDemo()" style="width: auto; margin: 0.5rem; background: #10b981;">
+                            🔧 Try Sandbox
+                        </button>
+                        <button class="demo-button" onclick="nextTourStep(1)" style="width: auto; margin: 0.5rem; background: #6b7280;">
+                            ↻ Restart Tour
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTemp = 75;
+        let currentVibration = 3.0;
+        let currentPower = 200;
+        let currentMachine = 'pump';
+
+        // Machine configurations
+        const machines = {
+            pump: { 
+                name: 'Oil Pump #1', 
+                tempThreshold: 90, 
+                vibrationThreshold: 5.0, 
+                powerThreshold: 250 
+            },
+            compressor: { 
+                name: 'Compressor A', 
+                tempThreshold: 85, 
+                vibrationThreshold: 4.5, 
+                powerThreshold: 300 
+            },
+            turbine: { 
+                name: 'Turbine #3', 
+                tempThreshold: 120, 
+                vibrationThreshold: 6.0, 
+                powerThreshold: 400 
+            }
+        };
+
+        // Demo functions
+        function loadDashboardDemo() {
+            closeDemos();
+            document.getElementById('dashboardContainer').style.display = 'block';
+            document.getElementById('dashboardContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function loadSandboxDemo() {
+            closeDemos();
+            document.getElementById('sandboxContainer').style.display = 'block';
+            document.getElementById('sandboxContainer').scrollIntoView({ behavior: 'smooth' });
+            resetMachine(); // Initialize with default values
+        }
+
+        function loadGuidedDemo() {
+            closeDemos();
+            document.getElementById('guidedContainer').style.display = 'block';
+            document.getElementById('guidedContainer').scrollIntoView({ behavior: 'smooth' });
+            nextTourStep(1); // Start with first step
+        }
+
+        function closeDemos() {
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('sandboxContainer').style.display = 'none';
+            document.getElementById('guidedContainer').style.display = 'none';
+        }
+
+        // Sandbox functions
+        function updateMachine() {
+            currentMachine = document.getElementById('machineSelect').value;
+            document.getElementById('machineName').textContent = machines[currentMachine].name;
+            checkMachineStatus();
+        }
+
+        function updateTemperature(value) {
+            currentTemp = parseInt(value);
+            document.getElementById('tempValue').textContent = value + '°C';
+            document.getElementById('displayTemp').textContent = value + '°C';
+            checkMachineStatus();
+        }
+
+        function updateVibration(value) {
+            currentVibration = parseFloat(value);
+            document.getElementById('vibrationValue').textContent = value + ' mm/s';
+            document.getElementById('displayVibration').textContent = value;
+            checkMachineStatus();
+        }
+
+        function updatePower(value) {
+            currentPower = parseInt(value);
+            document.getElementById('powerValue').textContent = value + ' kW';
+            document.getElementById('displayPower').textContent = value;
+            checkMachineStatus();
+        }
+
+        function checkMachineStatus() {
+            const machine = machines[currentMachine];
+            const statusDot = document.getElementById('statusDot');
+            const alertBox = document.getElementById('alertBox');
+            const alertMessage = document.getElementById('alertMessage');
+            const confidenceLevel = document.getElementById('confidenceLevel');
+            const aiAnalysis = document.getElementById('aiAnalysis');
+
+            let alerts = [];
+            let confidence = 0;
+
+            // Check thresholds
+            if (currentTemp > machine.tempThreshold) {
+                alerts.push('High temperature');
+                confidence = Math.max(confidence, 85 + Math.min((currentTemp - machine.tempThreshold) * 2, 15));
+            }
+
+            if (currentVibration > machine.vibrationThreshold) {
+                alerts.push('Excessive vibration');
+                confidence = Math.max(confidence, 80 + Math.min((currentVibration - machine.vibrationThreshold) * 4, 20));
+            }
+
+            if (currentPower > machine.powerThreshold) {
+                alerts.push('Power anomaly');
+                confidence = Math.max(confidence, 75 + Math.min((currentPower - machine.powerThreshold) * 0.1, 25));
+            }
+
+            // Update status
+            if (alerts.length > 0) {
+                statusDot.className = 'status-dot critical';
+                alertBox.classList.add('show');
+                alertMessage.textContent = alerts.join(', ') + ' detected. Immediate maintenance recommended.';
+                confidenceLevel.textContent = Math.min(Math.round(confidence), 99) + '%';
+                aiAnalysis.textContent = `AI detected ${alerts.length} anomal${alerts.length > 1 ? 'ies' : 'y'}. Failure probability in next 24-48 hours: ${Math.min(Math.round(confidence), 99)}%. Schedule maintenance immediately.`;
+            } else if (currentTemp > machine.tempThreshold * 0.8 || currentVibration > machine.vibrationThreshold * 0.8 || currentPower > machine.powerThreshold * 0.8) {
+                statusDot.className = 'status-dot warning';
+                alertBox.classList.remove('show');
+                aiAnalysis.textContent = 'Machine operating near threshold limits. Continue monitoring for changes.';
+            } else {
+                statusDot.className = 'status-dot';
+                alertBox.classList.remove('show');
+                aiAnalysis.textContent = 'Machine operating within normal parameters. All systems nominal.';
+            }
+        }
+
+        function simulateFailure() {
+            // Set critical values
+            document.getElementById('tempSlider').value = 140;
+            document.getElementById('vibrationSlider').value = 8.5;
+            document.getElementById('powerSlider').value = 450;
+
+            updateTemperature(140);
+            updateVibration(8.5);
+            updatePower(450);
+        }
+
+        function resetMachine() {
+            // Reset to normal values
+            document.getElementById('tempSlider').value = 75;
+            document.getElementById('vibrationSlider').value = 3.0;
+            document.getElementById('powerSlider').value = 200;
+
+            updateTemperature(75);
+            updateVibration(3.0);
+            updatePower(200);
+        }
+
+        // Guided tour functions
+        function nextTourStep(step) {
+            // Hide all tour steps
+            for (let i = 1; i <= 4; i++) {
+                const stepElement = document.getElementById('tourStep' + i);
+                if (stepElement) {
+                    stepElement.style.display = 'none';
+                }
+            }
+
+            // Show current step
+            const currentStepElement = document.getElementById('tourStep' + step);
+            if (currentStepElement) {
+                currentStepElement.style.display = 'block';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('AISPARK Demo loaded successfully');
+        });
+    </script>
+</body>
+</html>
