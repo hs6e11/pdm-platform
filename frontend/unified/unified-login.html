@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDM Platform - Unified Client Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .platform-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-icon {
+            font-size: 3.5rem;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .subtitle {
+            color: #4a5568;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-to-hub {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .back-to-hub:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="email"], input[type="password"], select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .client-select {
+            position: relative;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 4rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-message {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #f0fff4, #e6fffa);
+            color: #2f855a;
+            border: 1px solid #9ae6b4;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .info {
+            background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+            color: #2b6cb0;
+            border: 1px solid #90cdf4;
+        }
+
+        .features {
+            margin-top: 35px;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feature-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .demo-credentials {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-credentials h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .demo-credentials p {
+            font-size: 13px;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .credential-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .industry-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .industry-badge {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 25px;
+                margin: 10px;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="hub.html" class="back-to-hub">← Back to Hub</a>
+        
+        <div class="platform-header">
+            <span class="logo-icon">🏭</span>
+            <div class="logo">PDM Platform</div>
+        </div>
+        <p class="subtitle">Industrial IoT Client Portal</p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <div class="form-group">
+                <label for="clientType">Industry / Client Type</label>
+                <select id="clientType" name="clientType" required>
+                    <option value="">Select your industry...</option>
+                    <option value="egypt_manufacturing">🇪🇬 Egypt Manufacturing Co.</option>
+                    <option value="oil_gas">🛢️ Oil & Gas Operations</option>
+                    <option value="automotive">🚗 Automotive Manufacturing</option>
+                    <option value="aerospace">✈️ Aerospace & Defense</option>
+                    <option value="pharma">💊 Pharmaceutical</option>
+                    <option value="food_processing">🏭 Food Processing</option>
+                    <option value="steel_metals">⚡ Steel & Metals</option>
+                    <option value="energy">⚡ Energy & Utilities</option>
+                    <option value="demo">🧪 Demo Environment</option>
+                </select>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                Sign In to Dashboard
+            </button>
+        </form>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <div class="industry-badges">
+            <div class="industry-badge">🏭 Manufacturing</div>
+            <div class="industry-badge">🛢️ Energy</div>
+            <div class="industry-badge">🚗 Automotive</div>
+            <div class="industry-badge">✈️ Aerospace</div>
+        </div>
+
+        <div class="features">
+            <h3>Platform Capabilities</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🔄</span>
+                    <span>Real-time Monitoring</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🤖</span>
+                    <span>ML Anomaly Detection</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <span>Predictive Analytics</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌍</span>
+                    <span>Global Connectivity</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📱</span>
+                    <span>Mobile Responsive</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔒</span>
+                    <span>Enterprise Security</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-credentials">
+            <h4>🧪 Demo Access Credentials</h4>
+            <div class="credential-item">
+                <p><strong>General Demo:</strong> demo@pdm-platform.com / demo123</p>
+            </div>
+            <div class="credential-item">
+                <p><strong>Egypt Client:</strong> egypt@manufacturing.eg / egypt2024</p>
+            </div>
+            <div class="credential-item">
+                <p><strong>Oil & Gas:</strong> admin@oilgas.com / oilgas123</p>
+            </div>
+            <div class="credential-item">
+                <p><strong>Automotive:</strong> manager@automotive.com / auto123</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced client routing configuration
+        const clientRoutes = {
+            'egypt_manufacturing': '/pages/egypt-dashboard.html',
+            'oil_gas': '/pages/oil-gas-dashboard.html',
+            'automotive': '/pages/automotive-dashboard.html',
+            'aerospace': '/pages/aerospace-dashboard.html',
+            'pharma': '/pages/pharma-dashboard.html',
+            'food_processing': '/pages/food-dashboard.html',
+            'steel_metals': '/pages/metals-dashboard.html',
+            'energy': '/pages/energy-dashboard.html',
+            'demo': '/pages/demo-dashboard.html'
+        };
+
+        // Enhanced demo credentials
+        const demoCredentials = {
+            'demo@pdm-platform.com': { password: 'demo123', clientType: 'demo' },
+            'egypt@manufacturing.eg': { password: 'egypt2024', clientType: 'egypt_manufacturing' },
+            'admin@oilgas.com': { password: 'oilgas123', clientType: 'oil_gas' },
+            'manager@automotive.com': { password: 'auto123', clientType: 'automotive' },
+            'admin@aerospace.com': { password: 'aero123', clientType: 'aerospace' },
+            'quality@pharma.com': { password: 'pharma123', clientType: 'pharma' },
+            'ops@steelworks.com': { password: 'steel123', clientType: 'steel_metals' },
+            'supervisor@energy.com': { password: 'energy123', clientType: 'energy' }
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const clientType = document.getElementById('clientType').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // Show loading state
+            loginBtn.innerHTML = '<span class="loading"></span> Authenticating...';
+            loginBtn.disabled = true;
+            hideMessage();
+
+            try {
+                // Simulate authentication delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Check demo credentials
+                if (demoCredentials[email]) {
+                    const user = demoCredentials[email];
+                    if (user.password === password) {
+                        // Successful demo login
+                        showMessage(`✅ Authentication successful! Redirecting to ${clientType.replace('_', ' ')} dashboard...`, 'success');
+                        
+                        // Store session info
+                        sessionStorage.setItem('pdm_user', JSON.stringify({
+                            email: email,
+                            clientType: user.clientType,
+                            loginTime: new Date().toISOString(),
+                            platform: 'PDM Unified',
+                            permissions: ['dashboard_access', 'real_time_data', 'alerts']
+                        }));
+
+                        // Redirect after short delay
+                        setTimeout(() => {
+                            const route = clientRoutes[user.clientType] || '/pages/demo-dashboard.html';
+                            window.location.href = route;
+                        }, 1200);
+                        
+                        return;
+                    }
+                }
+
+                // For Egypt client, also verify with backend API
+                if (clientType === 'egypt_manufacturing') {
+                    try {
+                        const response = await fetch('/api/iot/clients/egypt_client_001/status');
+                        if (response.ok) {
+                            const data = await response.json();
+                            showMessage(`🇪🇬 Egypt client authenticated. Status: ${data.status || 'Active'}`, 'success');
+                            
+                            // Store session with Egypt-specific info
+                            sessionStorage.setItem('pdm_user', JSON.stringify({
+                                email: email,
+                                clientType: clientType,
+                                clientId: 'egypt_client_001',
+                                loginTime: new Date().toISOString(),
+                                platform: 'PDM Unified',
+                                permissions: ['dashboard_access', 'real_time_data', 'alerts', 'machine_control']
+                            }));
+
+                            setTimeout(() => {
+                                window.location.href = '/pages/egypt-dashboard.html';
+                            }, 1200);
+                            
+                            return;
+                        }
+                    } catch (apiError) {
+                        console.log('API check failed, using demo mode');
+                        showMessage('API unavailable, using demo mode', 'info');
+                    }
+                }
+
+                // Invalid credentials
+                showMessage('❌ Invalid credentials. Please check your email and password.', 'error');
+
+            } catch (error) {
+                showMessage('❌ Authentication failed. Please try again.', 'error');
+                console.error('Login error:', error);
+            } finally {
+                loginBtn.innerHTML = 'Sign In to Dashboard';
+                loginBtn.disabled = false;
+            }
+        });
+
+        function showMessage(message, type) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+            
+            // Add animation
+            statusMessage.style.opacity = '0';
+            statusMessage.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                statusMessage.style.transition = 'all 0.3s ease';
+                statusMessage.style.opacity = '1';
+                statusMessage.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        function hideMessage() {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.style.display = 'none';
+        }
+
+        // Auto-select client type based on email domain
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value.toLowerCase();
+            const clientSelect = document.getElementById('clientType');
+            
+            if (email.includes('egypt') || email.endsWith('.eg')) {
+                clientSelect.value = 'egypt_manufacturing';
+            } else if (email.includes('oil') || email.includes('gas')) {
+                clientSelect.value = 'oil_gas';
+            } else if (email.includes('automotive') || email.includes('auto')) {
+                clientSelect.value = 'automotive';
+            } else if (email.includes('aerospace') || email.includes('aero')) {
+                clientSelect.value = 'aerospace';
+            } else if (email.includes('pharma') || email.includes('quality')) {
+                clientSelect.value = 'pharma';
+            } else if (email.includes('steel') || email.includes('metal')) {
+                clientSelect.value = 'steel_metals';
+            } else if (email.includes('energy') || email.includes('power')) {
+                clientSelect.value = 'energy';
+            } else if (email.includes('demo')) {
+                clientSelect.value = 'demo';
+            }
+        });
+
+        // Enhanced form validation
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            
+            if (email && !isValid) {
+                this.style.borderColor = '#e53e3e';
+                this.style.boxShadow = '0 0 0 4px rgba(229, 62, 62, 0.1)';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+                this.style.boxShadow = 'none';
+            }
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const userData = sessionStorage.getItem('pdm_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                showMessage(`👋 Welcome back! Redirecting to your dashboard...`, 'info');
+                
+                setTimeout(() => {
+                    const route = clientRoutes[user.clientType] || '/pages/demo-dashboard.html';
+                    window.location.href = route;
+                }, 1500);
+            }
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        window.location.href = 'hub.html';
+                        break;
+                }
+            }
+        });
+
+        // Enhanced client type selection with descriptions
+        const clientDescriptions = {
+            'egypt_manufacturing': 'Real-time monitoring of Cairo manufacturing operations',
+            'oil_gas': 'Drilling, production, and pipeline management systems',
+            'automotive': 'Assembly lines, quality control, and supply chain monitoring',
+            'aerospace': 'Precision manufacturing and safety-critical systems',
+            'pharma': 'GMP compliance, batch tracking, and quality assurance',
+            'food_processing': 'HACCP monitoring, temperature control, and traceability',
+            'steel_metals': 'Furnace monitoring, rolling mills, and quality testing',
+            'energy': 'Power generation, distribution, and grid management',
+            'demo': 'Full-featured demonstration environment'
+        };
+
+        document.getElementById('clientType').addEventListener('change', function() {
+            const selectedType = this.value;
+            const description = clientDescriptions[selectedType];
+            
+            if (description) {
+                // Could add a description tooltip or update subtitle
+                console.log(`Selected: ${description}`);
+            }
+        });
+
+        // Add demo credential click-to-fill functionality
+        document.querySelectorAll('.credential-item').forEach(item => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', function() {
+                const text = this.textContent;
+                const match = text.match(/(\S+@\S+\.\S+)\s*\/\s*(\S+)/);
+                
+                if (match) {
+                    document.getElementById('email').value = match[1];
+                    document.getElementById('password').value = match[2];
+                    
+                    // Trigger email blur to auto-select client type
+                    document.getElementById('email').dispatchEvent(new Event('blur'));
+                    
+                    // Visual feedback
+                    this.style.background = 'rgba(102, 126, 234, 0.1)';
+                    setTimeout(() => {
+                        this.style.background = 'rgba(255, 255, 255, 0.7)';
+                    }, 500);
+                }
+            });
+        });
+
+        console.log('🔐 Enhanced PDM Login Portal loaded');
+        console.log('🌟 Features: Auto-fill, backend verification, unified routing');
+    </script>
+</body>
+</html>

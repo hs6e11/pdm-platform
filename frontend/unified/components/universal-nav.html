@@ -1,0 +1,357 @@
+<!-- Universal PDM Platform Navigation Component -->
+<!-- Add this to the top of any dashboard page for unified navigation -->
+
+<style>
+/* Universal Navigation Styles - Add to any dashboard */
+.pdm-universal-nav {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    border-bottom: 3px solid #667eea;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pdm-nav-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pdm-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #f7fafc;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.pdm-nav-brand:hover {
+    color: #667eea;
+}
+
+.pdm-nav-brand .brand-icon {
+    font-size: 1.5rem;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.pdm-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.pdm-nav-link {
+    color: #cbd5e0;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.pdm-nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.pdm-nav-link:hover::before {
+    left: 100%;
+}
+
+.pdm-nav-link:hover {
+    color: #f7fafc;
+    background: rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.pdm-nav-link.active {
+    background: #667eea;
+    color: white;
+}
+
+.pdm-breadcrumb {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: #a0aec0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pdm-breadcrumb-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pdm-breadcrumb a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.pdm-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.pdm-nav-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.85rem;
+}
+
+.pdm-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(72, 187, 120, 0.2);
+    border-radius: 15px;
+    color: #48bb78;
+    font-weight: 500;
+}
+
+.pdm-status-dot {
+    width: 6px;
+    height: 6px;
+    background: #48bb78;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.pdm-nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #cbd5e0;
+}
+
+.pdm-user-avatar {
+    width: 32px;
+    height: 32px;
+    background: #667eea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.pdm-nav-mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #cbd5e0;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .pdm-nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #1a202c;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pdm-nav-links.active {
+        display: flex;
+    }
+    
+    .pdm-nav-mobile-toggle {
+        display: block;
+    }
+    
+    .pdm-nav-content {
+        position: relative;
+    }
+}
+</style>
+
+<!-- Universal Navigation HTML -->
+<nav class="pdm-universal-nav">
+    <div class="pdm-nav-content">
+        <a href="hub.html" class="pdm-nav-brand">
+            <span class="brand-icon">🏭</span>
+            PDM Platform
+        </a>
+        
+        <div class="pdm-nav-links" id="navLinks">
+            <a href="hub.html" class="pdm-nav-link">🏠 Hub</a>
+            <a href="file:///Users/hemdanshalaby/PDM_PROJECT/pdm-platform/website/dashboard/incredible_dashboard.html" 
+               class="pdm-nav-link" target="_blank">📈 Overview</a>
+            <a href="http://localhost:8080/pages/egypt-dashboard.html" 
+               class="pdm-nav-link" target="_blank">🇪🇬 Egypt</a>
+            <a href="http://localhost:8080/pages/oil-gas-dashboard.html" 
+               class="pdm-nav-link" target="_blank">🛢️ Oil & Gas</a>
+            <a href="http://localhost:8080/pages/login.html" 
+               class="pdm-nav-link" target="_blank">🔐 Login</a>
+        </div>
+
+        <div class="pdm-nav-status">
+            <div class="pdm-status-indicator">
+                <span class="pdm-status-dot"></span>
+                <span>Live</span>
+            </div>
+            <div class="pdm-nav-user">
+                <div class="pdm-user-avatar" id="userAvatar">A</div>
+                <span id="currentTime"></span>
+            </div>
+        </div>
+
+        <button class="pdm-nav-mobile-toggle" onclick="toggleMobileNav()">
+            ☰
+        </button>
+    </div>
+</nav>
+
+<!-- Optional Breadcrumb -->
+<div class="pdm-breadcrumb" id="breadcrumb" style="display: none;">
+    <div class="pdm-breadcrumb-content">
+        <a href="hub.html">PDM Platform</a>
+        <span>›</span>
+        <span id="currentPage">Dashboard</span>
+    </div>
+</div>
+
+<script>
+// Universal Navigation JavaScript
+(function() {
+    // Update current time
+    function updateTime() {
+        const timeElement = document.getElementById('currentTime');
+        if (timeElement) {
+            const now = new Date();
+            timeElement.textContent = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        }
+    }
+
+    // Set active navigation link based on current page
+    function setActiveNav() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.pdm-nav-link');
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.href.includes(currentPath) || 
+                (currentPath.includes('egypt-dashboard') && link.href.includes('egypt-dashboard')) ||
+                (currentPath.includes('oil-gas-dashboard') && link.href.includes('oil-gas-dashboard')) ||
+                (currentPath.includes('login') && link.href.includes('login')) ||
+                (currentPath.includes('hub') && link.href.includes('hub'))) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Update breadcrumb based on page
+    function updateBreadcrumb() {
+        const breadcrumb = document.getElementById('breadcrumb');
+        const currentPage = document.getElementById('currentPage');
+        
+        if (breadcrumb && currentPage) {
+            const path = window.location.pathname;
+            let pageName = 'Dashboard';
+            
+            if (path.includes('egypt-dashboard')) {
+                pageName = '🇪🇬 Egypt Manufacturing';
+                breadcrumb.style.display = 'block';
+            } else if (path.includes('oil-gas-dashboard')) {
+                pageName = '🛢️ Oil & Gas Operations';
+                breadcrumb.style.display = 'block';
+            } else if (path.includes('login')) {
+                pageName = '🔐 Client Login';
+                breadcrumb.style.display = 'block';
+            } else if (path.includes('hub')) {
+                pageName = '🏠 Command Center';
+                breadcrumb.style.display = 'block';
+            } else if (path.includes('incredible_dashboard')) {
+                pageName = '📈 Company Overview';
+                breadcrumb.style.display = 'block';
+            }
+            
+            currentPage.textContent = pageName;
+        }
+    }
+
+    // Set user avatar based on session
+    function setUserAvatar() {
+        const avatar = document.getElementById('userAvatar');
+        if (avatar) {
+            const userData = sessionStorage.getItem('pdm_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                avatar.textContent = user.email.charAt(0).toUpperCase();
+                avatar.title = user.email;
+            } else {
+                avatar.textContent = 'G'; // Guest
+                avatar.title = 'Guest User';
+            }
+        }
+    }
+
+    // Mobile navigation toggle
+    window.toggleMobileNav = function() {
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('active');
+    };
+
+    // Initialize navigation
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTime();
+        setActiveNav();
+        updateBreadcrumb();
+        setUserAvatar();
+        
+        // Update time every minute
+        setInterval(updateTime, 60000);
+        
+        console.log('🧭 PDM Universal Navigation loaded');
+    });
+
+    // Add navigation event tracking
+    document.querySelectorAll('.pdm-nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            console.log(`📍 Navigation: ${this.textContent.trim()}`);
+        });
+    });
+})();
+</script>

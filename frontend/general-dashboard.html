@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDM Platform - General Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #2d3748;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .overview-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .overview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .overview-card h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .overview-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .overview-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .clients-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .client-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .client-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: #667eea;
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .client-info {
+            flex: 1;
+        }
+
+        .client-flag {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .client-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .client-location {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .client-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #f0fff4;
+            color: #38a169;
+            border: 1px solid #9ae6b4;
+        }
+
+        .status-offline {
+            background: #fff5f5;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+        }
+
+        .status-demo {
+            background: #ebf8ff;
+            color: #3182ce;
+            border: 1px solid #90cdf4;
+        }
+
+        .client-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .client-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .alerts-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            background: #f7fafc;
+        }
+
+        .alert-item.critical {
+            border-left-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .alert-item.warning {
+            border-left-color: #ed8936;
+            background: #fffbf0;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .alert-description {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .alert-time {
+            color: #a0aec0;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+            }
+
+            .overview-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .clients-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .client-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span>🏭</span>
+                PDM Platform - General Dashboard
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalClients">5</div>
+                    <div>Active Clients</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalMachines">23</div>
+                    <div>Total Machines</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalAlerts">12</div>
+                    <div>Active Alerts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99.2%</div>
+                    <div>System Uptime</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- System Overview -->
+        <div class="overview-section">
+            <div class="overview-card">
+                <h3>Data Points Collected</h3>
+                <div class="overview-number" id="dataPoints">15,247</div>
+                <div class="overview-label">Last 24 Hours</div>
+            </div>
+
+            <div class="overview-card">
+                <h3>Anomalies Detected</h3>
+                <div class="overview-number" id="anomalies">47</div>
+                <div class="overview-label">ML Predictions</div>
+            </div>
+
+            <div class="overview-card">
+                <h3>Avg Response Time</h3>
+                <div class="overview-number" id="responseTime">85</div>
+                <div class="overview-label">Milliseconds</div>
+            </div>
+
+            <div class="overview-card">
+                <h3>Success Rate</h3>
+                <div class="overview-number" id="successRate">98.7</div>
+                <div class="overview-label">Percent</div>
+            </div>
+        </div>
+
+        <!-- Client Management -->
+        <div class="clients-section">
+            <h2 class="section-title">📍 Client Locations & Status</h2>
+            
+            <div class="clients-grid">
+                <!-- Egypt Client -->
+                <a href="pages/egypt-dashboard.html" class="client-card" target="_blank">
+                    <div class="client-status status-online">Live</div>
+                    <div class="client-header">
+                        <div class="client-info">
+                            <div class="client-flag">🇪🇬</div>
+                            <div class="client-name">Egypt Manufacturing Co.</div>
+                            <div class="client-location">Cairo, Egypt • Africa/Cairo timezone</div>
+                        </div>
+                    </div>
+                    
+                    <div class="client-metrics">
+                        <div class="metric">
+                            <div class="metric-value">5</div>
+                            <div class="metric-label">Machines</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">Alerts</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">94%</div>
+                            <div class="metric-label">Efficiency</div>
+                        </div>
+                    </div>
+
+                    <div class="client-actions">
+                        <span class="btn btn-primary">View Dashboard</span>
+                        <span class="btn btn-secondary">System Status</span>
+                    </div>
+                </a>
+
+                <!-- Oil & Gas Client -->
+                <a href="pages/oil-gas-dashboard.html" class="client-card" target="_blank">
+                    <div class="client-status status-demo">Simulation</div>
+                    <div class="client-header">
+                        <div class="client-info">
+                            <div class="client-flag">🛢️</div>
+                            <div class="client-name">Global Oil & Gas Operations</div>
+                            <div class="client-location">Multiple Locations • Drilling & Production</div>
+                        </div>
+                    </div>
+                    
+                    <div class="client-metrics">
+                        <div class="metric">
+                            <div class="metric-value">12</div>
+                            <div class="metric-label">Equipment</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">847</div>
+                            <div class="metric-label">Bbl/Day</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">92%</div>
+                            <div class="metric-label">Efficiency</div>
+                        </div>
+                    </div>
+
+                    <div class="client-actions">
+                        <span class="btn btn-primary">View Dashboard</span>
+                        <span class="btn btn-secondary">Operations</span>
+                    </div>
+                </a>
+
+                <!-- Automotive Client (Future) -->
+                <div class="client-card" style="opacity: 0.7; cursor: not-allowed;">
+                    <div class="client-status status-offline">Coming Soon</div>
+                    <div class="client-header">
+                        <div class="client-info">
+                            <div class="client-flag">🚗</div>
+                            <div class="client-name">Automotive Manufacturing</div>
+                            <div class="client-location">Detroit, USA • Assembly Lines</div>
+                        </div>
+                    </div>
+                    
+                    <div class="client-metrics">
+                        <div class="metric">
+                            <div class="metric-value">-</div>
+                            <div class="metric-label">Lines</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">-</div>
+                            <div class="metric-label">Units/Hr</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">-</div>
+                            <div class="metric-label">Quality</div>
+                        </div>
+                    </div>
+
+                    <div class="client-actions">
+                        <span class="btn btn-secondary">Phase 2</span>
+                    </div>
+                </div>
+
+                <!-- Add New Client Card -->
+                <div class="client-card" style="border: 2px dashed #cbd5e0; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; color: #a0aec0;">➕</div>
+                    <div class="client-name" style="color: #718096;">Add New Client</div>
+                    <div class="client-location">Expand to new locations</div>
+                    
+                    <div class="client-actions" style="margin-top: 20px;">
+                        <span class="btn btn-primary" onclick="addNewClient()">Add Client</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Alerts -->
+        <div class="alerts-section">
+            <div class="alerts-header">
+                <h2 class="section-title">🚨 Recent System Alerts</h2>
+                <button class="btn btn-secondary" onclick="refreshAlerts()">Refresh</button>
+            </div>
+
+            <div id="alertsList">
+                <div class="alert-item critical">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Egypt - High Temperature Alert</div>
+                        <div class="alert-description">CNC Mill Alpha temperature exceeds threshold (52°C)</div>
+                    </div>
+                    <div class="alert-time">5 min ago</div>
+                </div>
+
+                <div class="alert-item warning">
+                    <div class="alert-icon">🔧</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Oil & Gas - Maintenance Due</div>
+                        <div class="alert-description">Drilling Rig Beta requires scheduled maintenance</div>
+                    </div>
+                    <div class="alert-time">2 hours ago</div>
+                </div>
+
+                <div class="alert-item">
+                    <div class="alert-icon">📊</div>
+                    <div class="alert-content">
+                        <div class="alert-title">System Performance</div>
+                        <div class="alert-description">All systems operating within normal parameters</div>
+                    </div>
+                    <div class="alert-time">1 hour ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update statistics periodically
+        function updateStats() {
+            // Simulate real-time data updates
+            document.getElementById('dataPoints').textContent = 
+                (15247 + Math.floor(Math.random() * 100)).toLocaleString();
+            
+            document.getElementById('anomalies').textContent = 
+                47 + Math.floor(Math.random() * 10);
+            
+            document.getElementById('responseTime').textContent = 
+                Math.floor(70 + Math.random() * 30);
+            
+            document.getElementById('totalAlerts').textContent = 
+                Math.floor(8 + Math.random() * 8);
+        }
+
+        function addNewClient() {
+            const clientTypes = [
+                '🇺🇸 USA - Automotive Manufacturing',
+                '🇩🇪 Germany - Industrial Automation', 
+                '🇯🇵 Japan - Electronics Manufacturing',
+                '🇮🇳 India - Textile Production',
+                '🇧🇷 Brazil - Mining Operations'
+            ];
+            
+            const selectedType = clientTypes[Math.floor(Math.random() * clientTypes.length)];
+            
+            alert(`New Client Registration\n\n${selectedType}\n\nClient setup wizard would open here.\nThis feature is planned for Phase 2 development.`);
+        }
+
+        function refreshAlerts() {
+            alert('Refreshing system alerts...\n\nConnecting to all client locations:\n• Egypt Manufacturing ✅\n• Oil & Gas Operations ✅\n• Automotive (Coming Soon)\n\nAll alerts up to date.');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update stats every 30 seconds
+            setInterval(updateStats, 30000);
+            
+            console.log('🏭 General PDM Dashboard loaded');
+            console.log('📊 Multi-client overview active');
+        });
+
+        // Simulate real-time client status updates
+        setInterval(() => {
+            // This would normally fetch real data from the backend
+            console.log('📡 Checking client status...');
+        }, 60000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil & Gas Operations Dashboard - PDM Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 3px solid #f59e0b;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f59e0b;
+        }
+
+        .oil-icon {
+            font-size: 2rem;
+            animation: pump 2s ease-in-out infinite;
+        }
+
+        @keyframes pump {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border-color: #f59e0b;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f59e0b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .equipment-card {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .equipment-card:hover {
+            transform: scale(1.03);
+            border-color: #f59e0b;
+        }
+
+        .equipment-card.normal {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .equipment-card.warning {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+
+        .equipment-card.critical {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .equipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .equipment-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .equipment-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .readings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .reading-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .reading-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .reading-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .critical-alerts {
+            background: #7f1d1d;
+            border: 2px solid #dc2626;
+        }
+
+        .alert-item {
+            background: rgba(220, 38, 38, 0.1);
+            border-left: 4px solid #dc2626;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-item.warning {
+            background: rgba(217, 119, 6, 0.1);
+            border-left-color: #d97706;
+        }
+
+        .alert-item.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+        }
+
+        .production-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: #0f172a;
+            border: 1px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f59e0b;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: #e5e7eb;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.operational {
+            background: #10b981;
+        }
+
+        .status-dot.warning {
+            background: #f59e0b;
+        }
+
+        .status-dot.critical {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .emergency-stop {
+            background: #7f1d1d !important;
+            border: 2px solid #dc2626 !important;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .production-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .readings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="oil-icon">🛢️</span>
+                Oil & Gas Operations - PDM Dashboard
+            </div>
+            <div class="header-info">
+                <div class="status-indicator">
+                    <span class="status-dot operational"></span>
+                    <span>Systems Operational</span>
+                </div>
+                <div id="currentTime"></div>
+                <button class="btn btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Production Overview -->
+        <div class="production-metrics">
+            <div class="metric-card">
+                <div class="metric-value" id="dailyProduction">847</div>
+                <div class="metric-label">Barrels/Day</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="systemEfficiency">94.2</div>
+                <div class="metric-label">Efficiency %</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="activePumps">12</div>
+                <div class="metric-label">Active Pumps</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="alertCount">3</div>
+                <div class="metric-label">Active Alerts</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Drilling Equipment -->
+            <div class="card">
+                <h3 class="card-title">⚒️ Drilling Equipment</h3>
+                <div class="equipment-grid" id="drillingEquipment">
+                    <!-- Drilling equipment will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Production Systems -->
+            <div class="card">
+                <h3 class="card-title">⚙️ Production Systems</h3>
+                <div class="equipment-grid" id="productionSystems">
+                    <!-- Production systems will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Pumping Stations -->
+        <div class="card">
+            <h3 class="card-title">🏭 Pumping Stations & Pipelines</h3>
+            <div class="equipment-grid" id="pumpingStations">
+                <!-- Pumping stations will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Critical Alerts -->
+        <div class="card critical-alerts">
+            <h3 class="card-title">🚨 Critical Alerts & Safety</h3>
+            <div id="criticalAlerts">
+                <!-- Critical alerts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Equipment Management -->
+        <div class="card">
+            <h3 class="card-title">🔧 Equipment Management</h3>
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <button class="btn btn-primary" onclick="addEquipment()">+ Add Equipment</button>
+                <button class="btn btn-secondary" onclick="scheduleMaintenece()">📅 Schedule Maintenance</button>
+                <button class="btn btn-danger" onclick="emergencyShutdown()">⚠️ Emergency Stop</button>
+            </div>
+            <div id="equipmentControls"></div>
+        </div>
+    </div>
+
+    <script>
+        // Oil & Gas Equipment Configuration
+        const oilGasEquipment = {
+            drilling: [
+                {
+                    id: 'DRILL_001',
+                    name: 'Drilling Rig Alpha',
+                    type: 'Rotary Drilling Rig',
+                    status: 'operational',
+                    location: 'Platform A-1'
+                },
+                {
+                    id: 'DRILL_002',
+                    name: 'Drilling Rig Beta',
+                    type: 'Hydraulic Drilling Rig',
+                    status: 'maintenance',
+                    location: 'Platform A-2'
+                }
+            ],
+            production: [
+                {
+                    id: 'PROD_001',
+                    name: 'Separator Unit 1',
+                    type: 'Oil-Gas Separator',
+                    status: 'operational',
+                    location: 'Processing Plant'
+                },
+                {
+                    id: 'PROD_002',
+                    name: 'Compressor Station',
+                    type: 'Gas Compressor',
+                    status: 'warning',
+                    location: 'Central Facility'
+                }
+            ],
+            pumping: [
+                {
+                    id: 'PUMP_001',
+                    name: 'Main Transfer Pump',
+                    type: 'Centrifugal Pump',
+                    status: 'operational',
+                    location: 'Pipeline Station 1'
+                },
+                {
+                    id: 'PUMP_002',
+                    name: 'Booster Pump A',
+                    type: 'Multistage Pump',
+                    status: 'operational',
+                    location: 'Pipeline Station 2'
+                },
+                {
+                    id: 'PUMP_003',
+                    name: 'Injection Pump',
+                    type: 'High Pressure Pump',
+                    status: 'critical',
+                    location: 'Well Site 3'
+                }
+            ]
+        };
+
+        let currentSensorData = {};
+
+        window.addEventListener('load', function() {
+            // Check authentication
+            const userData = sessionStorage.getItem('pdm_user');
+            if (!userData) {
+                window.location.href = '/pages/login.html';
+                return;
+            }
+
+            initializeDashboard();
+            startRealTimeUpdates();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+        });
+
+        function initializeDashboard() {
+            renderAllEquipment();
+            generateCriticalAlerts();
+            updateProductionMetrics();
+        }
+
+        function renderAllEquipment() {
+            renderEquipmentSection('drillingEquipment', oilGasEquipment.drilling);
+            renderEquipmentSection('productionSystems', oilGasEquipment.production);
+            renderEquipmentSection('pumpingStations', oilGasEquipment.pumping);
+        }
+
+        function renderEquipmentSection(containerId, equipment) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            equipment.forEach(item => {
+                const sensorData = generateOilGasSensorData(item);
+                currentSensorData[item.id] = sensorData;
+
+                const equipmentCard = document.createElement('div');
+                equipmentCard.className = `equipment-card ${getStatusClass(item.status)}`;
+                equipmentCard.innerHTML = `
+                    <div class="equipment-header">
+                        <div class="equipment-name">${item.name}</div>
+                        <div class="equipment-status">${item.status.toUpperCase()}</div>
+                    </div>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;">
+                        ${item.type} • ${item.location}
+                    </div>
+                    <div class="readings-grid">
+                        <div class="reading-item">
+                            <div class="reading-label">Pressure</div>
+                            <div class="reading-value">${sensorData.pressure} PSI</div>
+                        </div>
+                        <div class="reading-item">
+                            <div class="reading-label">Flow Rate</div>
+                            <div class="reading-value">${sensorData.flow_rate} bbl/h</div>
+                        </div>
+                        <div class="reading-item">
+                            <div class="reading-label">Temperature</div>
+                            <div class="reading-value">${sensorData.temperature}°F</div>
+                        </div>
+                        <div class="reading-item">
+                            <div class="reading-label">Vibration</div>
+                            <div class="reading-value">${sensorData.vibration} mm/s</div>
+                        </div>
+                        <div class="reading-item">
+                            <div class="reading-label">Power</div>
+                            <div class="reading-value">${sensorData.power} kW</div>
+                        </div>
+                        <div class="reading-item">
+                            <div class="reading-label">Efficiency</div>
+                            <div class="reading-value">${sensorData.efficiency}%</div>
+                        </div>
+                    </div>
+                `;
+
+                equipmentCard.addEventListener('click', () => {
+                    showEquipmentDetails(item);
+                });
+
+                container.appendChild(equipmentCard);
+            });
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'operational': return 'normal';
+                case 'warning': return 'warning';
+                case 'critical': return 'critical';
+                case 'maintenance': return 'warning';
+                default: return 'normal';
+            }
+        }
+
+        function generateOilGasSensorData(equipment) {
+            const baseValues = {
+                pressure: equipment.status === 'operational' ? 450 : equipment.status === 'critical' ? 650 : 500,
+                flow_rate: equipment.status === 'operational' ? 125 : equipment.status === 'critical' ? 50 : 100,
+                temperature: equipment.status === 'operational' ? 180 : equipment.status === 'critical' ? 220 : 200,
+                vibration: equipment.status === 'operational' ? 15 : equipment.status === 'critical' ? 45 : 25,
+                power: equipment.status === 'operational' ? 85 : equipment.status === 'critical' ? 120 : 95,
+                efficiency: equipment.status === 'operational' ? 92 : equipment.status === 'critical' ? 65 : 85
+            };
+
+            return {
+                pressure: (baseValues.pressure + Math.random() * 50 - 25).toFixed(0),
+                flow_rate: (baseValues.flow_rate + Math.random() * 20 - 10).toFixed(1),
+                temperature: (baseValues.temperature + Math.random() * 20 - 10).toFixed(0),
+                vibration: (baseValues.vibration + Math.random() * 10 - 5).toFixed(1),
+                power: (baseValues.power + Math.random() * 15 - 7).toFixed(1),
+                efficiency: (baseValues.efficiency + Math.random() * 8 - 4).toFixed(1)
+            };
+        }
+
+        function startRealTimeUpdates() {
+            console.log('🔌 Starting real-time updates for Oil & Gas operations...');
+            
+            // Update every 3 seconds for critical oil & gas monitoring
+            setInterval(() => {
+                updateAllEquipmentData();
+                updateProductionMetrics();
+                checkCriticalThresholds();
+            }, 3000);
+        }
+
+        function updateAllEquipmentData() {
+            Object.values(oilGasEquipment).flat().forEach(equipment => {
+                if (equipment.status !== 'maintenance') {
+                    currentSensorData[equipment.id] = generateOilGasSensorData(equipment);
+                }
+            });
+            renderAllEquipment();
+        }
+
+        function updateProductionMetrics() {
+            // Simulate production metrics
+            const dailyProduction = document.getElementById('dailyProduction');
+            const systemEfficiency = document.getElementById('systemEfficiency');
+            const activePumps = document.getElementById('activePumps');
+            
+            dailyProduction.textContent = (840 + Math.random() * 20).toFixed(0);
+            systemEfficiency.textContent = (93 + Math.random() * 3).toFixed(1);
+            activePumps.textContent = Math.floor(10 + Math.random() * 4);
+        }
+
+        function checkCriticalThresholds() {
+            // Check for critical conditions and update alerts
+            let criticalCount = 0;
+            Object.values(oilGasEquipment).flat().forEach(equipment => {
+                const data = currentSensorData[equipment.id];
+                if (data) {
+                    if (parseFloat(data.pressure) > 600 || parseFloat(data.temperature) > 210) {
+                        criticalCount++;
+                    }
+                }
+            });
+            
+            document.getElementById('alertCount').textContent = criticalCount + Math.floor(Math.random() * 3);
+        }
+
+        function generateCriticalAlerts() {
+            const alerts = [
+                {
+                    type: 'error',
+                    title: 'HIGH PRESSURE ALERT',
+                    message: 'Injection Pump pressure exceeding safe limits (650+ PSI)',
+                    equipment: 'PUMP_003',
+                    time: '2 minutes ago',
+                    severity: 'CRITICAL'
+                },
+                {
+                    type: 'warning',
+                    title: 'Temperature Warning',
+                    message: 'Compressor Station running above optimal temperature',
+                    equipment: 'PROD_002',
+                    time: '8 minutes ago',
+                    severity: 'HIGH'
+                },
+                {
+                    type: 'info',
+                    title: 'Maintenance Due',
+                    message: 'Drilling Rig Beta scheduled for routine inspection',
+                    equipment: 'DRILL_002',
+                    time: '1 hour ago',
+                    severity: 'LOW'
+                },
+                {
+                    type: 'error',
+                    title: 'FLOW RATE ANOMALY',
+                    message: 'Significant drop in Main Transfer Pump flow rate',
+                    equipment: 'PUMP_001',
+                    time: '15 minutes ago',
+                    severity: 'CRITICAL'
+                }
+            ];
+
+            const alertsList = document.getElementById('criticalAlerts');
+            alertsList.innerHTML = alerts.map(alert => `
+                <div class="alert-item ${alert.type}">
+                    <div class="alert-content">
+                        <div class="alert-title">
+                            ${alert.severity === 'CRITICAL' ? '🚨' : alert.severity === 'HIGH' ? '⚠️' : 'ℹ️'} 
+                            ${alert.title}
+                        </div>
+                        <div style="margin: 8px 0;">${alert.message}</div>
+                        <div class="alert-time">Equipment: ${alert.equipment} • ${alert.time} • Priority: ${alert.severity}</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn ${alert.severity === 'CRITICAL' ? 'btn-danger' : 'btn-secondary'}" 
+                                onclick="acknowledgeAlert('${alert.equipment}', '${alert.severity}')">
+                            ${alert.severity === 'CRITICAL' ? 'URGENT' : 'Acknowledge'}
+                        </button>
+                        ${alert.severity === 'CRITICAL' ? 
+                            `<button class="btn btn-danger" onclick="emergencyResponse('${alert.equipment}')">Emergency Stop</button>` 
+                            : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showEquipmentDetails(equipment) {
+            const sensorData = currentSensorData[equipment.id];
+            const statusColor = equipment.status === 'operational' ? '🟢' : 
+                               equipment.status === 'warning' ? '🟡' : 
+                               equipment.status === 'critical' ? '🔴' : '🟠';
+            
+            const details = `
+                ${statusColor} ${equipment.name} (${equipment.id})
+                Type: ${equipment.type}
+                Location: ${equipment.location}
+                Status: ${equipment.status.toUpperCase()}
+                
+                Current Readings:
+                • Pressure: ${sensorData.pressure} PSI
+                • Flow Rate: ${sensorData.flow_rate} bbl/h  
+                • Temperature: ${sensorData.temperature}°F
+                • Vibration: ${sensorData.vibration} mm/s
+                • Power Consumption: ${sensorData.power} kW
+                • Efficiency: ${sensorData.efficiency}%
+                
+                ${equipment.status === 'critical' ? '⚠️ REQUIRES IMMEDIATE ATTENTION' : ''}
+                ${equipment.status === 'maintenance' ? '🔧 SCHEDULED MAINTENANCE MODE' : ''}
+            `;
+            
+            alert(details);
+        }
+
+        function acknowledgeAlert(equipmentId, severity) {
+            const message = severity === 'CRITICAL' ? 
+                'CRITICAL ALERT ACKNOWLEDGED. Safety protocols activated.' :
+                `Alert acknowledged for equipment ${equipmentId}`;
+            alert(message);
+        }
+
+        function emergencyResponse(equipmentId) {
+            if (confirm(`⚠️ EMERGENCY SHUTDOWN for ${equipmentId}?\n\nThis will immediately stop all operations for this equipment. Continue?`)) {
+                alert(`🚨 EMERGENCY SHUTDOWN ACTIVATED for ${equipmentId}\n\n• Equipment stopped immediately\n• Safety teams notified\n• Incident logged\n• Investigation initiated`);
+                
+                // Update equipment status to emergency stop
+                Object.values(oilGasEquipment).flat().forEach(equipment => {
+                    if (equipment.id === equipmentId) {
+                        equipment.status = 'emergency_stop';
+                    }
+                });
+                
+                renderAllEquipment();
+            }
+        }
+
+        function addEquipment() {
+            const equipmentTypes = [
+                'Centrifugal Pump',
+                'Reciprocating Compressor', 
+                'Heat Exchanger',
+                'Pressure Vessel',
+                'Control Valve',
+                'Flow Meter',
+                'Separator Tank',
+                'Boiler Unit'
+            ];
+            
+            const randomType = equipmentTypes[Math.floor(Math.random() * equipmentTypes.length)];
+            const newId = `NEW_${Date.now()}`;
+            
+            const newEquipment = {
+                id: newId,
+                name: `${randomType} ${Math.floor(Math.random() * 100)}`,
+                type: randomType,
+                status: 'operational',
+                location: `Platform ${String.fromCharCode(65 + Math.floor(Math.random() * 3))}-${Math.floor(Math.random() * 5) + 1}`
+            };
+            
+            // Add to pumping stations for demo
+            oilGasEquipment.pumping.push(newEquipment);
+            
+            alert(`✅ Equipment Added Successfully!\n\nID: ${newEquipment.id}\nName: ${newEquipment.name}\nLocation: ${newEquipment.location}`);
+            
+            renderAllEquipment();
+        }
+
+        function scheduleMaintenece() {
+            const maintenanceWindow = prompt('Schedule maintenance for which equipment ID?\n\n(e.g., PUMP_001, DRILL_001, PROD_002)');
+            
+            if (maintenanceWindow) {
+                const targetEquipment = Object.values(oilGasEquipment).flat().find(eq => eq.id === maintenanceWindow.toUpperCase());
+                
+                if (targetEquipment) {
+                    targetEquipment.status = 'maintenance';
+                    alert(`📅 Maintenance Scheduled\n\nEquipment: ${targetEquipment.name}\nStatus: MAINTENANCE MODE\nEstimated Duration: 4-6 hours`);
+                    renderAllEquipment();
+                } else {
+                    alert('Equipment ID not found. Please check the ID and try again.');
+                }
+            }
+        }
+
+        function emergencyShutdown() {
+            const confirmation = confirm('⚠️ EMERGENCY SHUTDOWN OF ALL SYSTEMS?\n\nThis will stop ALL oil & gas operations immediately.\nOnly use in case of serious safety concerns.\n\nCONFIRM EMERGENCY SHUTDOWN?');
+            
+            if (confirmation) {
+                const finalConfirm = confirm('🚨 FINAL CONFIRMATION REQUIRED\n\nYou are about to shut down all oil & gas operations.\nThis action cannot be undone remotely.\n\nPROCEED WITH EMERGENCY SHUTDOWN?');
+                
+                if (finalConfirm) {
+                    // Simulate emergency shutdown
+                    alert('🚨 EMERGENCY SHUTDOWN ACTIVATED\n\n• All drilling operations stopped\n• All pumps shut down\n• Production systems offline\n• Emergency teams dispatched\n• Regulatory authorities notified\n• Incident command center activated');
+                    
+                    // Update all equipment status
+                    Object.values(oilGasEquipment).flat().forEach(equipment => {
+                        equipment.status = 'emergency_stop';
+                    });
+                    
+                    // Update header to show emergency status
+                    document.querySelector('.logo').innerHTML = '🚨 EMERGENCY SHUTDOWN - Oil & Gas Operations';
+                    document.querySelector('.status-dot').className = 'status-dot critical';
+                    document.querySelector('.status-dot').nextElementSibling.textContent = 'EMERGENCY SHUTDOWN';
+                    
+                    renderAllEquipment();
+                }
+            }
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        function logout() {
+            sessionStorage.removeItem('pdm_user');
+            alert('Logged out from Oil & Gas Operations Dashboard');
+            window.location.href = '/pages/login.html';
+        }
+
+        // Simulate random equipment failures for realism
+        setInterval(() => {
+            if (Math.random() < 0.05) { // 5% chance every 10 seconds
+                const allEquipment = Object.values(oilGasEquipment).flat();
+                const randomEquipment = allEquipment[Math.floor(Math.random() * allEquipment.length)];
+                
+                if (randomEquipment.status === 'operational' && Math.random() < 0.3) {
+                    const oldStatus = randomEquipment.status;
+                    randomEquipment.status = Math.random() < 0.7 ? 'warning' : 'critical';
+                    
+                    console.log(`⚠️ Equipment status change: ${randomEquipment.name} (${oldStatus} → ${randomEquipment.status})`);
+                    
+                    if (randomEquipment.status === 'critical') {
+                        setTimeout(() => {
+                            alert(`🚨 CRITICAL ALERT: ${randomEquipment.name} requires immediate attention!\n\nLocation: ${randomEquipment.location}\nRecommended Action: Emergency inspection`);
+                        }, 1000);
+                    }
+                    
+                    renderAllEquipment();
+                    generateCriticalAlerts();
+                }
+            }
+        }, 10000);
+
+        // Equipment recovery simulation
+        setInterval(() => {
+            if (Math.random() < 0.1) { // 10% chance every 15 seconds
+                const allEquipment = Object.values(oilGasEquipment).flat();
+                const problemEquipment = allEquipment.filter(eq => eq.status === 'warning');
+                
+                if (problemEquipment.length > 0) {
+                    const recoveredEquipment = problemEquipment[Math.floor(Math.random() * problemEquipment.length)];
+                    recoveredEquipment.status = 'operational';
+                    
+                    console.log(`✅ Equipment recovered: ${recoveredEquipment.name} is now operational`);
+                    renderAllEquipment();
+                }
+            }
+        }, 15000);
+    </script>
+</body>
+</html>
